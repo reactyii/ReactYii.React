@@ -8,7 +8,7 @@ import {
 import {RootState, AppDispatch} from '../../app/store';
 import {iPageLoaderProps, iPage} from '../../models/pageModels';
 import {Page} from '../../views/Page';
-import {setPage, loadAsync, testPage} from '../../features/page/pageSlice';
+import {startLoadPage, loadAsync, testPage} from '../../features/page/pageSlice';
 
 const mapStateToProps = (state: RootState) => (state.page);
 /*const mapDispatchToProps = {
@@ -16,14 +16,12 @@ const mapStateToProps = (state: RootState) => (state.page);
 }*/
 
 // Thunk Action
-const loadWithDelay = (path:string) => async (dispatch: AppDispatch): Promise<void> => {
-	//setTimeout(() => dispatch(loadAsync(path)), 1000);
-	dispatch(loadAsync(path))
-};
 const mapDispatchToProps = (dispatch:AppDispatch) =>  bindActionCreators(
     {
-		load: loadWithDelay,//(path:string) => dispatch(loadAsync(path)),
-		setPage: setPage,
+		load: (path:string) => async (dispatch: AppDispatch): Promise<void> => {
+			dispatch(loadAsync(path))
+		},
+		startLoadPage: startLoadPage,
 		test: testPage
     },
     dispatch
@@ -55,21 +53,18 @@ class PageLoader extends React.Component<Props, State> {
 	}/* */
 
 	protected loadPage(path: string) {
-		if (path === this.props.currentPath) return;
+		if (path === this.props.page?.path) return;
 		
 		console.log(path);
-		var page:iPage = {template:'', layout:'', contents:[]};
-		//this.props.setPage(page);
 		
-		//this.props.load(path);
-		this.props.test();
+		this.props.load(path);
 	}
 
 	render() {
 		//var { path } = useParams();
 		//var path = '';
 		//var location = useLocation();
-		return <Page page={this.props.value} path={this.props.currentPath} />;
+		return <Page page={this.props.page} />;
 	}
 }
 

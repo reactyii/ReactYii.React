@@ -6,7 +6,6 @@ import { iContent } from './contentModels';
 
 export interface iPageProps {
 	page?: iPage;
-	path?: string;
 }
 
 export interface iPageLoaderProps {
@@ -15,12 +14,20 @@ export interface iPageLoaderProps {
 	readonly history: H.History;
 }
 
-export interface iPageState {
-	readonly currentPath: string;
-	readonly value?: iPage;
+export interface iPageStoreState {
+	//readonly currentPath: string; // путь который загружен в данный момент
+	readonly loadingPath: string; // путь который грузится в жанный момент, если '' то загрузки нет
+	readonly page?: iPage;
+
+	// вынести в общего предка для загружаемых объектов
+	readonly error?: string; // ошибка при загрузке страницы
+	readonly timeLoaded?: Date; // время загрузки страницы, чтобы сделать еще попытку загрузки при сетевой ошибке
+	//readonly loadRetryTime?: Date; // время когда нужно повторить загрузку страницы
+	readonly timer?: number; // вместо loadRetryTime скорее всего сразу будем формировать отложенный таск на повтор
 }
 
 export interface iPage {
+	readonly path: string; // путь по которому загружена страница
 	lang?: string;
 	section?: string;
 	template: string;
