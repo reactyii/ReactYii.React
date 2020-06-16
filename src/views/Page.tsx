@@ -19,7 +19,7 @@ export class Page extends React.Component<iPageProps, {}> {
 	render() {
 		return (
 			<div>
-				<h1>Привет, мир! {this.props.page?.path}</h1>
+				<h1>Привет, мир! {this.props.page?.key}</h1>
 				<Link to="/path.html">Path</Link><br/>
 				<Link to="/ru/aqua/about.html">About</Link>
 			</div>

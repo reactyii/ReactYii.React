@@ -6,9 +6,9 @@ import {
 	//ContentType,
 } from '../../models/commonModels';
 import {RootState, AppDispatch} from '../../app/store';
-import {iPageLoaderProps, iPage} from '../../models/pageModels';
+import {iPageLoaderProps} from '../../models/pageModels';
 import {Page} from '../../views/Page';
-import {startLoadPage, loadAsync, testPage} from '../../features/page/pageSlice';
+import {startLoadPage, loadPageAsync, testPage} from '../../features/page/pageSlice';
 
 const mapStateToProps = (state: RootState) => (state.page);
 /*const mapDispatchToProps = {
@@ -19,7 +19,7 @@ const mapStateToProps = (state: RootState) => (state.page);
 const mapDispatchToProps = (dispatch:AppDispatch) =>  bindActionCreators(
     {
 		load: (path:string) => async (dispatch: AppDispatch): Promise<void> => {
-			dispatch(loadAsync(path))
+			dispatch(loadPageAsync(path))
 		},
 		startLoadPage: startLoadPage,
 		test: testPage
@@ -53,9 +53,9 @@ class PageLoader extends React.Component<Props, State> {
 	}/* */
 
 	protected loadPage(path: string) {
-		if (path === this.props.page?.path) return;
+		if (path === this.props.page?.key) return;
 		
-		console.log(path);
+		console.log('try load page', path);
 		
 		this.props.load(path);
 	}

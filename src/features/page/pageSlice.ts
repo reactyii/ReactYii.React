@@ -1,20 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../app/store';
 import {iPageStoreState, iPage} from '../../models/pageModels';
+import { pageRepository } from '../../models/pageRepository';
+import { iWrapLoadableItem } from '../../models/baseRepository';
 
 const initialState: iPageStoreState = {
 	//currentPath: '',
 	loadingPath: '',
+	//page: null,
 	//value: {},
 }
-interface iStartLoadPageParams {
+/*interface iStartLoadPageParams {
 	path: string;
 }
 interface iEndLoadPageParams {
 	path: string; // путь который грузили (может пригодится, например, в случе ошибки для формирования задачи на повторную загрузку)
 	page?: iPage;
 	error?: string;
-}
+}/* */
 export const pageSlice = createSlice({
 	name: 'page',
 	initialState,
@@ -31,9 +34,14 @@ export const pageSlice = createSlice({
 			state.loadingPath = action.payload; // устанавливаем признак загрузки
 		},
 		// Use the PayloadAction type to declare the contents of `action.payload`
-		endLoadPage: (state, action: PayloadAction<iPage>) => {
+		endLoadPage: (state, action: PayloadAction<iWrapLoadableItem<iPage>>) => {
 			console.log('setPage:', action.payload);
+
+			// нужно проверить может быть юзер уже грузит другую страницу
+			if (state.loadingPath !== action.payload.key) return;
+
 			state.page = action.payload;
+			state.loadingPath = '';
 		}
 	},
 });
@@ -44,14 +52,22 @@ export const { testPage, startLoadPage, endLoadPage } = pageSlice.actions;
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched
-export const loadAsync = (path: string): AppThunk => dispatch => {
+export const loadPageAsync = (path: string): AppThunk => dispatch => {
 	console.log('start loading:', path);
-	//dispatch(setCurrentPath(path));
-	setTimeout(() => {
+	dispatch(startLoadPage(path));
+
+	pageRepository.get(path, item => {
+		console.log('loaded:', item);
+		setTimeout(() => {
+			dispatch(endLoadPage(item));
+		}, 1000);/* */
+	});
+
+	/*setTimeout(() => {
 		console.log('loaded:', path);
-		var page: iPage = {path: path, template: '', layout: '', contents: []};
+		var page: iPage = {key: path, template: '', layout: '', contents: []};
 		dispatch(endLoadPage(page));
-	}, 1000);
+	}, 1000);/* */
 };
 
 // The function below is called a selector and allows us to select a value from
