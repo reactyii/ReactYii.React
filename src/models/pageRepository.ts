@@ -2,6 +2,9 @@ import { BaseRepository, iWrapLoadableItem } from "./baseRepository";
 import { iPage } from './pageModels';
 
 class PageRepository extends BaseRepository<iPage>{
+	getTestItem(key: string): iPage {
+		return {path: key, template: '', layout: '', contents: []}
+	}
 	getUrl(key: string): string {
 		return this.host + key;
 	}

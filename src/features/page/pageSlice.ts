@@ -40,7 +40,7 @@ export const pageSlice = createSlice({
 			// нужно проверить может быть юзер уже грузит другую страницу
 			if (state.loadingPath !== action.payload.key) return;
 
-			state.page = action.payload;
+			state.pageWraper = action.payload;
 			state.loadingPath = '';
 		}
 	},
@@ -73,6 +73,6 @@ export const loadPageAsync = (path: string): AppThunk => dispatch => {
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-export const selectPage = (state: RootState) => state.page.page;
+export const selectPage = (state: RootState) => state.page.pageWraper;
 
 export default pageSlice.reducer;

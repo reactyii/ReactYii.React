@@ -11,7 +11,7 @@ export interface iLoadableItem {
 export interface iWrapLoadableItem<T> {
 	key: string;
 	item: T | null;
-	loaded?: Date; // время загрузки итема
+	loaded?: number; // время загрузки итема
 	request: request.SuperAgentRequest | null;
 	err: string | null;
 }
@@ -23,9 +23,10 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 	public get(key: string, end: (item: iWrapLoadableItem<T>) => void) {
 		if (typeof this.data[key] !== 'undefined' && this.data[key].item !== null) 
 		{
+			console.log('get from cache', this.data[key]);
 			// также здесь можно проверить срок жизни итема в кеше
 			//return this.data[id].item;
-			end(this.prepareItemForStore(key, this.data[key]));
+			return end(this.prepareItemForStore(key, this.data[key]));
 		}
 
 		this.load(key, end);
@@ -46,6 +47,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			console.error('Ошибка при отмене запроса:', error);
 		}
 
+		/*
 		(this.data[key].request = request.get(this.getUrl(key))).then(response => {
 			console.log('data loaded', response);
 			let status = typeof response !== 'undefined' ? response.status : 500;
@@ -55,9 +57,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			}
 
 			this.data[key].request = null;
-
-			this.data[key].loaded = new Date();
-
+			this.data[key].loaded = Date.now(); //new Date();
 			this.data[key].item = response.body;
 
 			return end(this.prepareItemForStore(key, this.data[key]));
@@ -65,19 +65,27 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 		}, err => {
 			console.log('load data error', err);
 			if (err.timeout) { 
-				/* timed out! */ 
 				this.data[key].err = 'error timeout';
-			} else { 
-				/* other error */ 
+			} else {
 				this.data[key].err = 'other error';
 			}
 			
 			return end(this.prepareItemForStore(key, this.data[key]));
-		});
+		});/* */
+
+		// блок тестирования
+		setTimeout(() => {
+			this.data[key].request = null;
+			this.data[key].loaded = Date.now(); //new Date();
+			this.data[key].item = this.getTestItem(key);
+
+			return end(this.prepareItemForStore(key, this.data[key]));
+		}, 1000);
 		  
 		return null;
 	}
 
+	abstract getTestItem(key: string): T;
 	abstract getUrl(key: string): string;
 	abstract prepareItemForStore(key: string, item: iWrapLoadableItem<T>): iWrapLoadableItem<T>;
 

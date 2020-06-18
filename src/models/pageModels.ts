@@ -17,7 +17,7 @@ export interface iPageLoaderProps {
 export interface iPageStoreState {
 	//readonly currentPath: string; // путь который загружен в данный момент
 	readonly loadingPath: string; // путь который грузится в жанный момент, если '' то загрузки нет
-	readonly page?: iWrapLoadableItem<iPage>;
+	readonly pageWraper?: iWrapLoadableItem<iPage>;
 
 	// вынести в общего предка для загружаемых объектов
 	/*readonly error?: string; // ошибка при загрузке страницы

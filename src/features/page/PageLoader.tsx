@@ -53,7 +53,8 @@ class PageLoader extends React.Component<Props, State> {
 	}/* */
 
 	protected loadPage(path: string) {
-		if (path === this.props.page?.key) return;
+		//if (path === this.props.pageWraper?.key) return;
+		if (path === this.props.pageWraper?.key || path === this.props.loadingPath) return;
 		
 		console.log('try load page', path);
 		
@@ -64,7 +65,7 @@ class PageLoader extends React.Component<Props, State> {
 		//var { path } = useParams();
 		//var path = '';
 		//var location = useLocation();
-		return <Page page={this.props.page} />;
+		return <Page page={this.props.pageWraper} />;
 	}
 }
 
