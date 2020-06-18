@@ -73,7 +73,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 		});/* */
 
 		// блок тестирования
-		setTimeout(() => {
+		/*setTimeout(() => {
 			this.data[key].request = null;
 			this.data[key].loaded = Date.now(); //new Date();
 			this.data[key].item = this.getTestItem(key);
