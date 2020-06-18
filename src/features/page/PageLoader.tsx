@@ -47,13 +47,10 @@ class PageLoader extends React.Component<Props, State> {
 		this.loadPage(this.props.match.url);
 	}
 	async componentDidUpdate(prevProps: iPageLoaderProps, prevState:State, snapshot:any) {
-		//var location = useLocation();
-		//console.log(location);
 		this.loadPage(this.props.match.url);
 	}/* */
 
 	protected loadPage(path: string) {
-		//if (path === this.props.pageWraper?.key) return;
 		if (path === this.props.pageWraper?.key || path === this.props.loadingPath) return;
 		
 		console.log('try load page', path);

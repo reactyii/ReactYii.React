@@ -47,7 +47,6 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			console.error('Ошибка при отмене запроса:', error);
 		}
 
-		/*
 		(this.data[key].request = request.get(this.getUrl(key))).then(response => {
 			console.log('data loaded', response);
 			let status = typeof response !== 'undefined' ? response.status : 500;
@@ -80,7 +79,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			this.data[key].item = this.getTestItem(key);
 
 			return end(this.prepareItemForStore(key, this.data[key]));
-		}, 1000);
+		}, 1000);/* */
 		  
 		return null;
 	}
