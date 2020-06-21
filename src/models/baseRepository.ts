@@ -18,10 +18,11 @@ export interface iWrapLoadableItem<T> {
 
 export abstract class BaseRepository<T extends iLoadableItem> {
 	readonly host: string = 'http://yii.test';
-	data: Hash<iWrapLoadableItem<T>> = {};
+	protected readonly enableCache: boolean = true;
+	protected readonly data: Hash<iWrapLoadableItem<T>> = {};
 
 	public get(key: string, end: (item: iWrapLoadableItem<T>) => void) {
-		if (typeof this.data[key] !== 'undefined' && this.data[key].item !== null) 
+		if (this.enableCache && typeof this.data[key] !== 'undefined' && this.data[key].item !== null) 
 		{
 			console.log('get from cache', this.data[key]);
 			// также здесь можно проверить срок жизни итема в кеше
