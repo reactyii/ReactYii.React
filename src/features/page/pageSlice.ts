@@ -58,9 +58,9 @@ export const loadPageAsync = (path: string): AppThunk => dispatch => {
 
 	pageRepository.get(path, item => {
 		console.log('loaded:', item);
-		setTimeout(() => {
+		//setTimeout(() => {
 			dispatch(endLoadPage(item));
-		}, 1000);/* */
+		//}, 1000);/* */
 	});
 
 	/*setTimeout(() => {
