@@ -1,4 +1,4 @@
-import * as request from 'superagent';
+import * as request from 'superagent'; // годные доки https://visionmedia.github.io/superagent/
 import {
 	Hash, 
 	//ContentType,
@@ -48,19 +48,24 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			console.error('Ошибка при отмене запроса:', error);
 		}
 
-		(this.data[key].request = request.get(this.getUrl(key))).then(response => {
-			console.log('data loaded', response);
-			let status = typeof response !== 'undefined' ? response.status : 500;
-			if (status !== 200) {
-				this.data[key].err = 'error code: ' + status;
+		(this.data[key].request = request
+			.get(this.getUrl(key)))
+			.set('Accept', 'application/json')
+			.set('X-Requested-With', 'XMLHttpRequest')
+			//.withCredentials() // https://visionmedia.github.io/superagent/#cors
+			.then(response => {
+				console.log('data loaded', response);
+				let status = typeof response !== 'undefined' ? response.status : 500;
+				if (status !== 200) {
+					this.data[key].err = 'error code: ' + status;
+					return end(this.prepareItemForStore(key, this.data[key]));
+				}
+
+				this.data[key].request = null;
+				this.data[key].loaded = Date.now(); //new Date();
+				this.data[key].item = response.body;
+
 				return end(this.prepareItemForStore(key, this.data[key]));
-			}
-
-			this.data[key].request = null;
-			this.data[key].loaded = Date.now(); //new Date();
-			this.data[key].item = response.body;
-
-			return end(this.prepareItemForStore(key, this.data[key]));
 
 		}, err => {
 			console.log('load data error', err);
