@@ -4,6 +4,17 @@ import {iPageStoreState, iPage} from '../../models/pageModels';
 import { pageRepository } from '../../models/pageRepository';
 import { iWrapLoadableItem } from '../../models/baseRepository';
 
+// https://github.com/stereobooster/react-snap
+// Grab the state from a global variable injected into the server-generated HTML
+const _state = (window as any).__PRELOADED_STATE__;
+const preloadedState: iPageStoreState = typeof _state !== 'undefined' ? _state.page : undefined;
+
+// в данный момент для SSR мы используем только данные самой страницы все остальные сторы не участвуют в генерации контента
+if (typeof (window as any) !== 'undefined') {
+	// Allow the passed state to be garbage-collected
+	delete (window as any).__PRELOADED_STATE__;
+}/**/
+
 const initialState: iPageStoreState = {
 	//currentPath: '',
 	loadingPath: '',
@@ -20,7 +31,7 @@ interface iEndLoadPageParams {
 }/* */
 export const pageSlice = createSlice({
 	name: 'page',
-	initialState,
+	initialState: preloadedState || initialState,
 	reducers: {
 		testPage: state => {
 			// Redux Toolkit allows us to write "mutating" logic in reducers. It

@@ -9,6 +9,12 @@ export const store = configureStore({
   },
 });
 
+// https://github.com/stereobooster/react-snap
+// Tell react-snap how to save Redux state
+(window as any).snapSaveState = () => ({
+    __PRELOADED_STATE__: store.getState()
+});
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,

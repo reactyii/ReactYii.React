@@ -16,8 +16,20 @@ export interface iWrapLoadableItem<T> {
 	err: string | null;
 }
 
+const prepareHost = (host: string): string => {
+	if (typeof host === 'undefined') {
+		console.error('".env" file required. please, rename ".env.inc" to ".env" and set vars.');
+		return '';
+    }
+	const h = host.trim();
+	const l = h.length;
+
+	//console.log('!!', h.substring(l - 1, l), h.substring(0, l - 1));
+	return h.substring(l - 1, l) === '/' ? h.substring(0, l - 1) : h;// || 'http://yii.test';
+};
+
 export abstract class BaseRepository<T extends iLoadableItem> {
-	readonly host: string = 'http://yii.test';
+	readonly host: string = prepareHost(process.env.REACT_APP_HOST as string);
 	protected readonly enableCache: boolean = true;
 	protected readonly data: Hash<iWrapLoadableItem<T>> = {};
 
@@ -37,9 +49,9 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 		if (typeof this.data[key] === 'undefined') {
 			this.data[key] = {key: key, item: null, err: null, request: null};
 		}
-		
-		console.log('load', this.data[key]);
-		
+
+		console.log('load from ', this.host, this.data[key]);
+
 		this.data[key].err = null; // скинем ошибку если была
 
 		try { // тупо давим все ошибки если не вышло отменить и пес с ним
@@ -49,23 +61,23 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 		}
 
 		(this.data[key].request = request
-			.get(this.getUrl(key)))
-			.set('Accept', 'application/json')
-			.set('X-Requested-With', 'XMLHttpRequest')
-			//.withCredentials() // https://visionmedia.github.io/superagent/#cors
-			.then(response => {
-				console.log('data loaded', response);
-				let status = typeof response !== 'undefined' ? response.status : 500;
-				if (status !== 200) {
-					this.data[key].err = 'error code: ' + status;
-					return end(this.prepareItemForStore(key, this.data[key]));
-				}
-
-				this.data[key].request = null;
-				this.data[key].loaded = Date.now(); //new Date();
-				this.data[key].item = response.body;
-
+		.get(this.getUrl(key)))
+		.set('Accept', 'application/json')
+		.set('X-Requested-With', 'XMLHttpRequest')
+		//.withCredentials() // https://visionmedia.github.io/superagent/#cors
+		.then(response => {
+			console.log('data loaded', response);
+			let status = typeof response !== 'undefined' ? response.status : 500;
+			if (status !== 200) {
+				this.data[key].err = 'error code: ' + status;
 				return end(this.prepareItemForStore(key, this.data[key]));
+			}
+
+			this.data[key].request = null;
+			this.data[key].loaded = Date.now(); //new Date();
+			this.data[key].item = response.body;
+
+			return end(this.prepareItemForStore(key, this.data[key]));
 
 		}, err => {
 			console.log('load data error', err);
