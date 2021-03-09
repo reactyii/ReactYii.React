@@ -6,7 +6,8 @@ import { iWrapLoadableItem } from '../../models/baseRepository';
 
 // https://github.com/stereobooster/react-snap
 // Grab the state from a global variable injected into the server-generated HTML
-const _state = (window as any).__PRELOADED_STATE__;
+
+const _state = typeof window !== 'undefined' ? (window as any).__PRELOADED_STATE__ : undefined;
 const preloadedState: iPageStoreState = typeof _state !== 'undefined' ? _state.page : undefined;
 
 // в данный момент для SSR мы используем только данные самой страницы все остальные сторы не участвуют в генерации контента

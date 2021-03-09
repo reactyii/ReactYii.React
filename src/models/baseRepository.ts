@@ -1,4 +1,4 @@
-import * as request from 'superagent'; // годные доки https://visionmedia.github.io/superagent/
+//import * as request from 'superagent'; // годные доки https://visionmedia.github.io/superagent/
 import {
 	Hash, 
 	//ContentType,
@@ -12,7 +12,7 @@ export interface iWrapLoadableItem<T> {
 	key: string;
 	item: T | null;
 	loaded?: number; // время загрузки итема
-	request: request.SuperAgentRequest | null;
+	request: null,//request.SuperAgentRequest | null;
 	err: string | null;
 }
 
@@ -53,13 +53,13 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 		console.log('load from ', this.host, this.data[key]);
 
 		this.data[key].err = null; // скинем ошибку если была
-
+		/*
 		try { // тупо давим все ошибки если не вышло отменить и пес с ним
 			this.data[key].request?.abort(); // отменим предидущий запрос
 		} catch (error) {
 			console.error('Ошибка при отмене запроса:', error);
 		}
-
+		
 		(this.data[key].request = request
 		.get(this.getUrl(key)))
 		.set('Accept', 'application/json')
@@ -91,7 +91,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 		});/* */
 
 		// блок тестирования
-		/*setTimeout(() => {
+		setTimeout(() => {
 			this.data[key].request = null;
 			this.data[key].loaded = Date.now(); //new Date();
 			this.data[key].item = this.getTestItem(key);
