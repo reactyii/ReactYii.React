@@ -51,6 +51,7 @@ class PageLoader extends React.Component<Props, State> {
 	}/* */
 
 	protected loadPage(path: string) {
+		console.log('check for load page', path, this.props.pageWraper?.key, this.props.loadingPath);
 		if (path === this.props.pageWraper?.key || path === this.props.loadingPath) return;
 		
 		console.log('try load page', path);

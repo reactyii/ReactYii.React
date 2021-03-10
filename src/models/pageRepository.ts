@@ -2,6 +2,8 @@ import { BaseRepository, iWrapLoadableItem } from "./baseRepository";
 import { iPage } from './pageModels';
 
 class PageRepository extends BaseRepository<iPage>{
+	protected readonly abortAll: boolean = false;
+	protected readonly enableCache: boolean = false;
 	getTestItem(key: string): iPage {
 		return {path: key, template: '', layout: '', contents: []}
 	}
@@ -16,8 +18,9 @@ class PageRepository extends BaseRepository<iPage>{
 		return {
 			key: item.key,
 			item: item.item,//page, 
-			err: item.err, 
-			request: null, // NB! очень важно тут null так как клонированный объект уходит в стор, а request мутирует!
+			err: item.err,
+			//request: null, // NB! очень важно тут null так как клонированный объект уходит в стор, а request мутирует!
+			abortController: null, // NB! очень важно тут null так как клонированный объект уходит в стор, а request мутирует!
 			loaded: item.loaded
 		};
 	}

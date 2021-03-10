@@ -14,6 +14,7 @@ import PageLoader from './features/page/PageLoader';
 
 // https://reacttraining.com/react-router/web/guides/quick-start
 //import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { StaticRouterContext } from 'react-router';
 import { StaticRouter as Router, Route, Switch } from 'react-router-dom';
 
 import express from 'express';
@@ -28,11 +29,15 @@ const expr = express();
 // https://www.digitalocean.com/community/tutorials/react-server-side-rendering-ru
 // https://www.digitalocean.com/community/tutorials/react-react-router-ssr
 
+function sleep(ms:number) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // копипизда из index.tsx вынести в один файл (вынести не получится! Router (см импорт) другой)
 
-expr.get('/*', (req, res) => {
-	const context = {};
-	const _app = renderToString(<React.StrictMode>
+expr.get('/*', async (req, res) => {
+	const context: StaticRouterContext = {};
+	const app = <React.StrictMode>
 		<Provider store={store}>
 			<Router location={req.url} context={context}>
 				<Switch>
@@ -42,7 +47,26 @@ expr.get('/*', (req, res) => {
 				</Switch>
 			</Router>
 		</Provider>
-	</React.StrictMode>);
+	</React.StrictMode>;
+
+	var _app = renderToString(app);
+	console.log('0:', _app);
+
+	await sleep(3000);
+
+	_app = renderToString(app);
+	console.log('1:', _app);
+
+	if (context.statusCode === 404) {
+		res.status(404);
+		return;
+	}
+
+	// хз будем ли поддерживать редиректы в таком варианте или просто вернем какой то статус - нам ведь надо будет на сервере сделать редирект
+	/*if (context.url) {
+		return res.redirect(301, context.url);
+	}/**/
+
 	const initialState = store.getState();
 
 	//const indexFile = path.resolve('./build/index.html');
