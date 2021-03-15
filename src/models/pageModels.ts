@@ -27,6 +27,12 @@ export interface iPageStoreState {
 	/**/
 }
 
+export interface iSeo {
+	title: string;
+	descr: string;
+	keywords: string;
+}
+
 export interface iPage extends iLoadableItem {
 	readonly path: string; // путь по которому загружена страница
 	lang?: string;
@@ -34,4 +40,5 @@ export interface iPage extends iLoadableItem {
 	template: string;
 	layout: string;
 	contents: iContent[];
+	seo: iSeo;
 }

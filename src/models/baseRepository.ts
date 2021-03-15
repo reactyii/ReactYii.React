@@ -93,7 +93,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			}*/
 
 			this.data[key].loaded = Date.now(); //new Date();
-			this.data[key].item = response.body;
+			this.data[key].item = response;//.body;
 
 			return end(this.prepareItemForStore(key, this.data[key]));
 		}).catch(err => {
