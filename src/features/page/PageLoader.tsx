@@ -18,9 +18,10 @@ const mapStateToProps = (state: RootState) => (state.page);
 // Thunk Action
 const mapDispatchToProps = (dispatch:AppDispatch) =>  bindActionCreators(
     {
-		load: (path:string) => async (dispatch: AppDispatch): Promise<void> => {
+		/*load: (path:string) => async (dispatch: AppDispatch): Promise<void> => {
 			dispatch(loadPageAsync(path))
-		},
+		},*/
+		load: loadPageAsync,
 		startLoadPage: startLoadPage,
 		test: testPage
     },
