@@ -38,7 +38,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 	private abortController: AbortController | null = null;
 
 	public get(key: string, end: (item: iWrapLoadableItem<T>) => void) {
-		console.log('this.enableCache=', this.enableCache);
+		//console.log('this.enableCache=', this.enableCache);
 		if (this.enableCache && typeof this.data[key] !== 'undefined' && this.data[key].item !== null) 
 		{
 			console.log('get from cache', this.data[key]);
@@ -97,7 +97,10 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 
 			return end(this.prepareItemForStore(key, this.data[key]));
 		}).catch(err => {
-			console.error('load data error', err);
+			console.error('load data error', JSON.stringify(err.name));
+			if (err.name == 'AbortError') {
+				return; // ничего не делаем. если вызовем end() то скинем loadingPath и мы откинем нужный результат при его получении
+			} 
 			if (err.timeout) {
 				this.data[key].err = 'error timeout';
 			} else {

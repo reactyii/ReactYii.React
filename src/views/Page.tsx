@@ -8,7 +8,7 @@ import {
 	//Hash, 
 	//ContentType,
 } from '../models/commonModels';
-import {iPageProps} from '../models/pageModels';
+import { iPageProps} from '../models/pageModels';
 
 export class Page extends React.Component<iPageProps, {}> {
 		
@@ -21,9 +21,15 @@ export class Page extends React.Component<iPageProps, {}> {
 		return (
 			<div>
 				<HelmetProvider>
-					<Helmet title={this.props.page?.item?.seo.title ?? ''} />
+					<Helmet title={this.props.pageWraper?.item?.seo.title} />
 				</HelmetProvider>
-				<h1>Привет, мир! {this.props.page?.key}</h1>
+				<h1>Привет, мир! {this.props.pageWraper?.key}</h1>
+				{
+					(this.props.loadingPath !== '' ? <div>loading... {this.props.loadingPath}</div> : '')
+				}
+				{
+					this.props.pageWraper?.err ? <div>{this.props.pageWraper?.err}</div>: ''
+				}
 				<Link to="/">Home</Link><br />
 				<Link to="/path.html">Path</Link><br />
 				<Link to="/ru/aqua/about.html">About</Link><br /><br />

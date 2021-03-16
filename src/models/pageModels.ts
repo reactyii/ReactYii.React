@@ -3,9 +3,11 @@ import { match } from "react-router";
 
 import { iContent } from './contentModels';
 import { iLoadableItem, iWrapLoadableItem  } from './baseRepository';
+import { iSeo } from './commonModels';
 
 export interface iPageProps {
-	page?: iWrapLoadableItem<iPage>;
+	pageWraper?: iWrapLoadableItem<iPage>;
+	loadingPath: string;
 }
 
 export interface iPageLoaderProps {
@@ -25,12 +27,6 @@ export interface iPageStoreState {
 	//readonly loadRetryTime?: Date; // время когда нужно повторить загрузку страницы
 	readonly timer?: number; // вместо loadRetryTime скорее всего сразу будем формировать отложенный таск на повтор
 	/**/
-}
-
-export interface iSeo {
-	title: string;
-	descr: string;
-	keywords: string;
 }
 
 export interface iPage extends iLoadableItem {

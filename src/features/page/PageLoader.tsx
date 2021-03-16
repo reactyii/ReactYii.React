@@ -18,10 +18,10 @@ const mapStateToProps = (state: RootState) => (state.page);
 // Thunk Action
 const mapDispatchToProps = (dispatch:AppDispatch) =>  bindActionCreators(
     {
-		/*load: (path:string) => async (dispatch: AppDispatch): Promise<void> => {
+		load: (path:string) => async (dispatch: AppDispatch): Promise<void> => {
 			dispatch(loadPageAsync(path))
-		},*/
-		load: loadPageAsync,
+		},/**/
+		//load: loadPageAsync,
 		startLoadPage: startLoadPage,
 		test: testPage
     },
@@ -52,10 +52,15 @@ class PageLoader extends React.Component<Props, State> {
 	}/* */
 
 	protected loadPage(path: string) {
-		console.log('check for load page', path, this.props.pageWraper?.key, this.props.loadingPath);
-		if (path === this.props.pageWraper?.key || path === this.props.loadingPath) return;
+		console.log('check for load page path=', path, 'key=', this.props.pageWraper?.key, 'loading=', this.props.loadingPath);
+
+		// 1 отсекаем если мы уже грузим эту страницу
+		if (/*path === this.props.pageWraper?.key ||*/ path === this.props.loadingPath) return;
+
+		// 2 отсекаем если эта страница загружена в данный момент и мы не в состояни загрузки
+		if (this.props.loadingPath === '' && path === this.props.pageWraper?.key) return;
 		
-		console.log('try load page', path);
+		console.log('------try load page', path);
 		
 		this.props.load(path);
 	}
@@ -64,7 +69,7 @@ class PageLoader extends React.Component<Props, State> {
 		//var { path } = useParams();
 		//var path = '';
 		//var location = useLocation();
-		return <Page page={this.props.pageWraper} />;
+		return <Page pageWraper={this.props.pageWraper} loadingPath={this.props.loadingPath} />;
 	}
 }
 

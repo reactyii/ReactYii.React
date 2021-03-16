@@ -12,16 +12,28 @@ export interface iUser {
     name: string | null;
     email: string;
 }
+export interface iSection {
+    id: string;
+    name: string;
+    code: string | null;
+    page: string; // для формирования урла
+    host: string | null;
+    icon: string | null;
+    isDefault: boolean;
+}
 export interface iSite {
     id: number;
     name: string;
+    langs: iLanguage[];
+    sections: iSection[];
+    menus: Hash<iMenu>;
 }
 export interface iSession {
     // user
     user: iUser | null;
     site: iSite;
-    menus: Hash<iMenu>;
-    langs: iLanguage[];
+    
+    //langs: iLanguage[];
     // token
     //tokenId?: string;
     //authToken?: string;
