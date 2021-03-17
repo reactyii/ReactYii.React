@@ -18,6 +18,11 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // доки по SSR см тут https://github.com/stereobooster/react-snap
 
+// Tell react-snap how to save Redux state
+(window as any).snapSaveState = () => ({
+	__PRELOADED_STATE__: store.getState()
+});/**/
+
 const rootElement = document.getElementById("root");
 if (rootElement != null) {
 	const app = <React.StrictMode>
