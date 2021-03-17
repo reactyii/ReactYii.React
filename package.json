@@ -57,7 +57,6 @@
   },
   "reactSnap": {
     "removeStyleTags": true,
-    "removeScriptTags": true,
     "destination": "ssr"
   }
 }
