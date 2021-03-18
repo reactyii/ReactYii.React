@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-	//Hash, 
-	//ContentType,
-} from '../../models/commonModels';
+import { Hash } from '../../models/commonModels';
 import {RootState, AppDispatch} from '../../app/store';
 import {iPageLoaderProps} from '../../models/pageModels';
 import {Page} from '../../views/Page';
@@ -18,8 +15,8 @@ const mapStateToProps = (state: RootState) => (state.page);
 // Thunk Action
 const mapDispatchToProps = (dispatch:AppDispatch) =>  bindActionCreators(
     {
-		load: (path:string) => async (dispatch: AppDispatch): Promise<void> => {
-			dispatch(loadPageAsync(path))
+		load: (path: string, params: Hash<string>) => async (dispatch: AppDispatch): Promise<void> => {
+			dispatch(loadPageAsync(path, params))
 		},/**/
 		//load: loadPageAsync,
 		startLoadPage: startLoadPage,
@@ -52,17 +49,24 @@ class PageLoader extends React.Component<Props, State> {
 	}/* */
 
 	protected loadPage(path: string) {
-		console.log('check for load page path=', path, 'key=', this.props.pageWraper?.key, 'loading=', this.props.loadingPath);
+		// РґРѕР±Р°РІРёРј РґР°С‚Сѓ РїРѕСЃР»РµРґРЅРµРіРѕ РёР·РјРµРЅРµРЅРёСЏ РґР°РЅРЅС‹С… СЃР°Р№С‚Р°
+		console.log('session', this.props.session);
+		let params: Hash<string> = {};
+		if (typeof this.props.session !== 'undefined' && typeof this.props.session.site !== 'undefined') {
+			
+			params['__siteLM'] = '' + this.props.session.site.lastModified;
+		}
+		//console.log('check for load page path=', path, 'key=', this.props.pageWraper?.key, 'loading=', this.props.loadingPath);
 
-		// 1 отсекаем если мы уже грузим эту страницу
+		// 1 РѕС‚СЃРµРєР°РµРј РµСЃР»Рё РјС‹ СѓР¶Рµ РіСЂСѓР·РёРј СЌС‚Сѓ СЃС‚СЂР°РЅРёС†Сѓ
 		if (/*path === this.props.pageWraper?.key ||*/ path === this.props.loadingPath) return;
 
-		// 2 отсекаем если эта страница загружена в данный момент и мы не в состояни загрузки
+		// 2 РѕС‚СЃРµРєР°РµРј РµСЃР»Рё СЌС‚Р° СЃС‚СЂР°РЅРёС†Р° Р·Р°РіСЂСѓР¶РµРЅР° РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ Рё РјС‹ РЅРµ РІ СЃРѕСЃС‚РѕСЏРЅРё Р·Р°РіСЂСѓР·РєРё
 		if (this.props.loadingPath === '' && path === this.props.pageWraper?.key) return;
 		
 		console.log('------try load page', path);
 		
-		this.props.load(path);
+		this.props.load(path, params);
 	}
 
 	render() {

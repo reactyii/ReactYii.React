@@ -11,6 +11,8 @@ export interface iUser {
     id: number;
     name: string | null;
     email: string;
+    // если юзер авторизован он будет прилетать при каждом запросе (данных не фиг. гнать тока id или + имя с емайлом разницы почти нет)
+    //lastModified: number; // здесь будем передавать время последнего изменения сайта (языков, меню, разделов и прочего)
 }
 export interface iSection {
     id: string;
@@ -27,11 +29,12 @@ export interface iSite {
     langs: iLanguage[];
     sections: iSection[];
     menus: Hash<iMenu>;
+    lastModified: number; // здесь будем передавать время последнего изменения сайта (языков, меню, разделов и прочего)
 }
 export interface iSession {
     // user
-    user: iUser | null;
-    site: iSite;
+    user?: iUser;
+    site?: iSite;
     
     //langs: iLanguage[];
     // token

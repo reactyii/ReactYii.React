@@ -37,7 +37,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 	protected readonly data: Hash<iWrapLoadableItem<T>> = {};
 	private abortController: AbortController | null = null;
 
-	public get(key: string, end: (item: iWrapLoadableItem<T>) => void) {
+	public get(key: string, params: Hash<string>, end: (item: iWrapLoadableItem<T>) => void) {
 		//console.log('this.enableCache=', this.enableCache);
 		if (this.enableCache && typeof this.data[key] !== 'undefined' && this.data[key].item !== null) 
 		{
@@ -47,10 +47,10 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			return end(this.prepareItemForStore(key, this.data[key]));
 		}
 
-		this.load(key, end);
+		this.load(key, params, end);
 	}
 
-	public load(key: string, end: (item: iWrapLoadableItem<T>) => void) {
+	public load(key: string, params: Hash<string>, end: (item: iWrapLoadableItem<T>) => void) {
 		if (typeof this.data[key] === 'undefined') {
 			this.data[key] = { key: key, item: null, err: null, abortController: null/*, request: null*/ };
 		}
@@ -77,7 +77,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 				'X-Requested-With': 'XMLHttpRequest'
 			}
 		};
-		fetch(this.getUrl(key), options).then(res => {
+		fetch(this.getUrl(key, params), options).then(res => {
 			//console.log('data loaded1', res);
 			if (res.ok) {
 				return res.json();
@@ -98,7 +98,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			return end(this.prepareItemForStore(key, this.data[key]));
 		}).catch(err => {
 			console.error('load data error', JSON.stringify(err.name));
-			if (err.name == 'AbortError') {
+			if (err.name === 'AbortError') {
 				return; // ничего не делаем. если вызовем end() то скинем loadingPath и мы откинем нужный результат при его получении
 			} 
 			if (err.timeout) {
@@ -167,8 +167,34 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 		return null;
 	}
 
+	join_url_params(g: Hash<string | string[]>, clearEmpty: boolean = false): string {
+		var l = new Array();
+		for (var i in g) {
+			//Console.log('...', i, typeof g[i])
+
+			if (typeof g[i] === 'undefined') continue;
+			if (typeof g[i] === 'string') {
+				// в теории! в таком случае не надо проверять hasOwnProperty (see sample in https://www.typescriptlang.org/docs/handbook/modules.html)
+				//if (g.hasOwnProperty(i)) {
+				if (clearEmpty && g[i] == '') continue;
+
+				//Console.log('->', i, g[i]);
+				l.push(encodeURIComponent(i) + '=' + encodeURIComponent(g[i] as string));
+				//}
+			} /*else {
+				// массив
+
+				// здесь игнорим clearEmpty так как передается массив
+				if ((g[i] as string[]).length == 0) continue;
+
+				//Console.log('...', i, (g[i] as string[]).map((item) => encodeURIComponent(i) + '[]=' + encodeURIComponent(item)));
+				[].push.apply(l, (g[i] as string[]).map((item) => encodeURIComponent(i) + '=' + encodeURIComponent(item)));
+			}*/
+		}
+		return l.join('&');
+	};
 	abstract getTestItem(key: string): T;
-	abstract getUrl(key: string): string;
+	abstract getUrl(key: string, params: Hash<string>): string;
 	abstract prepareItemForStore(key: string, item: iWrapLoadableItem<T>): iWrapLoadableItem<T>;
 
 }

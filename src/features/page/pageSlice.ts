@@ -3,6 +3,7 @@ import { AppThunk, RootState } from '../../app/store';
 import {iPageStoreState, iPage} from '../../models/pageModels';
 import { pageRepository } from '../../models/pageRepository';
 import { iWrapLoadableItem } from '../../models/baseRepository';
+import { Hash } from '../../models/commonModels';
 
 // https://github.com/stereobooster/react-snap
 // Grab the state from a global variable injected into the server-generated HTML
@@ -56,6 +57,16 @@ export const pageSlice = createSlice({
 			console.log('setPage:', action.payload);
 
 			state.pageWraper = action.payload;
+			if (typeof state.session === 'undefined') state.session = {};
+			if (typeof action.payload.item?.session?.site !== 'undefined') {
+				state.session.site = action.payload.item.session.site;
+			}
+			if (typeof action.payload.item?.session?.user !== 'undefined') {
+				state.session.user = action.payload.item.session.user;
+			}
+
+			delete state.pageWraper.item?.session; // чтоб место не занимало
+
 			state.loadingPath = '';
 		}
 	},
@@ -67,11 +78,11 @@ export const { testPage, startLoadPage, endLoadPage } = pageSlice.actions;
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched
-export const loadPageAsync = (path: string): AppThunk => dispatch => {
+export const loadPageAsync = (path: string, params: Hash<string>): AppThunk => dispatch => {
 	console.log('start loading:', path);
 	dispatch(startLoadPage(path));
 
-	pageRepository.get(path, item => {
+	pageRepository.get(path, params, item => {
 		//console.log('loaded:', item);
 		//setTimeout(() => {
 			dispatch(endLoadPage(item));

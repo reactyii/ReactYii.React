@@ -3,7 +3,7 @@ import { match } from "react-router";
 
 import { iContent } from './contentModels';
 import { iLoadableItem, iWrapLoadableItem  } from './baseRepository';
-import { iSeo } from './commonModels';
+import { iSeo, iSession } from './commonModels';
 
 export interface iPageProps {
 	pageWraper?: iWrapLoadableItem<iPage>;
@@ -20,6 +20,7 @@ export interface iPageStoreState {
 	//readonly currentPath: string; // путь который загружен в данный момент
 	readonly loadingPath: string; // путь который грузится в жанный момент, если '' то загрузки нет
 	readonly pageWraper?: iWrapLoadableItem<iPage>;
+	readonly session?: iSession;
 
 	// вынести в общего предка для загружаемых объектов
 	/*readonly error?: string; // ошибка при загрузке страницы
@@ -37,4 +38,5 @@ export interface iPage extends iLoadableItem {
 	layout: string;
 	contents: iContent[];
 	seo: iSeo;
+	session?: iSession; // данные о сайте грузим вместе со страницей, если в сессии что то изменилось с последнего обновления, то придет новая сессия, если нового нет значит юзаем старую
 }

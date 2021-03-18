@@ -1,4 +1,5 @@
 import { BaseRepository, iWrapLoadableItem } from "./baseRepository";
+import { Hash } from "./commonModels";
 import { iPage } from './pageModels';
 
 class PageRepository extends BaseRepository<iPage>{
@@ -9,8 +10,14 @@ class PageRepository extends BaseRepository<iPage>{
 			path: key, template: '', layout: '', contents: [], seo: { title: 'loading...', description: '', keywords: '' }
 		};
 	}
-	getUrl(key: string): string {
-		return this.host + key;
+	getUrl(key: string, params: Hash<string>): string {
+		let path = this.host + key;
+		let p = this.join_url_params(params);
+
+		if (p!=='') {
+			path += (path.indexOf('?') >= 0 ? '&' : '?') + p;//'__siteLM=' + this.props.session.site.lastModified;
+		}
+		return path;
 	}
 
 	prepareItemForStore(key: string, item: iWrapLoadableItem<iPage>): iWrapLoadableItem<iPage> {
