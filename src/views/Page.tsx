@@ -17,12 +17,17 @@ export class Page extends React.Component<iPageProps, {}> {
 		this.state = {path: props.newPath};
 	}/* */
 
+	// дадим возможность переопределить в шаблонах
+	renderSEO() {
+		return <HelmetProvider>
+			<Helmet title={this.props.pageWraper?.item?.seo.title} />
+		</HelmetProvider>;
+	}
+
 	render() {
 		return (
 			<div>
-				<HelmetProvider>
-					<Helmet title={this.props.pageWraper?.item?.seo.title} />
-				</HelmetProvider>
+				{this.renderSEO()}
 				<h1>Привет, мир! {this.props.pageWraper?.key}</h1>
 				{
 					(this.props.loadingPath !== '' ? <div>loading... {this.props.loadingPath}</div> : '')
