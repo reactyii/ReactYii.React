@@ -71,7 +71,7 @@ export interface iMenu {
 export class Console {
     public static log = process.env.NODE_ENV === 'development' ? console.log : (arg: any, ...args: any[]) => { /* empty */ };
     public static info = process.env.NODE_ENV === 'development' ? console.info : (arg: any, ...args: any[]) => { /* empty */ };
-    public static error = process.env.NODE_ENV === 'development' ? console.error : (arg: any, ...args: any[]) => { /* empty */ };
+    public static error = console.error;//process.env.NODE_ENV === 'development' ? console.error : (arg: any, ...args: any[]) => { /* empty */ };
     public static debug = process.env.NODE_ENV === 'development' ? console.debug : (arg: any, ...args: any[]) => { /* empty */ };
     public static warn = process.env.NODE_ENV === 'development' ? console.warn : (arg: any, ...args: any[]) => { /* empty */ };
 }
