@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Hash } from '../../models/commonModels';
+import { Console, Hash } from '../../models/commonModels';
 import {RootState, AppDispatch} from '../../app/store';
 import {iPageLoaderProps} from '../../models/pageModels';
 import {Page} from '../../views/Page';
@@ -38,10 +38,10 @@ class PageLoader extends React.Component<Props, State> {
 		super(props);
 		this.state = {path: props.newPath};
 	}/* */
-	//var location = useLocation();
+	//let location = useLocation();
 	
 	async componentDidMount() {
-		//console.log(this.props.match, this.props.location, this.props.history);
+		//Console.log(this.props.match, this.props.location, this.props.history);
 		this.loadPage(this.props.match.url);
 	}
 	async componentDidUpdate(prevProps: iPageLoaderProps, prevState:State, snapshot:any) {
@@ -50,13 +50,13 @@ class PageLoader extends React.Component<Props, State> {
 
 	protected loadPage(path: string) {
 		// добавим дату последнего изменения данных сайта
-		console.log('session', this.props.session);
+		Console.log('session', this.props.session);
 		let params: Hash<string> = {};
 		if (typeof this.props.session !== 'undefined' && typeof this.props.session.site !== 'undefined') {
 			
 			params['__siteLM'] = '' + this.props.session.site.lastModified;
 		}
-		//console.log('check for load page path=', path, 'key=', this.props.pageWraper?.key, 'loading=', this.props.loadingPath);
+		//Console.log('check for load page path=', path, 'key=', this.props.pageWraper?.key, 'loading=', this.props.loadingPath);
 
 		// 1 отсекаем если мы уже грузим эту страницу
 		if (/*path === this.props.pageWraper?.key ||*/ path === this.props.loadingPath) return;
@@ -64,15 +64,15 @@ class PageLoader extends React.Component<Props, State> {
 		// 2 отсекаем если эта страница загружена в данный момент и мы не в состояни загрузки
 		if (this.props.loadingPath === '' && path === this.props.pageWraper?.key) return;
 		
-		console.log('------try load page', path);
+		Console.log('------try load page', path, params);
 		
 		this.props.load(path, params);
 	}
 
 	render() {
-		//var { path } = useParams();
-		//var path = '';
-		//var location = useLocation();
+		//let { path } = useParams();
+		//let path = '';
+		//let location = useLocation();
 		return <Page pageWraper={this.props.pageWraper} loadingPath={this.props.loadingPath} />;
 	}
 }

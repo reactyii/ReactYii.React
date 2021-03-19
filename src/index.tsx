@@ -12,9 +12,10 @@ import PageLoader from './features/page/PageLoader';
 
 // https://reacttraining.com/react-router/web/guides/quick-start
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Console } from './models/commonModels';
 
-//console.log('-->', process.env.NODE_ENV);
-//console.log('-->', process.env.REACT_APP_HOST);
+Console.log('-->', process.env.NODE_ENV);
+//Console.log('-->', process.env.REACT_APP_HOST);
 
 // доки по SSR см тут https://github.com/stereobooster/react-snap
 

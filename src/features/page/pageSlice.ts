@@ -3,7 +3,7 @@ import { AppThunk, RootState } from '../../app/store';
 import {iPageStoreState, iPage} from '../../models/pageModels';
 import { pageRepository } from '../../models/pageRepository';
 import { iWrapLoadableItem } from '../../models/baseRepository';
-import { Hash } from '../../models/commonModels';
+import { Console, Hash } from '../../models/commonModels';
 
 // https://github.com/stereobooster/react-snap
 // Grab the state from a global variable injected into the server-generated HTML
@@ -41,7 +41,7 @@ export const pageSlice = createSlice({
 			// which detects changes to a "draft state" and produces a brand new
 			// immutable state based off those changes
 			//state.value += 1;
-			console.log('TEST');
+			Console.log('TEST');
 		},
 		startLoadPage: (state, action: PayloadAction<string>) => {
 			state.loadingPath = action.payload; // устанавливаем признак загрузки
@@ -49,12 +49,12 @@ export const pageSlice = createSlice({
 		// Use the PayloadAction type to declare the contents of `action.payload`
 		endLoadPage: (state, action: PayloadAction<iWrapLoadableItem<iPage>>) => {
 
-			console.log('endLoadPage:', action.payload.key, 'loadingPath=', state.loadingPath);
+			Console.log('endLoadPage:', action.payload.key, 'loadingPath=', state.loadingPath);
 
 			// нужно проверить может быть юзер уже грузит другую страницу
 			if (state.loadingPath !== action.payload.key) return;
 
-			console.log('setPage:', action.payload);
+			Console.log('setPage:', action.payload);
 
 			state.pageWraper = action.payload;
 			if (typeof state.session === 'undefined') state.session = {};
@@ -79,19 +79,19 @@ export const { testPage, startLoadPage, endLoadPage } = pageSlice.actions;
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched
 export const loadPageAsync = (path: string, params: Hash<string>): AppThunk => dispatch => {
-	console.log('start loading:', path);
+	Console.log('start loading:', path);
 	dispatch(startLoadPage(path));
 
 	pageRepository.get(path, params, item => {
-		//console.log('loaded:', item);
+		//Console.log('loaded:', item);
 		//setTimeout(() => {
 			dispatch(endLoadPage(item));
 		//}, 1000);/* */
 	});
 
 	/*setTimeout(() => {
-		console.log('loaded:', path);
-		var page: iPage = {key: path, template: '', layout: '', contents: []};
+		Console.log('loaded:', path);
+		let page: iPage = {key: path, template: '', layout: '', contents: []};
 		dispatch(endLoadPage(page));
 	}, 1000);/* */
 };

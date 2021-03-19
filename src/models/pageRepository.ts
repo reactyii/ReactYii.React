@@ -1,6 +1,7 @@
 import { BaseRepository, iWrapLoadableItem } from "./baseRepository";
-import { Hash } from "./commonModels";
+import { Console, Hash } from "./commonModels";
 import { iPage } from './pageModels';
+import { Utils } from '../helpers/Utils';
 
 class PageRepository extends BaseRepository<iPage>{
 	protected readonly abortAll: boolean = false;
@@ -12,7 +13,8 @@ class PageRepository extends BaseRepository<iPage>{
 	}
 	getUrl(key: string, params: Hash<string>): string {
 		let path = this.host + key;
-		let p = this.join_url_params(params);
+		let p = Utils.join_url_params(params);
+		Console.log('!!!', Utils.formatDate('2018-03-30T00:00:00+03:00'));
 
 		if (p!=='') {
 			path += (path.indexOf('?') >= 0 ? '&' : '?') + p;//'__siteLM=' + this.props.session.site.lastModified;

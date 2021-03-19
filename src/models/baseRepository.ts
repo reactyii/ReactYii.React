@@ -1,6 +1,7 @@
 //import * as request from 'superagent'; // годные доки https://visionmedia.github.io/superagent/
 import 'isomorphic-fetch'; // https://www.digitalocean.com/community/tutorials/js-fetch-api
 import {
+    Console,
 	Hash, 
 	//ContentType,
 } from './commonModels';
@@ -20,13 +21,13 @@ export interface iWrapLoadableItem<T> {
 
 const prepareHost = (host: string): string => {
 	if (typeof host === 'undefined') {
-		console.error('".env" file required. please, rename ".env.inc" to ".env" and set vars.');
+		Console.error('".env" file required. please, rename ".env.inc" to ".env" and set vars.');
 		return '';
     }
 	const h = host.trim();
 	const l = h.length;
 
-	//console.log('!!', h.substring(l - 1, l), h.substring(0, l - 1));
+	//Console.log('!!', h.substring(l - 1, l), h.substring(0, l - 1));
 	return h.substring(l - 1, l) === '/' ? h.substring(0, l - 1) : h;// || 'http://yii.test';
 };
 
@@ -38,10 +39,10 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 	private abortController: AbortController | null = null;
 
 	public get(key: string, params: Hash<string>, end: (item: iWrapLoadableItem<T>) => void) {
-		//console.log('this.enableCache=', this.enableCache);
+		//Console.log('this.enableCache=', this.enableCache);
 		if (this.enableCache && typeof this.data[key] !== 'undefined' && this.data[key].item !== null) 
 		{
-			console.log('get from cache', this.data[key]);
+			Console.log('get from cache', this.data[key]);
 			// также здесь можно проверить срок жизни итема в кеше
 			//return this.data[id].item;
 			return end(this.prepareItemForStore(key, this.data[key]));
@@ -55,16 +56,16 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			this.data[key] = { key: key, item: null, err: null, abortController: null/*, request: null*/ };
 		}
 
-		console.log('load from ', this.host, this.data[key]);
+		Console.log('load from ', this.host, this.data[key]);
 
 		this.data[key].err = null; // скинем ошибку если была
 
 		try { // тупо давим все ошибки если не вышло отменить и пес с ним
-			console.log('try cancel ', key);
+			Console.log('try cancel ', key);
 			this.abortController?.abort();
 			this.data[key].abortController?.abort();
 		} catch (error) {
-			console.error('Ошибка при отмене запроса:', error);
+			Console.error('Ошибка при отмене запроса:', error);
 		}
 
 		// https://learn.javascript.ru/fetch-abort
@@ -78,14 +79,14 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			}
 		};
 		fetch(this.getUrl(key, params), options).then(res => {
-			//console.log('data loaded1', res);
+			//Console.log('data loaded1', res);
 			if (res.ok) {
 				return res.json();
 			} else {
 				return Promise.reject({ status: res.status, statusText: res.statusText });
 			}
 		}).then(response => {
-			console.log('data loaded', response);
+			Console.log('data loaded', response);
 			/*let status = typeof response !== 'undefined' ? response.status : 500;
 			if (status !== 200) {
 				this.data[key].err = 'error code: ' + status;
@@ -97,7 +98,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 
 			return end(this.prepareItemForStore(key, this.data[key]));
 		}).catch(err => {
-			console.error('load data error', JSON.stringify(err.name));
+			Console.error('load data error', JSON.stringify(err.name));
 			if (err.name === 'AbortError') {
 				return; // ничего не делаем. если вызовем end() то скинем loadingPath и мы откинем нужный результат при его получении
 			} 
@@ -117,43 +118,6 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 		// отладка отмены
 		//setTimeout(() => this.data[key].abortController?.abort(), 1000);
 		
-		/*
-		try { // тупо давим все ошибки если не вышло отменить и пес с ним
-			this.data[key].request?.abort(); // отменим предидущий запрос
-		} catch (error) {
-			console.error('Ошибка при отмене запроса:', error);
-		}
-		
-		(this.data[key].request = request
-		.get(this.getUrl(key)))
-		.set('Accept', 'application/json')
-		.set('X-Requested-With', 'XMLHttpRequest')
-		//.withCredentials() // https://visionmedia.github.io/superagent/#cors
-		.then(response => {
-			console.log('data loaded', response);
-			let status = typeof response !== 'undefined' ? response.status : 500;
-			if (status !== 200) {
-				this.data[key].err = 'error code: ' + status;
-				return end(this.prepareItemForStore(key, this.data[key]));
-			}
-
-			this.data[key].request = null;
-			this.data[key].loaded = Date.now(); //new Date();
-			this.data[key].item = response.body;
-
-			return end(this.prepareItemForStore(key, this.data[key]));
-
-		}, err => {
-			console.log('load data error', err);
-			if (err.timeout) { 
-				this.data[key].err = 'error timeout';
-			} else {
-				this.data[key].err = 'other error';
-			}
-			
-			return end(this.prepareItemForStore(key, this.data[key]));
-		});/* */
-
 		// блок тестирования
 		/*setTimeout(() => {
 			//this.data[key].request = null;
@@ -167,32 +131,6 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 		return null;
 	}
 
-	join_url_params(g: Hash<string | string[]>, clearEmpty: boolean = false): string {
-		var l = new Array();
-		for (var i in g) {
-			//Console.log('...', i, typeof g[i])
-
-			if (typeof g[i] === 'undefined') continue;
-			if (typeof g[i] === 'string') {
-				// в теории! в таком случае не надо проверять hasOwnProperty (see sample in https://www.typescriptlang.org/docs/handbook/modules.html)
-				//if (g.hasOwnProperty(i)) {
-				if (clearEmpty && g[i] == '') continue;
-
-				//Console.log('->', i, g[i]);
-				l.push(encodeURIComponent(i) + '=' + encodeURIComponent(g[i] as string));
-				//}
-			} /*else {
-				// массив
-
-				// здесь игнорим clearEmpty так как передается массив
-				if ((g[i] as string[]).length == 0) continue;
-
-				//Console.log('...', i, (g[i] as string[]).map((item) => encodeURIComponent(i) + '[]=' + encodeURIComponent(item)));
-				[].push.apply(l, (g[i] as string[]).map((item) => encodeURIComponent(i) + '=' + encodeURIComponent(item)));
-			}*/
-		}
-		return l.join('&');
-	};
 	abstract getTestItem(key: string): T;
 	abstract getUrl(key: string, params: Hash<string>): string;
 	abstract prepareItemForStore(key: string, item: iWrapLoadableItem<T>): iWrapLoadableItem<T>;
