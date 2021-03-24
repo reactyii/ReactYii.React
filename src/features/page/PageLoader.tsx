@@ -50,7 +50,7 @@ class PageLoader extends React.Component<Props, State> {
 
 	protected loadPage(path: string) {
 		// добавим дату последнего изменения данных сайта
-		Console.log('session', this.props.session);
+		//Console.log('session', this.props.session);
 		let params: Hash<string> = {};
 		if (typeof this.props.session !== 'undefined' && typeof this.props.session.site !== 'undefined') {
 			
