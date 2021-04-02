@@ -36,7 +36,7 @@ export interface iPage extends iLoadableItem {
 	section?: string;
 	template: string;
 	layout: string;
-	contents: iContent[];
+	content: iContent[];
 	seo: iSeo;
 	session?: iSession; // данные о сайте грузим вместе со страницей, если в сессии что то изменилось с последнего обновления, то придет новая сессия, если нового нет значит юзаем старую
 }

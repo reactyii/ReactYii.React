@@ -13,5 +13,5 @@ export interface iContent {
 }
 
 export interface iContentProps {
-    content: iContent;
+    content: iContent[];
 }

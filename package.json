@@ -17,6 +17,7 @@
     "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.5",
     "@types/superagent": "^4.1.7",
+    "html-react-parser": "^1.2.4",
     "isomorphic-fetch": "^3.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
