@@ -1,4 +1,5 @@
-import {iTemplate} from './templateModels';
+import { ContentType, Hash } from "./commonModels";
+
 export interface iContent {
     id: string;
     name: string;
@@ -6,12 +7,18 @@ export interface iContent {
     parent_id: number | null;
     path: string;
     content: string;
-    type: string;
-    childs: iContent[] | undefined;
-	template_keys: string[];
-	template: iTemplate;
+    //type: string;
+    childs?: iContent[];
+    content_keys: string[];
+    settings?: Hash<string>;
+    
+    //template: iTemplate;
+    type: ContentType | null;
+    template: string | null;
+    template_key: string | null;
 }
 
 export interface iContentProps {
     content: iContent[];
+    settings?: Hash<string>;
 }
