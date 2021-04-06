@@ -4,7 +4,7 @@
 // https://www.npmjs.com/package/html-react-parser
 import Parser from 'html-react-parser';
 
-import { Hash } from '../models/commonModels';
+import { Console, Hash } from '../models/commonModels';
 import { Content } from './Content';
 import { iContent, iContentProps } from '../models/contentModels';
 
@@ -20,40 +20,60 @@ import { iContent, iContentProps } from '../models/contentModels';
 interface iState { }
 interface iProps {
     html: string;
-    data?: Hash<iContent>;
+    //data?: Hash<iContent>;
+    data?: iContent[];
 }
 
 export class Html extends React.Component<iProps, {}>{//React.Component<iProps, {}> {
     public render() {
-        /*
-        //let html = this.props.html;
-        let html = this.props.content.widget.template as string; // на null проверено снаружи
-        if (html.indexOf('<custom ') >= 0) throw new Error(Lang.get('CustomTemplateError') as string);
+        
+        let html = this.props.html;
+        //let html = this.props.content.widget.template as string; // на null проверено снаружи
+        //if (html.indexOf('<custom ') >= 0) throw new Error(Lang.get('CustomTemplateError') as string);
 
-        const data = this.props.widget.data;
+        const data: iContent[] = typeof this.props.data !== 'undefined' ? this.props.data : [];
 
+        // ---------------------------------------------------------------------------------------------------------------------------
+        // NB!!! использовать произвольный элемент типа <custom /> идея плохая так как если мы вставляем его в <table> то парсер вытащит его наружу таблицы!
+        // и мы получим <custom /><table></table> вместо <table><custom /></table> (ну или если кастом это <tr> то <tr></tr><table></table> вместо <table><tr></tr></table>)
+        // ---------------------------------------------------------------------------------------------------------------------------
+        let htmls:Hash<iContent[]> = {};
         if (typeof data !== 'undefined') {
-            const keys = Object.keys(data);
-            for (let i = 0, l = keys.length; i < l; i++) {
-                html = html.replace('{{' + keys[i] + '}}', '<custom name="' + keys[i] + '" />');
+            //const keys = Object.keys(data);
+            for (let i = 0, l = data.length; i < l; i++) {
+
+                // --------------------
+                // !!!!!!!!!!!! не учтен случай когда в 1 {{COLS}} вставляются 2 и более элемента
+                // --------------------
+
+                if (!data[i].content_keys || data[i].content_keys === null) continue;
+                // 1 единица контента может быть использована несколько раз
+                for (let j = 0, ll = data[i].content_keys.length; j < ll; j++) {
+                    html = html.replace('{{' + data[i].content_keys[j] + '}}', '<custom name="' + data[i].content_keys[j] + '" />');
+                    htmls[data[i].content_keys[j]] = [data[i]];
+                }
             }
         }
         html = html.replace(/{{[^}]+}}/g, '');
-        */
+        Console.log('..', html, htmls);
+        /**/
         return Parser(
-            this.props.html,//html,
+            html, // this.props.html
             {
                 replace: (domNode: any) => {
 
-                    //if (typeof data === 'undefined') return;
+                    if (typeof this.props.data === 'undefined') return;
                     //Console.log('...', domNode.name);
 
                     if (domNode.name == 'custom') { // протестировано. domNode.name всегда в нижнем регистре
-                        //const content = data[domNode.attribs.name]; // всегда должно существовать! см выше мы делаем замены
-                        //return <Content ref={ref => this.ref(content.id, ref)} content={content} page={this.props.page} parent={this.props.parent} />;
-                        return '';
+                        const content = htmls[domNode.attribs.name]; // всегда должно существовать! см выше мы делаем замены
+                        Console.log('...', domNode.name, domNode.attribs.name);
+                        return <Content content={content}  />;
+                        //return <tbody><tr><td>{domNode.attribs.name}</td></tr></tbody>;
+                        
                     }
                 }
-            });
+            }
+        );
     }
 }
