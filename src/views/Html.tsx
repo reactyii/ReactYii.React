@@ -42,15 +42,12 @@ export class Html extends React.Component<iProps, {}>{//React.Component<iProps, 
             //const keys = Object.keys(data);
             for (let i = 0, l = data.length; i < l; i++) {
 
-                // --------------------
-                // !!!!!!!!!!!! не учтен случай когда в 1 {{COLS}} вставляются 2 и более элемента
-                // --------------------
-
                 if (!data[i].content_keys || data[i].content_keys === null) continue;
                 // 1 единица контента может быть использована несколько раз
                 for (let j = 0, ll = data[i].content_keys.length; j < ll; j++) {
                     html = html.replace('{{' + data[i].content_keys[j] + '}}', '<custom name="' + data[i].content_keys[j] + '" />');
-                    htmls[data[i].content_keys[j]] = [data[i]];
+                    if (typeof htmls[data[i].content_keys[j]] === 'undefined') htmls[data[i].content_keys[j]] = [];
+                    htmls[data[i].content_keys[j]].push(data[i]);
                 }
             }
         }
