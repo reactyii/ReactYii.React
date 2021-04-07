@@ -12,9 +12,13 @@ export class Content extends React.Component<iContentProps, {}> {
 			//Console.log('-->', item.type, item.template, item);
 			
 			if (item.template) { // контент с шаблоном из БД
-				Console.log('==>', item);
+				//Console.log('==>', item);
 
-				let childs: iContent[] = typeof item.childs !== 'undefined' && item.childs.length > 0 ? item.childs : [{ id: item.id, type:null, name: '', content: item.content, priority: 100, content_keys: ['CONTENT'], parent_id: null, path: '' } as iContent];
+				// для простоты (чтобы не делать еще оин уровен в дереве) если у ноды нет потомков и есть и шаблон и контент то контент перенесем в потомки
+				let childs: iContent[] = typeof item.childs !== 'undefined' && item.childs.length > 0
+					? item.childs :
+					[{ id: item.id, name: '', content: item.content, priority: 100, content_keys: ['CONTENT'], parent_id: null, path: '', type: null, template: null, template_key: null }];
+
 				return <Html key={item.id} html={item.template} data={childs} />;
 			}
 
@@ -40,10 +44,14 @@ export class Content extends React.Component<iContentProps, {}> {
 
 			// здесь контент как html
 			if (item.type === null) return <Html key={item.id} html={item.content} />;//item.content;
-			if (item.type === ContentType.String) return item.content;
-			// допилить другие примитивы ...
+			// хм а вот такого наверное не будет так как list у нас всегда с шаблоном идет
+			if (item.type === ContentType.List) {
 
-			return '';
+			}
+			// допилить другие примитивы ...
+			// ...
+			
+			return item.content; //if (item.type === ContentType.String)
 		});
 	}
 }

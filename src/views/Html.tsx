@@ -52,7 +52,7 @@ export class Html extends React.Component<iProps, {}>{//React.Component<iProps, 
             }
         }
         html = html.replace(/{{[^}]+}}/g, '');
-        Console.log('..', html, htmls);
+        //Console.log('..', html, htmls);
         /**/
         return Parser(
             html, // this.props.html
@@ -64,7 +64,7 @@ export class Html extends React.Component<iProps, {}>{//React.Component<iProps, 
 
                     if (domNode.name == 'custom') { // протестировано. domNode.name всегда в нижнем регистре
                         const content = htmls[domNode.attribs.name]; // всегда должно существовать! см выше мы делаем замены
-                        Console.log('...', domNode.name, domNode.attribs.name);
+                        //Console.log('...', domNode.name, domNode.attribs.name);
                         return <Content content={content}  />;
                         //return <tbody><tr><td>{domNode.attribs.name}</td></tr></tbody>;
                         

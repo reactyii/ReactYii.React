@@ -1,11 +1,12 @@
 export interface Hash<T> { [s: string]: T; }
 export enum ContentType {
-	Text = "TEXT",
-	String = "STRING",
-	Int = "INT",
-	List = "LIST",
-	Tree = "TREE",
-	Img = "IMG",
+    // это не используем так как это по умолчанию и в котенте (шаблоне) стоит null
+    //Text = "TEXT",
+    String = "string",
+    Number = "number",
+    List = "list",
+    Tree = "tree",
+    Img = "img",
 }
 export interface iUser {
     id: number;
