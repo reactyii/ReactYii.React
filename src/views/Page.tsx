@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { Layouts } from './layouts';
+//import { Layouts } from './layouts';
+import { Templates } from './templates';
 
 import {
 	Link,
@@ -26,7 +27,7 @@ export class Page extends React.Component<iPageProps, {}> {
 
 	public renderLayout(layout: string, content: React.ReactNode) {
 		//Console.log('-->', layout, (typeof Layouts[layout] !== 'undefined' ? Layouts[layout] : Layouts.Layout));
-		return React.createElement(typeof Layouts[layout] !== 'undefined' ? Layouts[layout] : Layouts.Layout,
+		return React.createElement(typeof Templates[layout] !== 'undefined' ? Templates[layout] : Templates.Layout,
 			{ ...this.props },
 			content
 		);
