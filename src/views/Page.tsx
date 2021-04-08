@@ -20,16 +20,20 @@ export class Page extends React.Component<iPageProps, {}> {
 
 	// дадим возможность переопределить в шаблонах
 	renderSEO() {
-		return <HelmetProvider>
+		return <HelmetProvider key="seo">
 			<Helmet title={this.props.pageWraper?.item?.seo.title} />
 		</HelmetProvider>;
 	}
 
-	public renderLayout(layout: string, content: React.ReactNode) {
+	public renderLayout(layout: string) {
 		//Console.log('-->', layout, (typeof Layouts[layout] !== 'undefined' ? Layouts[layout] : Layouts.Layout));
 		return React.createElement(typeof Templates[layout] !== 'undefined' ? Templates[layout] : Templates.Layout,
-			{ ...this.props },
-			content
+			{
+				content: this.props.pageWraper?.item?.content && typeof this.props.pageWraper?.item?.content !== 'undefined' ? this.props.pageWraper?.item?.content : [],
+				settings: null,
+				key: 'layout'
+			},
+			null//<Html key={item.id} html={item.content} />
 		);
 	}
 
@@ -63,15 +67,9 @@ export class Page extends React.Component<iPageProps, {}> {
 
 		let c: iContent[] = [];*/
 
-		const layout = this.props.pageWraper?.item?.layout ? this.props.pageWraper?.item?.layout : 'Layout';
 		return [
 			this.renderSEO(),
-			React.createElement(typeof Templates[layout] !== 'undefined' ? Templates[layout] : Templates.Layout,
-			{
-				content: this.props.pageWraper?.item?.content && typeof this.props.pageWraper?.item?.content !== 'undefined' ? this.props.pageWraper?.item?.content : [],
-				settings: null
-			},
-			null//<Html key={item.id} html={item.content} />
-		)];
+			this.renderLayout(this.props.pageWraper?.item?.layout ? this.props.pageWraper?.item?.layout : 'Layout')
+		];
 	}
 }
