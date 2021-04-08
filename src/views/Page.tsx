@@ -63,14 +63,15 @@ export class Page extends React.Component<iPageProps, {}> {
 
 		let c: iContent[] = [];*/
 
-		//Console.log('----->', this.props.pageWraper?.item?.content);
-		let contentPage = this.props.pageWraper?.item?.content && typeof this.props.pageWraper?.item?.content !== 'undefined' ?
-			<Content content={this.props.pageWraper.item.content.filter(item => {
-				//Console.log('----->', item.template_keys);
-				// 
-				return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
-			})} />
-			: [];
-		return this.renderLayout(this.props.pageWraper?.item?.layout ? this.props.pageWraper?.item?.layout : 'Layout', contentPage);
+		const layout = this.props.pageWraper?.item?.layout ? this.props.pageWraper?.item?.layout : 'Layout';
+		return [
+			this.renderSEO(),
+			React.createElement(typeof Templates[layout] !== 'undefined' ? Templates[layout] : Templates.Layout,
+			{
+				content: this.props.pageWraper?.item?.content && typeof this.props.pageWraper?.item?.content !== 'undefined' ? this.props.pageWraper?.item?.content : [],
+				settings: null
+			},
+			null//<Html key={item.id} html={item.content} />
+		)];
 	}
 }
