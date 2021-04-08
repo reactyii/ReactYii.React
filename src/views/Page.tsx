@@ -67,9 +67,9 @@ export class Page extends React.Component<iPageProps, {}> {
 			<Content content={this.props.pageWraper.item.content.filter(item => {
 				//Console.log('----->', item.template_keys);
 				// 
-				return typeof item.content_keys === 'undefined';// || item.template_keys?.indexOf('') >= 0;
+				return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
 			})} />
 			: [];
-		return this.renderLayout('Layout', contentPage);
+		return this.renderLayout(this.props.pageWraper?.item?.layout ? this.props.pageWraper?.item?.layout : 'Layout', contentPage);
 	}
 }
