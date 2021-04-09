@@ -55,15 +55,19 @@ export class Content extends React.Component<iContentProps, {}> {
 			}
 
 			// примитивы 
+
 			// здесь контент как html
+			// но https://reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml мы тут заюзать не сможем, так как вот так не прокатывает < dangerouslySetInnerHTML={{ __html: item.content}}></>
 			if (item.type === null) return <Html key={item.id} html={item.content} />;// <span key={item.id} dangerouslySetInnerHTML={{ __html: item.content}}></span>;
+
 			// хм а вот такого наверное не будет так как list у нас всегда с шаблоном (причем сложным) идет (фильтры, пагинатор, сами элементы списка)
 			if (item.type === ContentType.List) {
-				
+
 			}
+
 			// допилить другие примитивы ...
 			// ...
-			
+
 			return item.content; //if (item.type === ContentType.String)
 		});
 	}
