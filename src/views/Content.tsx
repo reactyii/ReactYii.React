@@ -45,7 +45,7 @@ export class Content extends React.Component<iContentProps, {}> {
 						null//<Html key={item.id} html={item.content} />
 					);
 				} else {
-					Console.error('Template component not founded!');
+					Console.error('Template component "' + item.template_key + '" not founded!');
 					return null;
 				}
 			}
