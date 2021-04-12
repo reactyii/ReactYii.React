@@ -1,4 +1,6 @@
-import { ContentType, Hash } from "./commonModels";
+import { iWrapLoadableItem } from "./baseRepository";
+import { ContentType, Hash, iSession } from "./commonModels";
+import { iPage } from "./pageModels";
 
 export interface iContent {
     id: string;
@@ -21,4 +23,6 @@ export interface iContent {
 export interface iContentProps {
     content: iContent[];
     settings?: Hash<string>;
+    pageWraper?: iWrapLoadableItem<iPage>; // чтоб знать сам момент загрузки
+    session?: iSession;
 }

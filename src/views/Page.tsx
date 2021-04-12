@@ -31,6 +31,8 @@ export class Page extends React.Component<iPageProps, {}> {
 			{
 				content: this.props.pageWraper?.item?.content && typeof this.props.pageWraper?.item?.content !== 'undefined' ? this.props.pageWraper?.item?.content : [],
 				settings: null,
+				pageWraper: this.props.pageWraper,
+				session: this.props.session,
 				key: 'layout'
 			},
 			null//<Html key={item.id} html={item.content} />

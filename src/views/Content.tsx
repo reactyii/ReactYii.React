@@ -24,7 +24,7 @@ export class Content extends React.Component<iContentProps, {}> {
 				//Console.log('==>', item);
 
 				// для простоты (чтобы не делать еще оин уровень в дереве) если у ноды нет потомков и есть и шаблон и контент то контент перенесем в потомки
-				return <Html key={item.id} html={item.template} data={this._prepareChilds(item)} />;
+				return <Html key={item.id} html={item.template} data={this._prepareChilds(item)} pageWraper={this.props.pageWraper} session={this.props.session}/>;
 			}
 
 			// контент с шаблоном - компонентом реакта
@@ -38,7 +38,10 @@ export class Content extends React.Component<iContentProps, {}> {
 					// не будем предавать ничего через this.props.children
 					return React.createElement(Templates[item.template_key],
 						// в пропсах прокидываем чилдсов и настройки
-						{ content: this._prepareChilds(item), settings: item.settings, key: item.id },
+						{
+							content: this._prepareChilds(item), settings: item.settings, key: item.id,
+							pageWraper: this.props.pageWraper, session: this.props.session
+						},
 						null//<Html key={item.id} html={item.content} />
 					);
 				} else {
@@ -51,7 +54,7 @@ export class Content extends React.Component<iContentProps, {}> {
 			if (typeof item.childs !== 'undefined' && item.childs.length > 0) {
 				// вот думаю если есть item.content, то надо его передать или нет?
 				// НЕ НАДО! так как у нас идет преопределение, например, языка или инфы для раздела
-				return <Content key={item.id} content={item.childs} />;
+				return <Content key={item.id} content={item.childs} pageWraper={this.props.pageWraper} session={this.props.session} />;
 			}
 
 			// примитивы 

@@ -13,7 +13,7 @@ export class Layout extends React.Component<iContentProps, {}> {
 
         const content = <Content content={this.props.content.filter(item => {
             return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
-        })} />
+        })} pageWraper={this.props.pageWraper} session={this.props.session} />
 
         return <div className="page"><b>Layout</b> 
             <div className="page-main">

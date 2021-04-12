@@ -7,6 +7,7 @@ import { iSeo, iSession } from './commonModels';
 
 export interface iPageProps {
 	pageWraper?: iWrapLoadableItem<iPage>;
+	session?: iSession;
 	loadingPath: string;
 }
 
