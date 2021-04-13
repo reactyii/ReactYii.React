@@ -1,15 +1,22 @@
 import * as React from 'react';
 //import { Console, ContentType } from '../../models/commonModels';
-import { iContentProps } from '../../models/contentModels';
+import { iContent, iContentProps } from '../../models/contentModels';
 import { List } from './List';
 
 export class ListContent extends List {
 
-	renderHeader() {
+	renderRow(content: iContent) {
+
+		return <div key={content.id}>
+			<b>{content.id}</b> {content.name}
+		</div>;
+	}
+
+/*	renderHeader(content: iContent[]) {
 
 	}
 
-	renderRow() {
+	renderRow(content: iContent[]) {
 
 	}
 
@@ -25,7 +32,7 @@ export class ListContent extends List {
 
 	}
 
-	/*render() {
+	render() {
 		//Console.log('hhhhhhhhhhhh1', this.props.content);
 
 		// протестируем передачу настроек в компоненты
