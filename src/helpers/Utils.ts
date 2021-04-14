@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Hash, iSession } from '../models/commonModels';
-//import { iPage } from '../models/pageModels';
+import { Hash, iSession, iSite } from '../models/commonModels';
+import { iPage } from '../models/pageModels';
 
 export class Utils {
 
@@ -18,46 +18,15 @@ export class Utils {
         });
     }
 
-    /* // доработать
-    static makeUrl(current: iPage | null, page: iMenu, pageNumber: string = '', path: string = '', gets: string = ''): string {
-        if (current == null) return '#'; // текущая страница пока не прогружена
-        let res = '';
+    // доработать
+    static makeUrl(currentPage: iPage, newPage: iPage, site: iSite, contentArgs: string = '', gets: string = ''): [string, string] {
+        // с курент страницы берем язык
+        let host = '';
+        let url = '/' + (currentPage.lang ? currentPage.lang + '/' : '');
 
-        // дефолтный язык может! присутствовать в урле (адрес с дефолтным языком должен быть запрещен к индексации)
-        // при первом посещении сайта мы можем сделать редирект на автоматически выбранный язык, 
-        // при принудительной установке языка мы должны это запомнить и в след раз делать редирект уже на выбранный юзером язык
-        if (current.culture != null ) res += '/' + current.culture.lang;
 
-        if (page.isSection) { // линк на главную в разделе
-            if (!page.isDefault) {
-                res += '/' + page.page + '/index';
-            } else {
-                res += '/index';
-            }
-        } else {
-            // дефолтный раздел не должен присутствовать в урле
-            if (current.section != null && !current.section.isDefault) res += '/' + current.section.page;
-
-            if (!page.isDefault) {
-                res += '/' + page.page;// + '.html';
-            } else {
-                res += '/index';//+'.html';
-            }
-
-            // номер страницы
-            if (pageNumber != '') res += '.' + pageNumber;
-
-            if (path != '') res += '/' + path;
-        }
-
-        if (!res.endsWith('.html')) res += '.html';
-
-        if (res == '/index.html') res = '/'; // исключение тока для самой главной!
-
-        if (gets != '') res += '?' + gets;
-
-        return res;
-    }*/
+        return [host, url];
+    }/**/
 
     // формат строки с бэкенда пока такой: 2018-03-30T00:00:00+03:00
     // на выход по дизайну 22/12/2017

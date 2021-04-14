@@ -18,8 +18,8 @@ export interface iUser {
 export interface iSection {
     id: string;
     name: string;
-    code: string | null;
-    page: string; // для формирования урла
+    //code: string | null;
+    path: string; // для формирования урла
     host: string | null;
     icon: string | null;
     isDefault: boolean;
@@ -53,20 +53,25 @@ export interface iSeo {
 
 export interface iLanguage {
     name: string;
-    lang: string; // для формирования урла
+    path: string; // для формирования урла
+    is_default: boolean;
     icon: string | null;
     isDefault: boolean;
 }
 export interface iMenu {
     id: string;
     name: string;
-    code: string | null;
-    page: string; // для формирования урла
-    icon: string | null;
-    isSection: boolean;
-    isDefault: boolean;
-    //childs: iMenu[];
-    parents: string[]; // чтобы тип не приводить
+    menu_name: string;
+    //code: string | null;
+    //content_keys: string[];
+    path: string; // для формирования урла
+    //icon: string | null;
+    is_all_section: boolean;
+    is_current_section: boolean;
+    section_id: number;
+    //is_default: boolean;
+    childs: iMenu[];
+    //parents: string[]; // чтобы тип не приводить
 }
 
 export class Console {

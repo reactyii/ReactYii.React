@@ -8,7 +8,7 @@ class PageRepository extends BaseRepository<iPage>{
 	protected readonly enableCache: boolean = false;
 	getTestItem(key: string): iPage {
 		return {
-			path: key, template: '', layout: '', content: [], seo: { title: 'loading...', description: '', keywords: '' }
+			path: key, layout: '', content: [], seo: { title: 'loading...', description: '', keywords: '' }, lang: null, section: null
 		};
 	}
 	getUrl(key: string, params: Hash<string>): string {

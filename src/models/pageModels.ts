@@ -3,7 +3,7 @@ import { match } from "react-router";
 
 import { iContent } from './contentModels';
 import { iLoadableItem, iWrapLoadableItem  } from './baseRepository';
-import { iSeo, iSession } from './commonModels';
+import { iLanguage, iSection, iSeo, iSession } from './commonModels';
 
 export interface iPageProps {
 	pageWraper?: iWrapLoadableItem<iPage>;
@@ -33,10 +33,10 @@ export interface iPageStoreState {
 
 export interface iPage extends iLoadableItem {
 	readonly path: string; // путь по которому загружена страница
-	lang?: string;
-	section?: string;
-	template: string;
-	layout: string;
+	lang: iLanguage | null;
+	section: iSection | null;
+	//template: string;
+	layout: string | null;
 	content: iContent[];
 	seo: iSeo;
 	session?: iSession; // данные о сайте грузим вместе со страницей, если в сессии что то изменилось с последнего обновления, то придет новая сессия, если нового нет значит юзаем старую

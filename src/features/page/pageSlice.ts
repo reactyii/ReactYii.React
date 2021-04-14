@@ -49,7 +49,7 @@ export const pageSlice = createSlice({
 		// Use the PayloadAction type to declare the contents of `action.payload`
 		endLoadPage: (state, action: PayloadAction<iWrapLoadableItem<iPage>>) => {
 
-			Console.log('endLoadPage:', action.payload.key, 'loadingPath=', state.loadingPath);
+			//Console.log('endLoadPage:', action.payload.key, 'loadingPath=', state.loadingPath);
 
 			// нужно проверить может быть юзер уже грузит другую страницу
 			if (state.loadingPath !== action.payload.key) return;

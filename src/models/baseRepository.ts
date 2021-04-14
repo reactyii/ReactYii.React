@@ -86,7 +86,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 				return Promise.reject({ status: res.status, statusText: res.statusText });
 			}
 		}).then(response => {
-			Console.log('data loaded', response);
+			//Console.log('data loaded', response);
 			/*let status = typeof response !== 'undefined' ? response.status : 500;
 			if (status !== 200) {
 				this.data[key].err = 'error code: ' + status;
