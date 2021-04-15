@@ -35,9 +35,11 @@ export interface iPage extends iLoadableItem {
 	readonly path: string; // путь по которому загружена страница
 	lang: iLanguage | null;
 	section: iSection | null;
+	section_id: number | null;
 	//template: string;
 	layout: string | null;
 	content: iContent[];
+	is_current_section: boolean;
 	seo: iSeo;
 	session?: iSession; // данные о сайте грузим вместе со страницей, если в сессии что то изменилось с последнего обновления, то придет новая сессия, если нового нет значит юзаем старую
 }

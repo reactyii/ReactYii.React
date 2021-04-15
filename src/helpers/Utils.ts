@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Hash, iSession, iSite } from '../models/commonModels';
+import { Console, Hash, iMenu, iSession, iSite } from '../models/commonModels';
 import { iPage } from '../models/pageModels';
 
 export class Utils {
@@ -19,13 +19,43 @@ export class Utils {
     }
 
     // доработать
-    static makeUrl(currentPage: iPage, newPage: iPage, site: iSite, contentArgs: string = '', gets: string = ''): [string, string] {
+    static makeUrl(currentPage: iPage, newPage: iPage | iMenu, site: iSite, contentArgs: string = '', gets: Hash<string | string[]> = {}): [string, string] {
         // с курент страницы берем язык
-        let host = '';
+        let host = site.main_host;
         let url = '/' + (currentPage.lang ? currentPage.lang + '/' : '');
 
+        // раздел 
+        const section = newPage.is_current_section && currentPage.section_id ?
+            site.sections_hash[currentPage.section_id] :
+            (newPage.section_id ? site.sections_hash[newPage.section_id] : undefined);
 
-        return [host, url];
+        if (typeof section !== 'undefined') {
+            if (section.host !== null) { // раздел в поддоменах
+                host = section.host;
+            } else if (section.path) {
+                url += section.path + '/';
+            } else  {
+                Console.error('В разделе "' + section.name + '" не указан ни path ни host.');
+                // по идее мы не сможем корректно сформирвоать урл, но пока продолжим работу
+            }
+        }
+
+        // адрес страницы
+        url += newPage.path;// даже если там index ибо нам надо обработать еще contentArgs
+
+        if (contentArgs !== '') {
+            url += '/' + contentArgs; // уже сформированный model/0 или model/itempath или model/0/filter_args
+        }
+
+        url += '.html';
+
+        // думаю нужно ли убирать с конца index.html
+        //url = (strrpos($path, '.html') === strlen($path) - 5 ? substr($path, 0, strlen($path) - 5) : $path)
+        url = (url.indexOf('index.html') === url.length - 10 ? url.substring(0, url.length - 10) : url);
+
+        url = Utils.merge_gets(url, gets);
+
+        return [host, url]; // возвращаем не полный путь так как выше (в вызывающем компоненте) нам понадобится узнать у какой элемент лепить <a> или <Link> в зависимости от того совпадают домены или нет
     }/**/
 
     // формат строки с бэкенда пока такой: 2018-03-30T00:00:00+03:00

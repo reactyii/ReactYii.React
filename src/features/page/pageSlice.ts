@@ -3,7 +3,7 @@ import { AppThunk, RootState } from '../../app/store';
 import {iPageStoreState, iPage} from '../../models/pageModels';
 import { pageRepository } from '../../models/pageRepository';
 import { iWrapLoadableItem } from '../../models/baseRepository';
-import { Console, Hash } from '../../models/commonModels';
+import { Console, Hash, iSection } from '../../models/commonModels';
 
 // https://github.com/stereobooster/react-snap
 // Grab the state from a global variable injected into the server-generated HTML
@@ -61,6 +61,10 @@ export const pageSlice = createSlice({
 			if (typeof action.payload.item?.session?.site !== 'undefined') {
 				Console.log('setSite:', action.payload.item.session.site);
 				state.session.site = action.payload.item.session.site;
+				let _hash: Hash<iSection> = {};
+				if (typeof state.session.site !== 'undefined')
+					state.session.site.sections.map(s => { _hash['_' + s.id] = s; });
+				state.session.site.sections_hash = _hash;
 			}
 			if (typeof action.payload.item?.session?.user !== 'undefined') {
 				state.session.user = action.payload.item.session.user;

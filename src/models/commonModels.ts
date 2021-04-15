@@ -29,6 +29,7 @@ export interface iSite {
     name: string;
     langs: iLanguage[];
     sections: iSection[];
+    sections_hash: Hash<iSection>; // заполняем строго при получении (нужно для формирования ссылок)
     main_host: string;
     menus: iMenu[];//Hash<iMenu>;
     lastModified: number; // здесь будем передавать время последнего изменения сайта (языков, меню, разделов и прочего)
@@ -68,7 +69,7 @@ export interface iMenu {
     //icon: string | null;
     is_all_section: boolean;
     is_current_section: boolean;
-    section_id: number;
+    section_id: number | null;
     //is_default: boolean;
     childs: iMenu[];
     //parents: string[]; // чтобы тип не приводить
