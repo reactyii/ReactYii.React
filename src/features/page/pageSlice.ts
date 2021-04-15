@@ -59,6 +59,7 @@ export const pageSlice = createSlice({
 			state.pageWraper = action.payload;
 			if (typeof state.session === 'undefined') state.session = {};
 			if (typeof action.payload.item?.session?.site !== 'undefined') {
+				Console.log('setSite:', action.payload.item.session.site);
 				state.session.site = action.payload.item.session.site;
 			}
 			if (typeof action.payload.item?.session?.user !== 'undefined') {

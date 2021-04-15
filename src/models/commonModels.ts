@@ -21,8 +21,8 @@ export interface iSection {
     //code: string | null;
     path: string; // для формирования урла
     host: string | null;
-    icon: string | null;
-    isDefault: boolean;
+    //icon: string | null;
+    //is_default: boolean; // раздела по умолчанию нет - там null
 }
 export interface iSite {
     id: number;
@@ -56,7 +56,6 @@ export interface iLanguage {
     path: string; // для формирования урла
     is_default: boolean;
     icon: string | null;
-    isDefault: boolean;
 }
 export interface iMenu {
     id: string;
