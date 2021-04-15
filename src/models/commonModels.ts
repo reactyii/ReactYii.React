@@ -29,7 +29,8 @@ export interface iSite {
     name: string;
     langs: iLanguage[];
     sections: iSection[];
-    menus: Hash<iMenu>;
+    main_host: string;
+    menus: iMenu[];//Hash<iMenu>;
     lastModified: number; // здесь будем передавать время последнего изменения сайта (языков, меню, разделов и прочего)
 }
 export interface iSession {
