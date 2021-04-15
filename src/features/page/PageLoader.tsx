@@ -73,7 +73,7 @@ class PageLoader extends React.Component<Props, State> {
 		//let { path } = useParams();
 		//let path = '';
 		//let location = useLocation();
-		return <Page pageWraper={this.props.pageWraper} loadingPath={this.props.loadingPath} />;
+		return <Page pageWraper={this.props.pageWraper} loadingPath={this.props.loadingPath} session={this.props.session} />;
 	}
 }
 
