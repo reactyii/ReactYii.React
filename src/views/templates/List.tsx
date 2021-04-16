@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Console } from '../../models/commonModels';
+import { Utils } from '../../helpers/Utils';
+import { Console, Hash } from '../../models/commonModels';
 //import { Console, ContentType } from '../../models/commonModels';
 import { iContent, iContentProps } from '../../models/contentModels';
 import { Content } from '../Content';
@@ -31,7 +32,17 @@ export class List extends React.Component<iContentProps, {}> {
 	}
 
 	renderPages() {
-		return <Paginator content={[]} pageWraper={this.props.pageWraper} session={this.props.session} settings={this.props.settings} />;
+		if (typeof this.props.settings === 'undefined') return null;
+		if (typeof this.props.pageWraper?.item === 'undefined' || this.props.pageWraper?.item === null) return null;
+		if (typeof this.props.session?.site === 'undefined') return null;
+
+		let settings: Hash<string> = Utils.clone(this.props.settings);
+		const [not_used_host, url] = Utils.makeUrl(this.props.pageWraper.item, this.props.pageWraper.item, this.props.session.site, settings.list_path + '/{{PAGE}}');
+		settings.base_url = url;
+		const [not_used_host1, url1] = Utils.makeUrl(this.props.pageWraper.item, this.props.pageWraper.item, this.props.session.site, '');
+		settings.first_url = url1;
+
+		return <Paginator content={[]} pageWraper={this.props.pageWraper} session={this.props.session} settings={settings} />;
 	}
 
 	getChilds() {
@@ -39,9 +50,9 @@ export class List extends React.Component<iContentProps, {}> {
 	}
 
 	renderFounded() {
-		const countAll = this.props.settings?.count || '0';
-		const max_on_page = this.props.settings?.max_on_page || '0';
-		const offset = this.props.settings?.offset || '0';
+		const countAll = this.props.settings?.total_rows || '0';
+		const max_on_page = this.props.settings?.per_page || '0';
+		const offset = this.props.settings?.cur_page || '0';
 		
 		const count = this.getChilds().length;
 

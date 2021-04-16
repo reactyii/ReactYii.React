@@ -22,12 +22,14 @@ export class Utils {
     static makeUrl(currentPage: iPage, newPage: iPage | iMenu, site: iSite, contentArgs: string = '', gets: Hash<string | string[]> = {}): [string, string] {
         // с курент страницы берем язык
         let host = site.main_host;
-        let url = '/' + (currentPage.lang ? currentPage.lang + '/' : '');
+        let url = '/' + (currentPage.lang && !currentPage.lang.is_default ? currentPage.lang.path + '/' : '');
 
         // раздел 
         const section = newPage.is_current_section && currentPage.section_id ?
-            site.sections_hash[currentPage.section_id] :
+            site.sections_hash['_' + currentPage.section_id] :
             (newPage.section_id ? site.sections_hash[newPage.section_id] : undefined);
+
+        //Console.log('section:', newPage.section_id, section);
 
         if (typeof section !== 'undefined') {
             if (section.host !== null) { // раздел в поддоменах
@@ -145,7 +147,8 @@ export class Utils {
     static merge_gets(url: string, gets: Hash<string | string[]>): string {
         const tmp: string[] = url.split('?', 2);
         if (tmp.length === 1) {
-            tmp.push(Utils.join_url_params(gets));
+            const g = Utils.join_url_params(gets);
+            if (g) tmp.push(g);
         } else {
             tmp[1] = Utils.join_url_params({ ...Utils.split_url_params(tmp[1]), ...gets });
         }

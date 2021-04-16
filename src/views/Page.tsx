@@ -27,6 +27,7 @@ export class Page extends React.Component<iPageProps, {}> {
 
 	public renderLayout(layout: string) {
 		//Console.log('-->', layout, (typeof Layouts[layout] !== 'undefined' ? Layouts[layout] : Layouts.Layout));
+		//Console.log('-->', this.props.session);
 		return React.createElement(typeof Templates[layout] !== 'undefined' ? Templates[layout] : Templates.Layout,
 			{
 				content: this.props.pageWraper?.item?.content && typeof this.props.pageWraper?.item?.content !== 'undefined' ? this.props.pageWraper?.item?.content : [],
