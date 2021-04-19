@@ -35,22 +35,28 @@ export class Paginator extends React.Component<iContentProps, {}> {
 		return settings['base_url'].replace('{{PAGE}}', '' + page);
 	}
 
-	render() {
+	render_pages(pages: Hash<React.ReactNode>): React.ReactNode {
+
+		// для тестового примера мы просто рендерим всем линки как есть, но в переопределенных вариантах может понадодобится что-то вставить между ними
+		return Object.values(pages);
+	}
+
+	prepare_pages(): Hash<React.ReactNode> {
 		Console.log('hhhhhhhhhhhh1', this.props.settings);
-		if (typeof this.props.settings === 'undefined') return null;
+		if (typeof this.props.settings === 'undefined') return {};
 		const s = this.props.settings;
 		const per_page = +s['per_page']; // Max number of items you want shown per page
 		const total_rows = +s['total_rows']; // Total number of items (database results)
 
-		if (per_page === 0 || total_rows === 0) return null; // If our item count or per-page total is zero there is no need to continue.
+		if (per_page === 0 || total_rows === 0) return {}; // If our item count or per-page total is zero there is no need to continue.
 
 		const cur_page = +s['cur_page']; // The current page being viewed
 		const num_links = typeof s['num_links'] !== 'undefined' ? +s['num_links'] : 2; // Number of "digit" links to show before/after the currently viewed page
 
 		const num_pages = Math.ceil(total_rows / per_page);
 
-		if (num_pages === 1) return null; // Is there only one page? Hm... nothing more to do here then.
-		Console.log('==num_pages=', num_pages);
+		if (num_pages === 1) return {}; // Is there only one page? Hm... nothing more to do here then.
+		//Console.log('==num_pages=', num_pages);
 
 		// Calculate the start and end numbers. These determine
 		// which number to start and end the digit links with
@@ -58,28 +64,38 @@ export class Paginator extends React.Component<iContentProps, {}> {
 		const end = (((cur_page + num_links) < num_pages) ? cur_page + num_links : num_pages);
 
 		//const base_url = s['base_url'];  // The page we are linking to
-		let res = [this.render_first_link(this.url(s, 0))];
+
+		let res: Hash<React.ReactNode> = { 'first': this.render_first_link(this.url(s, 0)) };
 
 		Console.log('hhhhhhhhhhhh1', cur_page, num_links);
 		//let uri_page_number = cur_page;
 		if (cur_page != 0) {
-			res.push(this.render_prev_link(this.url(s, cur_page - 1), cur_page));
+			//res.push(this.render_prev_link(this.url(s, cur_page - 1), cur_page));
+			res['prev'] = this.render_prev_link(this.url(s, cur_page - 1), cur_page);
 		}
 
+		let pages = [];
 		for (let loop = start; loop < end; loop++) {
 			if (cur_page == loop) {
-				res.push(this.render_current(loop + 1));
+				pages.push(this.render_current(loop + 1));
 			} else {
-				res.push(this.render_page(this.url(s, loop), loop + 1));
+				pages.push(this.render_page(this.url(s, loop), loop + 1));
 			}
 		}
+		res['pages'] = pages;
 
 		if (cur_page < num_pages - 1) {
-			res.push(this.render_next_link(this.url(s, cur_page + 1), cur_page + 2));
+			//res.push(this.render_next_link(this.url(s, cur_page + 1), cur_page + 2));
+			res['next'] = this.render_next_link(this.url(s, cur_page + 1), cur_page + 2);
 		}
 
-		res.push(this.render_last_link(this.url(s, num_pages - 1), num_pages));
+		//res.push(this.render_last_link(this.url(s, num_pages - 1), num_pages));
+		res['last'] = this.render_last_link(this.url(s, num_pages - 1), num_pages);
 		
 		return res;
+	}
+
+	render() {
+		return this.render_pages(this.prepare_pages());
 	}
 }
