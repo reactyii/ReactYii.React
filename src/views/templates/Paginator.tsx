@@ -42,7 +42,7 @@ export class Paginator extends React.Component<iContentProps, {}> {
 	}
 
 	prepare_pages(): Hash<React.ReactNode> {
-		Console.log('hhhhhhhhhhhh1', this.props.settings);
+		//Console.log('pages settings:', this.props.settings);
 		if (typeof this.props.settings === 'undefined') return {};
 		const s = this.props.settings;
 		const per_page = +s['per_page']; // Max number of items you want shown per page
@@ -67,10 +67,8 @@ export class Paginator extends React.Component<iContentProps, {}> {
 
 		let res: Hash<React.ReactNode> = { 'first': this.render_first_link(this.url(s, 0)) };
 
-		Console.log('hhhhhhhhhhhh1', cur_page, num_links);
-		//let uri_page_number = cur_page;
+		//Console.log('hhhhhhhhhhhh1', cur_page, num_links);
 		if (cur_page != 0) {
-			//res.push(this.render_prev_link(this.url(s, cur_page - 1), cur_page));
 			res['prev'] = this.render_prev_link(this.url(s, cur_page - 1), cur_page);
 		}
 
@@ -85,11 +83,9 @@ export class Paginator extends React.Component<iContentProps, {}> {
 		res['pages'] = pages;
 
 		if (cur_page < num_pages - 1) {
-			//res.push(this.render_next_link(this.url(s, cur_page + 1), cur_page + 2));
 			res['next'] = this.render_next_link(this.url(s, cur_page + 1), cur_page + 2);
 		}
 
-		//res.push(this.render_last_link(this.url(s, num_pages - 1), num_pages));
 		res['last'] = this.render_last_link(this.url(s, num_pages - 1), num_pages);
 		
 		return res;

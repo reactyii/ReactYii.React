@@ -19,7 +19,12 @@ export class List extends React.Component<iContentProps, {}> {
 	}
 
 	renderFilter() {
+		Console.log(':::', this.props.content.filter(item => item.content_keys?.indexOf('FILTER') >= 0));
 		return this.drawContent('FILTER');
+	}
+
+	renderSort() {
+		return this.drawContent('SORT');
 	}
 
 	renderRow(content: iContent) {
@@ -37,7 +42,7 @@ export class List extends React.Component<iContentProps, {}> {
 		if (typeof this.props.session?.site === 'undefined') return null;
 
 		let settings: Hash<string> = Utils.clone(this.props.settings);
-		const [not_used_host, url] = Utils.makeUrl(this.props.pageWraper.item, this.props.pageWraper.item, this.props.session.site, settings.list_path + '/{{PAGE}}');
+		const [not_used_host, url] = Utils.makeUrl(this.props.pageWraper.item, this.props.pageWraper.item, this.props.session.site, settings.path + '/{{PAGE}}');
 		settings.base_url = url;
 		const [not_used_host1, url1] = Utils.makeUrl(this.props.pageWraper.item, this.props.pageWraper.item, this.props.session.site, '');
 		settings.first_url = url1;
@@ -60,11 +65,12 @@ export class List extends React.Component<iContentProps, {}> {
 	}
 
 	render() {
-		//Console.log('.....', this.props.settings);
+		Console.log('.....', this.props.settings);
 		return <>
 			{this.renderHeader()}
 			{this.renderFilter()}
 			{this.renderFounded()}
+			{this.renderSort()}
 			{this.renderList()}
 			{this.renderPages()}
 		</>;

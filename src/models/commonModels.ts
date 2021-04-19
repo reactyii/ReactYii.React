@@ -75,6 +75,10 @@ export interface iMenu {
     //parents: string[]; // чтобы тип не приводить
 }
 
+export interface iFieldState {
+    value: string | string[];
+}
+
 export class Console {
     public static log = process.env.NODE_ENV === 'development' ? console.log : (arg: any, ...args: any[]) => { /* empty */ };
     public static info = process.env.NODE_ENV === 'development' ? console.info : (arg: any, ...args: any[]) => { /* empty */ };
