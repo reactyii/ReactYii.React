@@ -30,24 +30,29 @@ export class Content extends React.Component<iContentProps, {}> {
 			// контент с шаблоном - компонентом реакта
 			if (item.template_key) {
 				//Console.log('::>', item.template, item.template_key);
+				const tkeys: string[] = item.template_key.indexOf(',') >= 0 ? item.template_key.split(',') : [item.template_key];
 
-				if (typeof Templates[item.template_key] !== 'undefined') {
+				for (let i = 0, l = tkeys.length; i < l; i++) {
+					let template_key = tkeys[i];
 
-					// в качестве вложения (this.props.children) передаем сгенеренный item.content, а потомков элемента передаем в пропсах
-					// !!!! а может не стоит предавать this.props.children (см ниже "контент потомки") чтобы например переопределить язык
-					// не будем предавать ничего через this.props.children
-					return React.createElement(Templates[item.template_key],
-						// в пропсах прокидываем чилдсов и настройки
-						{
-							content: this._prepareChilds(item), settings: item.settings, key: item.id,
-							pageWraper: this.props.pageWraper, session: this.props.session
-						},
-						null//<Html key={item.id} html={item.content} />
-					);
-				} else {
-					Console.error('Template component "' + item.template_key + '" not founded!');
-					return null;
+					if (typeof Templates[template_key] !== 'undefined') {
+
+						// в качестве вложения (this.props.children) передаем сгенеренный item.content, а потомков элемента передаем в пропсах
+						// !!!! а может не стоит предавать this.props.children (см ниже "контент потомки") чтобы например переопределить язык
+						// не будем предавать ничего через this.props.children
+						return React.createElement(Templates[template_key],
+							// в пропсах прокидываем чилдсов и настройки
+							{
+								content: this._prepareChilds(item), settings: item.settings, key: item.id,
+								pageWraper: this.props.pageWraper, session: this.props.session
+							},
+							null//<Html key={item.id} html={item.content} />
+						);
+					}
 				}
+				// не нашли ни одного шаблона с таким именем
+				Console.error('Template component "' + item.template_key + '" not founded!');
+				return null;
 			}
 
 			// контент потомки
