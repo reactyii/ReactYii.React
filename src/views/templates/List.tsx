@@ -19,7 +19,7 @@ export class List extends React.Component<iContentProps, {}> {
 	}
 
 	renderFilter() {
-		Console.log(':::', this.props.content.filter(item => item.content_keys?.indexOf('FILTER') >= 0));
+		//Console.log(':::', this.props.content.filter(item => item.content_keys?.indexOf('FILTER') >= 0));
 		return this.drawContent('FILTER');
 	}
 
@@ -65,7 +65,7 @@ export class List extends React.Component<iContentProps, {}> {
 	}
 
 	render() {
-		Console.log('.....', this.props.settings);
+		//Console.log('.....', this.props.settings);
 		return <>
 			{this.renderHeader()}
 			{this.renderFilter()}

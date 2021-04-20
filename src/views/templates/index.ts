@@ -5,8 +5,9 @@ import { ListContent } from './ListContent';
 import { Paginator } from './Paginator';
 import { Layout } from './Layout';
 import { Form } from './Form';
-import { FormFilterContent } from './FormFilterContent';
+//import { FormFilterContent } from './FormFilterContent';
 import { FormFilter } from './FormFilter';
+import { FormSubmit } from './FormSubmit';
 import { Field } from './Field';
 import { FieldSelect} from './FieldSelect';
 
@@ -19,9 +20,10 @@ export const Templates: Hash<any> = {
     ListContent: ListContent,
     Form: Form,
     FormFilter: FormFilter,
-    FormFilterContent: FormFilterContent,
+    //FormFilterContent: FormFilterContent,
     Field: Field,
     FieldSelect: FieldSelect,
+    FormSubmit: FormSubmit,
     Paginator: Paginator,
     Layout: Layout,
     //WideLayout: WideLayout
