@@ -43,6 +43,14 @@ export const pageSlice = createSlice({
 			//state.value += 1;
 			Console.log('TEST');
 		},
+
+		startFormSubmit: (state, action: PayloadAction<string>) => {
+			//state.loadingPath = action.payload; // устанавливаем признак загрузки
+			Console.log('startFormSubmit', action.payload);
+		},
+		endFormSubmit: (state, action: PayloadAction<iWrapLoadableItem<iPage>>) => {
+			Console.log('endFormSubmit');
+		},
 		startLoadPage: (state, action: PayloadAction<string>) => {
 			state.loadingPath = action.payload; // устанавливаем признак загрузки
 		},
@@ -77,7 +85,7 @@ export const pageSlice = createSlice({
 	},
 });
 
-export const { testPage, startLoadPage, endLoadPage } = pageSlice.actions;
+export const { testPage, startLoadPage, endLoadPage, startFormSubmit, endFormSubmit } = pageSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This

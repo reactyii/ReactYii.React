@@ -7,6 +7,8 @@ import { FormStorage } from '../../helpers/FormStorage';
 import { Console, Hash, iSite } from '../../models/commonModels';
 import { iPage } from '../../models/pageModels';
 import { Redirect } from 'react-router-dom';
+import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
+import { StoreActions } from '../../features/page/StoreActions';
 //import { Html } from '../Html';
 interface iFormState {
 	redirectto?: string;
@@ -17,6 +19,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	method: string;
 	site: iSite;
 	page: iPage;
+	refFormUtils: React.RefObject<StoreActions>;
 
 	constructor(props: iContentProps) {
 		super(props);
@@ -33,16 +36,25 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		FormStorage.initForm(this.formname);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
+
+		const ref = React.createRef<StoreActions>();
+		this.refFormUtils = ref;
+
 	}/* */
 
 	handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
 		if (this.method === 'get') { // делаем редирект
 			const url = this.get_action_url(FormStorage.getFilterContentArgs(this.formname));
 			//Console.log('redirect to:', url);
-			this.setState({ redirectto: url });
 			event.preventDefault();
 			event.stopPropagation();
+			Console.log('redirect to:', url, this.refFormUtils?.current);
+			if (this.refFormUtils?.current !== null) this.refFormUtils?.current.submitForm('!!!!!!!!!!');
 			return false;
+
+			/*this.setState({ redirectto: url });
+
+			return false;/**/
 		} else {
 			// отправка поста
 		}
@@ -57,10 +69,12 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	}
 
 	render_form(action: string, method: string, content: React.ReactNode) {
-		return <form action={action} method={method} onSubmit={this.handleSubmit}>{content}</form>;
+
+		return <form action={action} method={method} onSubmit={this.handleSubmit}><StoreActionsWrapped ref={this.refFormUtils} />{content}</form>;
 	}
 
 	render() {
+
 		//Console.log('hhhhhhhhhhhh1', this.props.content);
 		if (typeof this.state.redirectto !== 'undefined') return <Redirect push to={this.state.redirectto} />;
 
