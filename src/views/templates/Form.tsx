@@ -19,13 +19,13 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	method: string;
 	site: iSite;
 	page: iPage;
-	refFormUtils: React.RefObject<StoreActions>;
+	refStoreActions: React.RefObject<StoreActions>;
 
 	constructor(props: iContentProps) {
 		super(props);
 		this.state = { redirectto: undefined };
 
-		Console.log('.....', props.settings);
+		//Console.log('.....', props.settings);
 
 		// вызов формы без этих параметров ошибка конфигурации
 		this.site = props.session?.site as iSite;
@@ -38,7 +38,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		this.handleSubmit = this.handleSubmit.bind(this);
 
 		const ref = React.createRef<StoreActions>();
-		this.refFormUtils = ref;
+		this.refStoreActions = ref;
 
 	}/* */
 
@@ -48,15 +48,15 @@ export class Form extends React.Component<iContentProps, iFormState> {
 			//Console.log('redirect to:', url);
 			event.preventDefault();
 			event.stopPropagation();
-			Console.log('redirect to:', url, this.refFormUtils?.current);
-			if (this.refFormUtils?.current !== null) this.refFormUtils?.current.submitForm('!!!!!!!!!!');
-			return false;
+			//return false;
 
-			/*this.setState({ redirectto: url });
+			this.setState({ redirectto: url });
 
 			return false;/**/
 		} else {
 			// отправка поста
+			//Console.log('redirect to:', url, this.refStoreActions?.current);
+			if (this.refStoreActions?.current !== null) this.refStoreActions?.current.submitForm('!!!!!!!!!!');
 		}
 	}
 
@@ -70,7 +70,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 
 	render_form(action: string, method: string, content: React.ReactNode) {
 
-		return <form action={action} method={method} onSubmit={this.handleSubmit}><StoreActionsWrapped ref={this.refFormUtils} />{content}</form>;
+		return <form action={action} method={method} onSubmit={this.handleSubmit}><StoreActionsWrapped ref={this.refStoreActions} />{content}</form>;
 	}
 
 	render() {
