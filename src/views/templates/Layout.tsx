@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { iContentProps } from '../../models/contentModels';
 
 //import { NavMenu } from '@template/views/NavMenu';
@@ -15,7 +16,7 @@ export class Layout extends React.Component<iContentProps, {}> {
             return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
         })} pageWraper={this.props.pageWraper} session={this.props.session} />
 
-        return <div className="page"><b>Layout</b> 
+        return <div className="page"><b>Layout</b> <Link to="/admin/contents.html" >list</Link>
             <div className="page-main">
                 
 

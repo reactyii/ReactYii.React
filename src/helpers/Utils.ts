@@ -4,6 +4,7 @@ import { iContent, iContentProps } from '../models/contentModels';
 import { iPage } from '../models/pageModels';
 
 export class Utils {
+    static Templates: Hash<any> = {};
 
      // замена пробела на nbsp в строке
     static replaceSpaceToNbsp(str: string) {

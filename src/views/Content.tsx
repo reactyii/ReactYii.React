@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { Utils } from '../helpers/Utils';
 import { Console, ContentType } from '../models/commonModels';
 import { iContent, iContentProps } from '../models/contentModels';
 import { Html } from './Html';
-import { Templates } from './templates';
+//import { Templates } from './templates';
 
 export class Content extends React.Component<iContentProps, {}> {
 
@@ -35,12 +36,12 @@ export class Content extends React.Component<iContentProps, {}> {
 				for (let i = 0, l = tkeys.length; i < l; i++) {
 					let template_key = tkeys[i];
 
-					if (typeof Templates[template_key] !== 'undefined') {
+					if (typeof Utils.Templates[template_key] !== 'undefined') {
 
 						// в качестве вложения (this.props.children) передаем сгенеренный item.content, а потомков элемента передаем в пропсах
 						// !!!! а может не стоит предавать this.props.children (см ниже "контент потомки") чтобы например переопределить язык
 						// не будем предавать ничего через this.props.children
-						return React.createElement(Templates[template_key],
+						return React.createElement(Utils.Templates[template_key],
 							// в пропсах прокидываем чилдсов и настройки
 							{
 								content: this._prepareChilds(item), settings: item.settings, key: item.id,
