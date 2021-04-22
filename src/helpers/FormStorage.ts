@@ -13,6 +13,7 @@ export class FormStorage {
     }
 
     static setValue(formkey: string, fieldName: string, value: string | string[]) {
+        Console.log('setValue', fieldName, value);
         _storage[formkey][fieldName] = value;
     }
 

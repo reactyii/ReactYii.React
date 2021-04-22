@@ -6,7 +6,7 @@ export interface iContent {
     id: string;
     name: string;
     priority: number;
-    parent_id: number | null;
+    parent_id: string | null;
     path: string;
     content: string;
     //type: string;

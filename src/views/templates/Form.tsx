@@ -2,6 +2,7 @@ import * as React from 'react';
 //import { Console, ContentType } from '../../models/commonModels';
 import { iContentProps } from '../../models/contentModels';
 import { Content } from '../Content';
+import { Error } from './Error';
 import { Utils } from '../../helpers/Utils';
 import { FormStorage } from '../../helpers/FormStorage';
 import { Console, Hash, iSite } from '../../models/commonModels';
@@ -12,6 +13,7 @@ import { StoreActions } from '../../features/page/StoreActions';
 //import { Html } from '../Html';
 interface iFormState {
 	redirectto?: string;
+	error: string[];
 }
 
 export class Form extends React.Component<iContentProps, iFormState> {
@@ -19,26 +21,33 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	method: string;
 	site: iSite;
 	page: iPage;
+	settings: Hash<string>; // пока предполагаем что настройки формы не изменятся во время жизни на странице
 	refStoreActions: React.RefObject<StoreActions>;
 
 	constructor(props: iContentProps) {
 		super(props);
-		this.state = { redirectto: undefined };
 
-		//Console.log('.....', props.settings);
+		let error: string[] = Utils.checkContentProps(props, ['formname']);
 
 		// вызов формы без этих параметров ошибка конфигурации
+		this.settings = props.settings || {};
 		this.site = props.session?.site as iSite;
 		this.page = props.pageWraper?.item as iPage;
-		this.formname = props.settings?.formname as string;
+		this.formname = props.settings?.formname || 'unknown'; // так как инит формы в конструкторе (ошибку мы покажем в рендере)
 		this.method = typeof props.settings?.method !== 'undefined' ? props.settings['method'] : 'post';
+
+		//error = ['test error', '1123'];
+
+		this.state = { redirectto: undefined, error };
+
+		//Console.log('.....', props.settings);
 
 		FormStorage.initForm(this.formname);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 
-		const ref = React.createRef<StoreActions>();
-		this.refStoreActions = ref;
+		//const ref = React.createRef<StoreActions>();
+		this.refStoreActions = React.createRef<StoreActions>();
 
 	}/* */
 
@@ -68,20 +77,27 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		return url;
 	}
 
+	render_error(message: string[]) {
+		//return <Error content={[Utils.genContent('1', message)]} />;
+		return <Content content={Utils.genErrorContent(message)} pageWraper={this.props.pageWraper} session={this.props.session} />;
+	}
 	render_form(action: string, method: string, content: React.ReactNode) {
 
 		return <form action={action} method={method} onSubmit={this.handleSubmit}><StoreActionsWrapped ref={this.refStoreActions} />{content}</form>;
 	}
 
 	render() {
-
 		//Console.log('hhhhhhhhhhhh1', this.props.content);
+
+		// ошибки компонента! ошибки самой формы покажутся в форме как обычные единицы контента
+		if (this.state.error.length > 0) return this.render_error(this.state.error);
+
 		if (typeof this.state.redirectto !== 'undefined') return <Redirect push to={this.state.redirectto} />;
 
 		// блок с копипиздой проверка всех настроек и загрузок (если у формы нет настроек или страница не загружена, то скипаем форму)
-		if (typeof this.props.settings === 'undefined') return 'Error';
-		if (typeof this.props.pageWraper?.item === 'undefined' || this.props.pageWraper?.item === null) return 'Error';
-		if (typeof this.props.session?.site === 'undefined') return 'Error';
+		//if (typeof this.props.settings === 'undefined') return 'Error';
+		//if (typeof this.props.pageWraper?.item === 'undefined' || this.props.pageWraper?.item === null) return 'Error';
+		//if (typeof this.props.session?.site === 'undefined') return 'Error';
 
 		//const settings: Hash<string> = this.props.settings;
 

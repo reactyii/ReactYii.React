@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Console, Hash, iMenu, iSession, iSite } from '../models/commonModels';
+import { Console, ContentType, Hash, iMenu, iSession, iSite } from '../models/commonModels';
+import { iContent, iContentProps } from '../models/contentModels';
 import { iPage } from '../models/pageModels';
 
 export class Utils {
@@ -16,6 +17,32 @@ export class Utils {
                 resolve();
             }, milliseconds);
         });
+    }
+
+    static checkContentProps(props: iContentProps, requiredSettings: string[] = []): string[] {
+        const res = [];
+        //let error: string | undefined = undefined;
+        if (typeof props.settings === 'undefined') res.push('Component settings not defined');
+
+        requiredSettings.forEach(item => {
+            if (typeof props.settings === 'undefined' || typeof props.settings[item] === 'undefined') res.push('Required setting "' + item + '" not exist');
+        });
+
+        if (typeof props.pageWraper?.item === 'undefined' || props.pageWraper?.item === null) res.push('Page data not loaded');
+        if (typeof props.session?.site === 'undefined') res.push('Site data not loaded');
+        return res;
+    }
+
+    static genErrorContent(message: string[]): iContent[] {
+        const res = [];
+        for (let i = 0, l = message.length; i < l; i++) {
+            res.push(this.genContent('error-' + i, message[i], 'Error'));
+        }
+        return res;
+    }
+
+    static genContent(id = '', content = '', template_key: string | null = null, path = '', parent_id = '', name = '', priority = 50, content_keys: string[] = [], type: ContentType | null = null, template: string | null = null): iContent {
+        return { id, content, path, parent_id, name, priority, content_keys, type, template, template_key }
     }
 
     // доработать
