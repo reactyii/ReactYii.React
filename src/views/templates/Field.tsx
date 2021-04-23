@@ -4,7 +4,7 @@ import { iContentProps } from '../../models/contentModels';
 import { Content } from '../Content';
 import { Utils } from '../../helpers/Utils';
 import { FormStorage } from '../../helpers/FormStorage';
-import { Hash, iFieldState, iSite } from '../../models/commonModels';
+import { Console, Hash, iFieldState, iSite } from '../../models/commonModels';
 import { iPage } from '../../models/pageModels';
 import { StoreActions } from '../../features/page/StoreActions';
 //import { Html } from '../Html';
@@ -12,7 +12,7 @@ import { StoreActions } from '../../features/page/StoreActions';
 export class Field extends React.Component<iContentProps, iFieldState> {
 	site: iSite;
 	page: iPage;
-	settings: Hash<string>; // пока предполагаем что настройки формы не изменятся во время жизни на странице
+	settings: Hash<string>; // РїРѕРєР° РїСЂРµРґРїРѕР»Р°РіР°РµРј С‡С‚Рѕ РЅР°СЃС‚СЂРѕР№РєРё С„РѕСЂРјС‹ РЅРµ РёР·РјРµРЅСЏС‚СЃСЏ РІРѕ РІСЂРµРјСЏ Р¶РёР·РЅРё РЅР° СЃС‚СЂР°РЅРёС†Рµ
 	refStoreActions: React.RefObject<StoreActions>;
 
 	constructor(props: iContentProps) {
@@ -20,7 +20,7 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 
 		let error: string[] = Utils.checkContentProps(props, ['formname', 'fieldname']);
 
-		// вызов формы без этих параметров ошибка конфигурации
+		// РІС‹Р·РѕРІ С„РѕСЂРјС‹ Р±РµР· СЌС‚РёС… РїР°СЂР°РјРµС‚СЂРѕРІ РѕС€РёР±РєР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 		this.settings = props.settings || {};
 		this.site = props.session?.site as iSite;
 		this.page = props.pageWraper?.item as iPage;
@@ -42,11 +42,12 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 	handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
 		//if (typeof this.props.settings === 'undefined') return;
 
+		Console.log('field change!', this.settings['formname'], this.settings['fieldname'], event.target.value);
 		this.setState({ value: event.target.value });
-		FormStorage.setValue(this.settings['formname'] as string, this.settings['fieldname'] as string, event.target.value as string | string[]);
+		FormStorage.setValue(this.settings['formname'], this.settings['fieldname'], event.target.value as string | string[]);
 	}
 	render_field(): React.ReactNode {
-		if (typeof this.props.settings === 'undefined') return;
+		//if (typeof this.props.settings === 'undefined') return;
 		return <input type={this.settings['type'] as string} value={this.state.value as string} onChange={this.handleChange} />;
 	}
 

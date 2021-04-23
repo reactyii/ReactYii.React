@@ -7,12 +7,14 @@ import { Utils } from '../../helpers/Utils';
 import { FormStorage } from '../../helpers/FormStorage';
 import { Console, Hash, iSite } from '../../models/commonModels';
 import { iPage } from '../../models/pageModels';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 import { StoreActions } from '../../features/page/StoreActions';
+import HistoryWrapped from '../../features/page/HistoryWrapped';
+import { History } from '../../features/page/History';
 //import { Html } from '../Html';
 interface iFormState {
-	redirectto?: string;
+	//redirectto?: string;
 	error: string[];
 }
 
@@ -23,6 +25,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	page: iPage;
 	settings: Hash<string>; // пока предполагаем что настройки формы не изменятся во время жизни на странице
 	refStoreActions: React.RefObject<StoreActions>;
+	refHistory: React.RefObject<History>;
 
 	constructor(props: iContentProps) {
 		super(props);
@@ -38,7 +41,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 
 		//error = ['test error', '1123'];
 
-		this.state = { redirectto: undefined, error };
+		this.state = { error };
 
 		//Console.log('.....', props.settings);
 
@@ -48,6 +51,8 @@ export class Form extends React.Component<iContentProps, iFormState> {
 
 		//const ref = React.createRef<StoreActions>();
 		this.refStoreActions = React.createRef<StoreActions>();
+		this.refHistory = React.createRef<History>();
+
 
 	}/* */
 
@@ -59,7 +64,10 @@ export class Form extends React.Component<iContentProps, iFormState> {
 			event.stopPropagation();
 			//return false;
 
-			this.setState({ redirectto: url });
+			//this.setState({ redirectto: url });
+			//if (this.refStoreActions?.current !== null) this.refStoreActions.current.loadPage(url);
+			//let history = useHistory();
+			//history.replace(url);
 
 			return false;/**/
 		} else {
@@ -78,21 +86,26 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	}
 
 	render_error(message: string[]) {
+		Console.log('form error!');
 		//return <Error content={[Utils.genContent('1', message)]} />;
 		return <Content content={Utils.genErrorContent(message)} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
 	render_form(action: string, method: string, content: React.ReactNode) {
 
-		return <form action={action} method={method} onSubmit={this.handleSubmit}><StoreActionsWrapped ref={this.refStoreActions} />{content}</form>;
+		return <form action={action} method={method} onSubmit={this.handleSubmit}>
+			<StoreActionsWrapped ref={this.refStoreActions} />
+			<HistoryWrapped ref={this.refHistory} />
+			{content}
+		</form>;
 	}
 
 	render() {
-		//Console.log('hhhhhhhhhhhh1', this.props.content);
+		//Console.log('hhhhhhhhhhhh1', this.state.redirectto);
 
 		// ошибки компонента! ошибки самой формы покажутся в форме как обычные единицы контента
 		if (this.state.error.length > 0) return this.render_error(this.state.error);
 
-		if (typeof this.state.redirectto !== 'undefined') return <Redirect push to={this.state.redirectto} />;
+		//if (typeof this.state.redirectto !== 'undefined') return <Redirect push to={this.state.redirectto} />;
 
 		// блок с копипиздой проверка всех настроек и загрузок (если у формы нет настроек или страница не загружена, то скипаем форму)
 		//if (typeof this.props.settings === 'undefined') return 'Error';
@@ -108,3 +121,5 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		return this.render_form(this.get_action_url(''), this.method, content);
 	}
 }
+
+//export default withRouter(Form);
