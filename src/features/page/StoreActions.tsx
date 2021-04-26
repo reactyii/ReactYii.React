@@ -3,8 +3,9 @@ import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { Console, Hash } from '../../models/commonModels';
 import { RootState, AppDispatch } from '../../app/store';
-import { startLoadPage, loadPageAsync, testPage, startFormSubmit } from '../../features/page/pageSlice';
+import { startLoadPage, loadPageAsync, testPage, startFormSubmit, initForm, clearForm, setFieldValue } from '../../features/page/pageSlice';
 import { RouteComponentProps } from 'react-router-dom';
+import { Utils } from '../../helpers/Utils';
 
 export const mapStateToProps = (state: RootState) => (state.page);
 /*const mapDispatchToProps = {
@@ -17,6 +18,9 @@ export const mapDispatchToProps = (dispatch: AppDispatch) => bindActionCreators(
 		/*load: (path: string, params: Hash<string>) => async (dispatch: AppDispatch): Promise<void> => {
 			dispatch(loadPageAsync(path, params))
 		},/**/
+		clearForm: clearForm,
+		initForm: initForm,
+		setFieldValue: setFieldValue,
 		load: loadPageAsync,
 		startLoadPage: startLoadPage,
 		startFormSubmit: startFormSubmit,
@@ -39,6 +43,26 @@ export class StoreActions extends React.Component<Props, State> {
 	// для оптимизации чтоб невызывался пререндер
 	shouldComponentUpdate(nextProps: Props, nextState: State) {
 		return false;
+	}
+
+	public initForm(formkey: string) {
+		this.props.initForm(formkey);
+	}
+	public clearForm(formkey: string, fullClear: boolean = false) {
+		this.props.clearForm({ formkey, fullClear });
+	}
+	public setFieldValue(formkey: string, fieldName: string, value: string | string[]) {
+		this.props.setFieldValue({ formkey, fieldName, value });
+	}
+	public getFieldValue(formkey: string, fieldName: string): string | string[] {
+		if (typeof this.props.forms[formkey] === 'undefined') return '';
+		if (typeof this.props.forms[formkey][fieldName] === 'undefined') return '';
+		return this.props.forms[formkey][fieldName];
+	}
+
+	public getFilterContentArgs(formkey: string): string {
+		if (typeof this.props.forms[formkey] === 'undefined') return '';
+		return Utils.joinUrlParams(this.props.forms[formkey]);//.replace('&', encodeURIComponent('&'));
 	}
 
 	public submitForm(path: string) {

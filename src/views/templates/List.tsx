@@ -1,13 +1,56 @@
 import * as React from 'react';
+import { StoreActions } from '../../features/page/StoreActions';
+import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 import { Utils } from '../../helpers/Utils';
-import { Console, Hash } from '../../models/commonModels';
+import { Console, Hash, iSite } from '../../models/commonModels';
 //import { Console, ContentType } from '../../models/commonModels';
 import { iContent, iContentProps } from '../../models/contentModels';
+import { iPage } from '../../models/pageModels';
 import { Content } from '../Content';
 import { Paginator } from './Paginator';
 
+export interface iListState {
 
-export class List extends React.Component<iContentProps, {}> {
+	error: string[];
+}
+
+
+export class List extends React.Component<iContentProps, iListState> {
+	path: string;
+	site: iSite;
+	page: iPage;
+	// не будем использовать! так как настройки (в частности пагинатора) будут меняться
+	//settings: Hash<string>; // NB!!! использваоть тока для фиксированных свойств, например "path"! 
+	refStoreActions: React.RefObject<StoreActions>;
+
+	constructor(props: iContentProps) {
+		super(props);
+
+		let error: string[] = Utils.checkContentProps(props, ['path']);
+
+		// вызов формы без этих параметров ошибка конфигурации
+		//this.settings = props.settings || {};
+		this.site = props.session?.site as iSite;
+		this.page = props.pageWraper?.item as iPage;
+
+		// так как фильтр нам нужен и в списке! то юзаем вместе имени формы path
+		this.path = this.props.settings?.path || 'unknown'; // path у списка не меняется
+
+		//error = ['test error', '1123'];
+
+		this.state = { error };
+
+		//Console.log('.....', props.settings);
+
+		this.refStoreActions = React.createRef<StoreActions>();
+
+	}/* */
+
+	componentDidMount() {
+		// форму инициализирует и список! так как сортировка будет храниться тоже в форме, а фильтра может не быть!
+		this.refStoreActions.current?.initForm(this.path);
+	}
+
 
 	drawContent(key: string) {
 		const content = this.props.content.filter(item => item.content_keys?.indexOf(key) >= 0);
@@ -36,15 +79,24 @@ export class List extends React.Component<iContentProps, {}> {
 		return this.getChilds().map(item => this.renderRow(item));
 	}
 
-	renderPages() {
-		if (typeof this.props.settings === 'undefined') return null;
-		if (typeof this.props.pageWraper?.item === 'undefined' || this.props.pageWraper?.item === null) return null;
-		if (typeof this.props.session?.site === 'undefined') return null;
+	renderError(message: string[]) {
+		Console.log('form error!');
+		//return <Error content={[Utils.genContent('1', message)]} />;
+		return <Content content={Utils.genErrorContent(message)} pageWraper={this.props.pageWraper} session={this.props.session} />;
+	}
 
-		let settings: Hash<string> = Utils.clone(this.props.settings);
-		const [not_used_host, url] = Utils.makeUrl(this.props.pageWraper.item, this.props.pageWraper.item, this.props.session.site, settings.path + '/{{PAGE}}');
+	renderPages() {
+
+		let settings: Hash<string> = Utils.clone(this.props.settings || {}); // NB!!! здесь именно this.props.settings так как настрйоки пагинатора будут менятся в завимсимости от фильтра и текущей страницы
+
+		// в урл надо добавить параметры фильтра и сортировку списка
+		const [not_used_host0, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.path, '{{PAGE}}', this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
+		let filter = '';
+
+		//const [not_used_host, url] = Utils.makeUrl(this.page, this.page, this.site, this.path + '/{{PAGE}}');
 		settings.base_url = url;
-		const [not_used_host1, url1] = Utils.makeUrl(this.props.pageWraper.item, this.props.pageWraper.item, this.props.session.site, '');
+		//const [not_used_host1, url1] = Utils.makeUrl(this.page, this.page, this.site, '');
+		const url1 = url.replace('{{PAGE}}', '0');
 		settings.first_url = url1;
 
 		return <Paginator content={[]} pageWraper={this.props.pageWraper} session={this.props.session} settings={settings} />;
@@ -64,9 +116,20 @@ export class List extends React.Component<iContentProps, {}> {
 		return 'Найдено ' + countAll + '.' + (+count > 0 ? ' Показано ' + (+offset * +max_on_page) + ' - ' + (+offset * +max_on_page + +count) : '');
 	}
 
+	renderWraps() {
+		return <>
+			<StoreActionsWrapped ref={this.refStoreActions} />
+		</>;
+	}
+
 	render() {
 		//Console.log('.....', this.props.settings);
+
+		// ошибки компонента! ошибки самой формы покажутся в форме как обычные единицы контента
+		if (this.state.error.length > 0) return this.renderError(this.state.error);
+
 		return <>
+			{this.renderWraps()}
 			{this.renderHeader()}
 			{this.renderFilter()}
 			{this.renderFounded()}

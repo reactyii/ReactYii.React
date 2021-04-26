@@ -4,7 +4,7 @@ import { iContentProps } from '../../models/contentModels';
 import { Content } from '../Content';
 import { Error } from './Error';
 import { Utils } from '../../helpers/Utils';
-import { FormStorage } from '../../helpers/FormStorage';
+//import { FormStorage } from '../../helpers/FormStorage';
 import { Console, Hash, iSite } from '../../models/commonModels';
 import { iPage } from '../../models/pageModels';
 import { Redirect, withRouter } from 'react-router-dom';
@@ -24,7 +24,7 @@ interface iFormState {
 }
 
 export class Form extends React.Component<iContentProps, iFormState> {
-	formname: string;
+	path: string;
 	method: string;
 	site: iSite;
 	page: iPage;
@@ -35,14 +35,18 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	constructor(props: iContentProps) {
 		super(props);
 
-		let error: string[] = Utils.checkContentProps(props, ['formname']);
+		let error: string[] = Utils.checkContentProps(props, ['path']);
 
 		// вызов формы без этих параметров ошибка конфигурации
 		this.settings = props.settings || {};
 		this.site = props.session?.site as iSite;
 		this.page = props.pageWraper?.item as iPage;
-		this.formname = props.settings?.formname || 'unknown'; // так как инит формы в конструкторе (ошибку мы покажем в рендере)
-		this.method = typeof props.settings?.method !== 'undefined' ? props.settings['method'] : 'post';
+
+		// так как фильтр нам нужен и в списке! то юзаем вместе имени формы path
+		this.path = this.settings.path || 'unknown';
+		//this.formname = props.settings?.formname || 'unknown'; // так как инит формы в конструкторе (ошибку мы покажем в рендере)
+
+		this.method = typeof this.settings.method !== 'undefined' ? this.settings['method'] : 'post';
 
 		//error = ['test error', '1123'];
 
@@ -50,21 +54,35 @@ export class Form extends React.Component<iContentProps, iFormState> {
 
 		//Console.log('.....', props.settings);
 
-		FormStorage.initForm(this.formname);
+		//FormStorage.initForm(this.path);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 
 		//const ref = React.createRef<StoreActions>();
 		this.refStoreActions = React.createRef<StoreActions>();
 		this.refRouter = React.createRef<Router>();
-
-
 	}/* */
+
+	private initialised: boolean = false;
+	init() {
+		if (this.initialised) return;
+		if (this.refStoreActions.current !== null) {
+			this.initialised = true;
+			Console.log('init form');
+			this.refStoreActions.current?.initForm(this.path);
+		}
+	}
+	componentDidMount() {
+		this.init();
+	}
+	componentDidUpdate() {
+		this.init();
+	}
 
 	handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
 		if (this.method === 'get') { // делаем редирект
-			const url = this.getActionUrl(FormStorage.getFilterContentArgs(this.formname));
-			//Console.log('redirect to:', url);
+			const url = this.getActionUrl(this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
+			Console.log('-+-+  handleSubmit: redirect to:', url);
 			event.preventDefault();
 			event.stopPropagation();
 			//return false;
@@ -83,11 +101,18 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		}
 	}
 
-	getActionUrl(filter: string): string {
-		const settings: Hash<string> = this.props.settings as Hash<string>; // проверка на undef была в render()
+	/* 
+	 * Не переопределять этот метод!!!!
+	 * так как при построении списка (пагинатор, сортировка) мы используем тот же алгоритм
+	 */
+	getActionUrl(filterAndSort: string): string {
 		// напоминание у нас другой host может быть тока на другом разделе и мы пока предполагаем что форма и ее сабмит на одном и том же разделе
-		//const [not_used_host, url] = Utils.makeUrl(this.props.pageWraper?.item as iPage, this.props.pageWraper?.item as iPage, this.props.session?.site as iSite, settings.path); // + '/{{PAGE}}'
-		const [not_used_host, url] = Utils.makeUrl(this.page, this.page, this.site, settings.path + (filter ? '/0/' + filter : '')); // + '/{{PAGE}}'
+
+		/*const [not_used_host, url] = Utils.makeUrl(this.page, this.page, this.site, settings.path + (filter ? '/0/' + filter : '')); // + '/{{PAGE}}'
+		return url;*/
+
+		// см коментарий в Utils.makeFilterUrl (всегда указываем '0' страницу при применении фильтров. даже если фильтр сброшен!)
+		const [not_used_host, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.path, '0', filterAndSort);
 		return url;
 	}
 

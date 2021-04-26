@@ -76,7 +76,7 @@ export interface iMenu {
 }
 
 export interface iFieldState {
-    value: string | string[];
+    //value: string | string[];
     error: string[];
 }
 

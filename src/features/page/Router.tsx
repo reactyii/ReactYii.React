@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { withRouter } from "react-router";
 import { RouteComponentProps } from "react-router";
 
 // Your component own properties

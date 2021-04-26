@@ -20,6 +20,7 @@ if (typeof (window as any) !== 'undefined') {
 const initialState: iPageStoreState = {
 	//currentPath: '',
 	loadingPath: '',
+	forms: {},
 	//page: null,
 	//value: {},
 }
@@ -31,6 +32,16 @@ interface iEndLoadPageParams {
 	page?: iPage;
 	error?: string;
 }/* */
+
+interface iFormClearPayload {
+	formkey: string;
+	fullClear?: boolean;
+}
+interface iSetValuePayload {
+	formkey: string;
+	fieldName: string;
+	value: string | string[];
+}
 export const pageSlice = createSlice({
 	name: 'page',
 	initialState: preloadedState || initialState,
@@ -44,6 +55,39 @@ export const pageSlice = createSlice({
 			Console.log('TEST');
 		},
 
+		// ------------------------------ forms
+		initForm(state, action: PayloadAction<string>) {
+			// так как форму инициализируютс разные компоненты (и список и форма), то чтобы не затереть данные сделаем проверку
+			if (typeof state.forms[action.payload] === 'undefined') state.forms[action.payload] = {};
+		},
+		clearForm(state, action: PayloadAction<iFormClearPayload>) {
+			const formkey = action.payload.formkey;
+			const fullClear = action.payload.fullClear || false;
+			if (typeof state.forms[formkey] === 'undefined') return;
+			if (fullClear) {
+				state.forms[formkey] = {};
+				return;
+			}
+
+			for (let i in state.forms[formkey]) {
+				if (i.startsWith('_')) continue; // все поля начинающиеся с '_' считаем системными (типа сортировки)
+				delete state.forms[formkey][i];
+			}
+		},
+		/*getFilterContentArgs(state, action: PayloadAction<string>): string {
+			if (typeof _storage[formkey] === 'undefined') return '';
+			return Utils.joinUrlParams(_storage[formkey]);//.replace('&', encodeURIComponent('&'));
+		},*/
+		setFieldValue(state, action: PayloadAction<iSetValuePayload>) {
+			const formkey = action.payload.formkey;
+			const fieldName = action.payload.fieldName;
+			const value = action.payload.value;
+
+			if (typeof state.forms[formkey] === 'undefined') return;
+			Console.log('setValue', fieldName, value);
+			state.forms[formkey][fieldName] = value;
+		},
+
 		startFormSubmit: (state, action: PayloadAction<string>) => {
 			//state.loadingPath = action.payload; // устанавливаем признак загрузки
 			Console.log('startFormSubmit', action.payload);
@@ -51,6 +95,9 @@ export const pageSlice = createSlice({
 		endFormSubmit: (state, action: PayloadAction<iWrapLoadableItem<iPage>>) => {
 			Console.log('endFormSubmit');
 		},
+		// ------------------------------ / forms
+
+
 		startLoadPage: (state, action: PayloadAction<string>) => {
 			state.loadingPath = action.payload; // устанавливаем признак загрузки
 		},
@@ -85,7 +132,7 @@ export const pageSlice = createSlice({
 	},
 });
 
-export const { testPage, startLoadPage, endLoadPage, startFormSubmit, endFormSubmit } = pageSlice.actions;
+export const { testPage, startLoadPage, endLoadPage, initForm, clearForm, setFieldValue, startFormSubmit, endFormSubmit } = pageSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This

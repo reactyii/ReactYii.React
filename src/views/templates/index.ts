@@ -9,6 +9,7 @@ import { Form } from './Form';
 //import { FormFilterContent } from './FormFilterContent';
 import { FormFilter } from './FormFilter';
 import { FormSubmit } from './FormSubmit';
+import { FormReset } from './FormReset';
 import { Field } from './Field';
 import { FieldSelect } from './FieldSelect';
 import { Error } from './Error';
@@ -27,6 +28,7 @@ export const Templates: Hash<any> = {
     Field: Field,
     FieldSelect: FieldSelect,
     FormSubmit: FormSubmit,
+    FormReset: FormReset,
     Paginator: Paginator,
     Layout: Layout,
     Error: Error,

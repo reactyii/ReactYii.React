@@ -14,7 +14,7 @@ export class FieldSelect extends Field {
 		});
 	}
 
-	render_field() {
+	renderField() {
 		//if (typeof this.props.settings === 'undefined') return;
 		return <select onChange={this.handleChange}>{
 			this.render_options(this.props.content.filter(item => {

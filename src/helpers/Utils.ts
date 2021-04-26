@@ -46,7 +46,17 @@ export class Utils {
         return { id, content, path, parent_id, name, priority, content_keys, type, template, template_key }
     }
 
-    // доработать
+    static makeFilterUrl(currentPage: iPage, newPage: iPage | iMenu, site: iSite, path: string, page: string, filterAndSort: string = ''): [string, string] {
+        // если нет фильтров и первая страница то не указываем их
+        // !я вот что подумал мы будем различать перую страницу списка /admin/contents.html
+        // но в пагинаторе первой уже будет стоять /admin/contents/contentslist/0.html
+        // что в принципе одно и то же, НО во втором случае мы уже можем не показывать SEO контент
+        // и в любом случае если у нас задана страница то мы указываем каноникал на /admin/contents.html
+        //if ((page === '0' || page === '') && !filterAndSort) return this.makeUrl(currentPage, newPage, site);
+
+        return this.makeUrl(currentPage, newPage, site, path + '/' + page + (filterAndSort ? '/' + filterAndSort : ''));
+    }
+    
     static makeUrl(currentPage: iPage, newPage: iPage | iMenu, site: iSite, contentArgs: string = '', gets: Hash<string | string[]> = {}): [string, string] {
         // с курент страницы берем язык
         let host = site.main_host;
