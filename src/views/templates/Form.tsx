@@ -10,10 +10,15 @@ import { iPage } from '../../models/pageModels';
 import { Redirect, withRouter } from 'react-router-dom';
 import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 import { StoreActions } from '../../features/page/StoreActions';
-import HistoryWrapped from '../../features/page/HistoryWrapped';
-import { History } from '../../features/page/History';
+import RouterWrapped from '../../features/page/RouterWrapped';
+import { Router } from '../../features/page/Router';
 //import { Html } from '../Html';
 interface iFormState {
+
+	// в идеале можно сделать отправку формы фильтров через Redirect компонент,
+	// НО компонент страницы не пересоздается и форма тоже. в итоге после редиректа имеем установленный стэйт с редиректом и скинуть его проблематично
+	// опять же можно в componentDidUpdate проверять, а равен ли урл текущему (а чтоб узнать текущий урл нам нужен location который в Router)
+
 	//redirectto?: string;
 	error: string[];
 }
@@ -25,7 +30,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	page: iPage;
 	settings: Hash<string>; // пока предполагаем что настройки формы не изменятся во время жизни на странице
 	refStoreActions: React.RefObject<StoreActions>;
-	refHistory: React.RefObject<History>;
+	refRouter: React.RefObject<Router>;
 
 	constructor(props: iContentProps) {
 		super(props);
@@ -51,7 +56,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 
 		//const ref = React.createRef<StoreActions>();
 		this.refStoreActions = React.createRef<StoreActions>();
-		this.refHistory = React.createRef<History>();
+		this.refRouter = React.createRef<Router>();
 
 
 	}/* */
@@ -66,8 +71,9 @@ export class Form extends React.Component<iContentProps, iFormState> {
 
 			//this.setState({ redirectto: url });
 			//if (this.refStoreActions?.current !== null) this.refStoreActions.current.loadPage(url);
-			//let history = useHistory();
-			//history.replace(url);
+
+			if (this.refRouter?.current !== null) this.refRouter.current.historyPush(url);
+			//Console.log('this.refRouter=', this.refRouter);
 
 			return false;/**/
 		} else {
@@ -94,7 +100,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 
 		return <form action={action} method={method} onSubmit={this.handleSubmit}>
 			<StoreActionsWrapped ref={this.refStoreActions} />
-			<HistoryWrapped ref={this.refHistory} />
+			<RouterWrapped ref={this.refRouter} />
 			{content}
 		</form>;
 	}

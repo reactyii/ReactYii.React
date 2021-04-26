@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { History } from './History';
+import { Router } from './Router';
 import { withRouter } from "react-router-dom";
 
-/*const withRouterAndRef = (Wrapped: any) => {
-    const WithRouter = withRouter(({ forwardedRef, ...otherProps }) => {
-        return <Wrapped ref={forwardedRef} {...otherProps} />;
+const withRouterAndRef = (Wrapped: any) => {
+    const WithRouter = withRouter(({ forwardRef, ...otherProps }: any) => {
+        return <Wrapped ref={forwardRef} {...otherProps} />;
     })
     const WithRouterAndRef = React.forwardRef((props, ref) => (
         <WithRouter {...props} forwardRef={ref} />
@@ -35,6 +35,6 @@ import { withRouter } from "react-router-dom";
     return '!!';
 })/**/
 
-//export default withRouterAndRef(History)
-export default withRouter(History);
+export default withRouterAndRef(Router)
+//export default withRouter(History);
 //export default withRouter(ChildWithRoute);
