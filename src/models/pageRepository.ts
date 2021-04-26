@@ -13,7 +13,7 @@ class PageRepository extends BaseRepository<iPage>{
 	}
 	getUrl(key: string, params: Hash<string>): string {
 		let path = this.host + key;
-		let p = Utils.join_url_params(params);
+		let p = Utils.joinUrlParams(params);
 
 		if (p!=='') {
 			path += (path.indexOf('?') >= 0 ? '&' : '?') + p;//'__siteLM=' + this.props.session.site.lastModified;

@@ -18,7 +18,7 @@ export class FormStorage {
     }
 
     static getFilterContentArgs(formkey: string) {
-        return Utils.join_url_params(_storage[formkey]);//.replace('&', encodeURIComponent('&'));
+        return Utils.joinUrlParams(_storage[formkey]);//.replace('&', encodeURIComponent('&'));
     }
 
 }

@@ -18,8 +18,8 @@ interface iFormState {
 	// в идеале можно сделать отправку формы фильтров через Redirect компонент,
 	// НО компонент страницы не пересоздается и форма тоже. в итоге после редиректа имеем установленный стэйт с редиректом и скинуть его проблематично
 	// опять же можно в componentDidUpdate проверять, а равен ли урл текущему (а чтоб узнать текущий урл нам нужен location который в Router)
-
 	//redirectto?: string;
+
 	error: string[];
 }
 
@@ -63,7 +63,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 
 	handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
 		if (this.method === 'get') { // делаем редирект
-			const url = this.get_action_url(FormStorage.getFilterContentArgs(this.formname));
+			const url = this.getActionUrl(FormStorage.getFilterContentArgs(this.formname));
 			//Console.log('redirect to:', url);
 			event.preventDefault();
 			event.stopPropagation();
@@ -83,7 +83,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		}
 	}
 
-	get_action_url(filter: string): string {
+	getActionUrl(filter: string): string {
 		const settings: Hash<string> = this.props.settings as Hash<string>; // проверка на undef была в render()
 		// напоминание у нас другой host может быть тока на другом разделе и мы пока предполагаем что форма и ее сабмит на одном и том же разделе
 		//const [not_used_host, url] = Utils.makeUrl(this.props.pageWraper?.item as iPage, this.props.pageWraper?.item as iPage, this.props.session?.site as iSite, settings.path); // + '/{{PAGE}}'
@@ -91,16 +91,21 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		return url;
 	}
 
-	render_error(message: string[]) {
+	renderError(message: string[]) {
 		Console.log('form error!');
 		//return <Error content={[Utils.genContent('1', message)]} />;
 		return <Content content={Utils.genErrorContent(message)} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
-	render_form(action: string, method: string, content: React.ReactNode) {
 
-		return <form action={action} method={method} onSubmit={this.handleSubmit}>
+	renderWraps() {
+		return <>
 			<StoreActionsWrapped ref={this.refStoreActions} />
 			<RouterWrapped ref={this.refRouter} />
+		</>;
+	}
+	renderForm(action: string, method: string, content: React.ReactNode) {
+		return <form action={action} method={method} onSubmit={this.handleSubmit}>
+			{this.renderWraps()}
 			{content}
 		</form>;
 	}
@@ -109,7 +114,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		//Console.log('hhhhhhhhhhhh1', this.state.redirectto);
 
 		// ошибки компонента! ошибки самой формы покажутся в форме как обычные единицы контента
-		if (this.state.error.length > 0) return this.render_error(this.state.error);
+		if (this.state.error.length > 0) return this.renderError(this.state.error);
 
 		//if (typeof this.state.redirectto !== 'undefined') return <Redirect push to={this.state.redirectto} />;
 
@@ -124,7 +129,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 			return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
 		})} pageWraper={this.props.pageWraper} session={this.props.session} />
 
-		return this.render_form(this.get_action_url(''), this.method, content);
+		return this.renderForm(this.getActionUrl(''), this.method, content);
 	}
 }
 

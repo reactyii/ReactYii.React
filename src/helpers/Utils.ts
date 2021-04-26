@@ -83,7 +83,7 @@ export class Utils {
         //url = (strrpos($path, '.html') === strlen($path) - 5 ? substr($path, 0, strlen($path) - 5) : $path)
         url = (url.indexOf('index.html') === url.length - 10 ? url.substring(0, url.length - 10) : url);
 
-        url = Utils.merge_gets(url, gets);
+        url = Utils.mergeGets(url, gets);
 
         return [host, url]; // возвращаем не полный путь так как выше (в вызывающем компоненте) нам понадобится узнать у какой элемент лепить <a> или <Link> в зависимости от того совпадают домены или нет
     }/**/
@@ -162,29 +162,29 @@ export class Utils {
         return parseFloat((a / Math.pow(c, f)).toFixed(b)) + " " + e[f];
     }
 
-    static get_from_location(location: Location): Hash<string> {
+    static getFromLocation(location: Location): Hash<string> {
         let l: any = {};
         let g = location.search;//window.location.search;
         if (g) {
             g = g.substr(1);
-            l = Utils.split_url_params(g);
+            l = Utils.splitUrlParams(g);
         }
         return l;
     };
 
-    static merge_gets(url: string, gets: Hash<string | string[]>): string {
+    static mergeGets(url: string, gets: Hash<string | string[]>): string {
         const tmp: string[] = url.split('?', 2);
         if (tmp.length === 1) {
-            const g = Utils.join_url_params(gets);
+            const g = Utils.joinUrlParams(gets);
             if (g) tmp.push(g);
         } else {
-            tmp[1] = Utils.join_url_params({ ...Utils.split_url_params(tmp[1]), ...gets });
+            tmp[1] = Utils.joinUrlParams({ ...Utils.splitUrlParams(tmp[1]), ...gets });
         }
 
         return tmp.join('?');
     }
 
-    static split_url_params(g: string): Hash<string | string[]> {
+    static splitUrlParams(g: string): Hash<string | string[]> {
         //Console.log('//////////////////////////////////');
         let l: Hash<string | string[]> = {};
         let k = g.split("&");
@@ -208,7 +208,7 @@ export class Utils {
         return l;
     }
 
-    static join_url_params(g: Hash<string | string[]>, clearEmpty: boolean = false): string {
+    static joinUrlParams(g: Hash<string | string[]>, clearEmpty: boolean = false): string {
         let l: string[] = [];
         for (let i in g) {
             //Console.log('...', i, typeof g[i])
