@@ -36,6 +36,11 @@ type State = {};
 
 export class StoreActions extends React.Component<Props, State> {
 
+	// для оптимизации чтоб невызывался пререндер
+	shouldComponentUpdate(nextProps: Props, nextState: State) {
+		return false;
+	}
+
 	public submitForm(path: string) {
 		this.props.startFormSubmit(path);
 	}
