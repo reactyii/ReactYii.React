@@ -7,6 +7,7 @@ export enum ContentType {
     List = "list",
     Tree = "tree",
     Img = "img",
+    Form = "form",
 }
 export interface iUser {
     id: number;

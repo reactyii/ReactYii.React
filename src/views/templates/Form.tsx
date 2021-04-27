@@ -63,7 +63,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		this.refRouter = React.createRef<Router>();
 	}/* */
 
-	private initialised: boolean = false;
+	/*private initialised: boolean = false;
 	init() {
 		if (this.initialised) return;
 		if (this.refStoreActions.current !== null) {
@@ -77,7 +77,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	}
 	componentDidUpdate() {
 		this.init();
-	}
+	}/**/
 
 	handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
 		if (this.method === 'get') { // делаем редирект

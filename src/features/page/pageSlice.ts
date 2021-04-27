@@ -3,7 +3,10 @@ import { AppThunk, RootState } from '../../app/store';
 import {iPageStoreState, iPage} from '../../models/pageModels';
 import { pageRepository } from '../../models/pageRepository';
 import { iWrapLoadableItem } from '../../models/baseRepository';
-import { Console, Hash, iSection } from '../../models/commonModels';
+import { Console, ContentType, Hash, iSection } from '../../models/commonModels';
+import { iContent } from '../../models/contentModels';
+import { type } from 'os';
+import { Content } from '../../views/Content';
 
 // https://github.com/stereobooster/react-snap
 // Grab the state from a global variable injected into the server-generated HTML
@@ -20,7 +23,7 @@ if (typeof (window as any) !== 'undefined') {
 const initialState: iPageStoreState = {
 	//currentPath: '',
 	loadingPath: '',
-	forms: {},
+	//forms: {},
 	//page: null,
 	//value: {},
 }
@@ -42,6 +45,48 @@ interface iSetValuePayload {
 	fieldName: string;
 	value: string | string[];
 }
+
+const fieldtypes = ['field'];
+function fillForm(content: iContent[]): Hash<string | string[]> {
+	const fields: Hash<string | string[]> = {};
+	for (let i = 0, l = content.length; i < l; i++) {
+		const c: iContent = content[i];
+		if (fieldtypes.indexOf(c.type as string) >= 0) {
+			
+			if (typeof c.settings === 'undefined' || typeof c.settings.fieldname === 'undefined') {
+				Console.error('Единица контента типа "' + (c.type as string) + '" не имеет имени поля.', c);
+				continue;
+			} else {
+				let n: string = c.settings.fieldname;
+				if (typeof c.settings.value !== 'undefined')
+					fields[n] = c.settings.value;
+			}
+        }
+	}
+
+	return fields;
+}
+
+function findForms(content: iContent[]): Hash<Hash<string | string[]>> {
+	const forms: Hash<Hash<string | string[]>> = {};
+	for (let i = 0, l = content.length; i < l; i++) {
+		const c: iContent = content[i];
+		if (c.type !== ContentType.Form) {
+			const _form = findForms(c.childs || []);
+			for (let k in _form) {
+				forms[k] = _form[k];
+            }
+			continue;
+		}
+		if (typeof c.settings === 'undefined' || typeof c.settings.path === 'undefined') {
+			Console.error('У формы "' + (c.id) + '" не указан path.', c);
+			continue;
+		}
+		forms[c.settings.path] = fillForm(c.childs || []);
+	}
+	return forms;
+}
+
 export const pageSlice = createSlice({
 	name: 'page',
 	initialState: preloadedState || initialState,
@@ -56,22 +101,19 @@ export const pageSlice = createSlice({
 		},
 
 		// ------------------------------ forms
-		initForm(state, action: PayloadAction<string>) {
-			// так как форму инициализируютс разные компоненты (и список и форма), то чтобы не затереть данные сделаем проверку
-			if (typeof state.forms[action.payload] === 'undefined') state.forms[action.payload] = {};
-		},
 		clearForm(state, action: PayloadAction<iFormClearPayload>) {
+			if (!state.pageWraper?.item) return;
 			const formkey = action.payload.formkey;
 			const fullClear = action.payload.fullClear || false;
-			if (typeof state.forms[formkey] === 'undefined') return;
+			if (typeof state.pageWraper.item.forms[formkey] === 'undefined') return;
 			if (fullClear) {
-				state.forms[formkey] = {};
+				state.pageWraper.item.forms[formkey] = {};
 				return;
 			}
 
-			for (let i in state.forms[formkey]) {
+			for (let i in state.pageWraper.item.forms[formkey]) {
 				if (i.startsWith('_')) continue; // все поля начинающиеся с '_' считаем системными (типа сортировки)
-				delete state.forms[formkey][i];
+				delete state.pageWraper.item.forms[formkey][i];
 			}
 		},
 		/*getFilterContentArgs(state, action: PayloadAction<string>): string {
@@ -79,13 +121,14 @@ export const pageSlice = createSlice({
 			return Utils.joinUrlParams(_storage[formkey]);//.replace('&', encodeURIComponent('&'));
 		},*/
 		setFieldValue(state, action: PayloadAction<iSetValuePayload>) {
+			if (!state.pageWraper?.item) return;
 			const formkey = action.payload.formkey;
 			const fieldName = action.payload.fieldName;
 			const value = action.payload.value;
 
-			if (typeof state.forms[formkey] === 'undefined') return;
+			if (typeof state.pageWraper.item.forms[formkey] === 'undefined') return;
 			Console.log('setValue', fieldName, value);
-			state.forms[formkey][fieldName] = value;
+			state.pageWraper.item.forms[formkey][fieldName] = value;
 		},
 
 		startFormSubmit: (state, action: PayloadAction<string>) => {
@@ -112,6 +155,10 @@ export const pageSlice = createSlice({
 			Console.log('setPage:', action.payload);
 
 			state.pageWraper = action.payload;
+			if (state.pageWraper.item) {
+				state.pageWraper.item.forms = findForms(state.pageWraper.item.content || []);
+				Console.log('forms=', state.pageWraper.item.forms);
+			}
 			if (typeof state.session === 'undefined') state.session = {};
 			if (typeof action.payload.item?.session?.site !== 'undefined') {
 				//Console.log('setSite:', action.payload.item.session.site);
@@ -132,7 +179,7 @@ export const pageSlice = createSlice({
 	},
 });
 
-export const { testPage, startLoadPage, endLoadPage, initForm, clearForm, setFieldValue, startFormSubmit, endFormSubmit } = pageSlice.actions;
+export const { testPage, startLoadPage, endLoadPage, clearForm, setFieldValue, startFormSubmit, endFormSubmit } = pageSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This

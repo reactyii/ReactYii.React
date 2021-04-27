@@ -46,10 +46,10 @@ export class List extends React.Component<iContentProps, iListState> {
 
 	}/* */
 
-	componentDidMount() {
+	/*componentDidMount() {
 		// форму инициализирует и список! так как сортировка будет храниться тоже в форме, а фильтра может не быть!
 		this.refStoreActions.current?.initForm(this.path);
-	}
+	}/**/
 
 
 	drawContent(key: string) {

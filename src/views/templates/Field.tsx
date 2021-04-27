@@ -41,29 +41,6 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 		this.refStoreActions = React.createRef<StoreActions>();
 	}/* */
 
-	private initialised: boolean = false;
-	init() {
-		if (this.initialised) return;
-		if (this.refStoreActions.current !== null) {
-			this.initialised = true;
-			Console.log('init field');
-			const val: string | string[] = this.settings['type'] === 'array' ? JSON.parse(this.settings['value']) as string[] : this.settings['value'] as string;
-			this.refStoreActions.current?.setFieldValue(this.formpath, this.fieldname, val);
-		}
-	}
-
-	// при первом рендере у нас еще this.refStoreActions.current === null и потому
-	/*componentDidMount() {
-		const val: string | string[] = this.settings['type'] === 'array' ? JSON.parse(this.settings['value']) as string[] : this.settings['value'] as string;
-		this.refStoreActions.current?.setFieldValue(this.formpath, this.fieldname, val);
-	}*/
-	componentDidMount() {
-		this.init();
-	}
-	componentDidUpdate() {
-		this.init();
-	}
-
 	handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
 		//if (typeof this.props.settings === 'undefined') return;
 
@@ -74,8 +51,8 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 	}
 	renderField(): React.ReactNode {
 		//if (typeof this.props.settings === 'undefined') return;
-		Console.log('---->', this.refStoreActions.current?.getFieldValue(this.formpath, this.fieldname));
-		const val = this.refStoreActions.current?.getFieldValue(this.formpath, this.fieldname) as string || '';
+		
+		const val = Utils.getFieldValue(this.props.pageWraper?.item?.forms || {}, this.formpath, this.fieldname)
 		return <input type={this.settings['type'] as string} value={val} onChange={this.handleChange} />;
 	}
 	renderWraps() {

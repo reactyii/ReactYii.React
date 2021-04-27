@@ -45,7 +45,11 @@ export class Utils {
     static genContent(id = '', content = '', template_key: string | null = null, path = '', parent_id = '', name = '', priority = 50, content_keys: string[] = [], type: ContentType | null = null, template: string | null = null): iContent {
         return { id, content, path, parent_id, name, priority, content_keys, type, template, template_key }
     }
-
+    static getFieldValue(forms: Hash<Hash<string | string[]>>, formkey: string, fieldName: string): string | string[] {
+        if (typeof forms[formkey] === 'undefined') return '';
+        if (typeof forms[formkey][fieldName] === 'undefined') return '';
+        return forms[formkey][fieldName];
+    }/**/
     static makeFilterUrl(currentPage: iPage, newPage: iPage | iMenu, site: iSite, path: string, page: string, filterAndSort: string = ''): [string, string] {
         // если нет фильтров и первая страница то не указываем их
         // !я вот что подумал мы будем различать перую страницу списка /admin/contents.html

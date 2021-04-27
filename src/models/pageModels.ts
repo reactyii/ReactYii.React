@@ -22,7 +22,7 @@ export interface iPageStoreState {
 	readonly loadingPath: string; // путь который грузится в жанный момент, если '' то загрузки нет
 	readonly pageWraper?: iWrapLoadableItem<iPage>;
 	readonly session?: iSession;
-	readonly forms: Hash<Hash<string | string[]>>;
+	//readonly forms: Hash<Hash<string | string[]>>;
 
 	// вынести в общего предка для загружаемых объектов
 	/*readonly error?: string; // ошибка при загрузке страницы
@@ -43,4 +43,5 @@ export interface iPage extends iLoadableItem {
 	is_current_section: boolean;
 	seo: iSeo;
 	session?: iSession; // данные о сайте грузим вместе со страницей, если в сессии что то изменилось с последнего обновления, то придет новая сессия, если нового нет значит юзаем старую
+	forms: Hash<Hash<string | string[]>>;
 }
