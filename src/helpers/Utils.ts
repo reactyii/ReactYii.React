@@ -221,8 +221,38 @@ export class Utils {
         }
         return l;
     }
-
-    static joinUrlParams(g: Hash<string | string[]>, clearEmpty: boolean = false): string {
+    /**
+     * Подготовка аргументов фильтра списка для вставки в path (contentArgs на бэкенде)
+     * очень большая проблема передать одиночный символ '%' в пути (в get проблем нет, также нет проблем и в %20 и кодировке русских букв в коды)
+     * При пост обработке конечной строки у нас отваливается русское SEO. Значит мы должны заменять '%' до encodeURIComponent и тока в значениях
+     * Было великое желание завернуть все в base64, но SEO нам тоже нужно
+     * 
+     * 1. args.push(encodeURIComponent(i) + '=' + encodeURIComponent(encodePercentsSymbol(g[i] as string)))
+     * 2. contentArgs = args.join(&)
+     * 
+     * вынесено в encodePercentsSymbol() в первый шаг то есть
+     * 3. contentArgs = contentArgs.replace('~', '~7E').replace('%', '~25')
+     * 
+     * @param contentArgs
+     */
+    static encodePercentsSymbol(contentArgs: string): string{
+        // ~ код 126 (7E)
+        // % код 37 (25)
+        let res = contentArgs.split('~').join('~7E');
+        return res.split('%').join('~25');
+        /**/
+        /*return contentArgs
+            .replace('~', '~7E') // чтоб была возможность передать сам символ '~'
+            .replace('%', '~25');// пока будем кодировать тока символ '%' возможно понадобятся и другие
+            */
+    }
+    /**
+     * Собираем из хеша с данными гет строку
+     * @param g - хэш с данными (ассоциативный массив)
+     * @param clearEmpty - признак удалять ли пустые элементы
+     * @param argReplacer - обработчик для значений (добавлен одля решения проблемы с одиночным '%' в path URI)
+     */
+    static joinUrlParams(g: Hash<string | string[]>, clearEmpty: boolean = false, argReplacer: (s: string) => string = (arg) => arg): string {
         let l: string[] = [];
         for (let i in g) {
             //Console.log('...', i, typeof g[i])
@@ -234,7 +264,7 @@ export class Utils {
                 if (clearEmpty && g[i] === '') continue;
 
                 //Console.log('->', i, g[i]);
-                l.push(encodeURIComponent(i) + '=' + encodeURIComponent(g[i] as string));
+                l.push(encodeURIComponent(i) + '=' + encodeURIComponent(argReplacer(g[i] as string)));
                 //}
             } else {
                 // массив
@@ -243,7 +273,7 @@ export class Utils {
                 if ((g[i] as string[]).length === 0) continue;
 
                 //console.log('...', i, (g[i] as string[]).map((item) => encodeURIComponent(i) + '[]=' + encodeURIComponent(item)));
-                l.push.apply(l, (g[i] as string[]).map((item) => encodeURIComponent(i) + '[]=' + encodeURIComponent(item)));
+                l.push.apply(l, (g[i] as string[]).map((item) => encodeURIComponent(i) + '[]=' + encodeURIComponent(argReplacer(item))));
             }
         }
         return l.join('&');

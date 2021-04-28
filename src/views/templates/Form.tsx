@@ -82,7 +82,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
 		if (this.method === 'get') { // делаем редирект
 			const url = this.getActionUrl(this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
-			Console.log('-+-+  handleSubmit: redirect to:', url);
+			//Console.log('-+-+  handleSubmit: redirect to:', url);
 			event.preventDefault();
 			event.stopPropagation();
 			//return false;
