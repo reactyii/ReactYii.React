@@ -10,7 +10,8 @@ export class FieldSelect extends Field {
 	render_options(options: iContent[], prefix = "") {
 		//const singlePrefix = 
 		return options.map(item => {
-			return <option key={item.id} value={item.path}>{item.content}</option>
+			// так как у нас может быть html в частности в префиксе &raquo;
+			return <option key={item.id} value={item.path} dangerouslySetInnerHTML={{ __html: item.content }}></option>
 		});
 	}
 
