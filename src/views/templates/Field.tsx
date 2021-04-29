@@ -9,7 +9,8 @@ import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 
 export class Field extends React.Component<iContentProps, iFieldState> {
 	site: iSite;
-	page: iPage;
+	// не будем странциу засовывать в свойства компонента, страница меняется в течении жизни компонента
+	//page: iPage;
 	settings: Hash<string>; // пока предполагаем что настройки формы не изменятся во время жизни на странице
 	formpath: string;
 	fieldname: string;
@@ -23,7 +24,7 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 		// вызов формы без этих параметров ошибка конфигурации
 		this.settings = props.settings || {};
 		this.site = props.session?.site as iSite;
-		this.page = props.pageWraper?.item as iPage;
+		//this.page = props.pageWraper?.item as iPage;
 		this.formpath = this.settings.formpath || 'unknown'; // наличие этих настроек проверяется выше (см установку значения let error = ...)
 		this.fieldname = this.settings.fieldname || 'unknown';
 

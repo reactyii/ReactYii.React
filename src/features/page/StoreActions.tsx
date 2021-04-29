@@ -56,10 +56,10 @@ export class StoreActions extends React.Component<Props, State> {
 		return this.props.forms[formkey][fieldName];
 	}/**/
 
-	public getFilterContentArgs(formkey: string): string {
+	/*public getFilterContentArgs(formkey: string): string {
 		if (typeof this.props.pageWraper?.item?.forms[formkey] === 'undefined') return '';
 		return Utils.joinUrlParams(this.props.pageWraper?.item?.forms[formkey], true, Utils.encodePercentsSymbol);//.replace('&', encodeURIComponent('&'));
-	}
+	}/**/
 
 	public submitForm(path: string) {
 		this.props.startFormSubmit(path);

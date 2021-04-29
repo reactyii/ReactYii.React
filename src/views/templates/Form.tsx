@@ -27,7 +27,8 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	path: string;
 	method: string;
 	site: iSite;
-	page: iPage;
+	// не будем странциу засовывать в свойства компонента, страница меняется в течении жизни компонента
+	//page: iPage;
 	settings: Hash<string>; // пока предполагаем что настройки формы не изменятся во время жизни на странице
 	refStoreActions: React.RefObject<StoreActions>;
 	refRouter: React.RefObject<Router>;
@@ -40,7 +41,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		// вызов формы без этих параметров ошибка конфигурации
 		this.settings = props.settings || {};
 		this.site = props.session?.site as iSite;
-		this.page = props.pageWraper?.item as iPage;
+		//this.page = props.pageWraper?.item as iPage;
 
 		// так как фильтр нам нужен и в списке! то юзаем вместе имени формы path
 		this.path = this.settings.path || 'unknown';
@@ -63,37 +64,27 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		this.refRouter = React.createRef<Router>();
 	}/* */
 
-	/*private initialised: boolean = false;
-	init() {
-		if (this.initialised) return;
-		if (this.refStoreActions.current !== null) {
-			this.initialised = true;
-			Console.log('init form');
-			this.refStoreActions.current?.initForm(this.path);
-		}
-	}
-	componentDidMount() {
-		this.init();
-	}
-	componentDidUpdate() {
-		this.init();
-	}/**/
-
 	handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
 		if (this.method === 'get') { // делаем редирект
-			const url = this.getActionUrl(this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
-			//Console.log('-+-+  handleSubmit: redirect to:', url);
-			event.preventDefault();
-			event.stopPropagation();
+			//const url = this.getActionUrl(this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
+			const url = this.getActionUrl(Utils.getFilterContentArgs(this.path, this.props.pageWraper?.item?.forms || {}) || '');
+			Console.log('-+-+  handleSubmit: redirect to:', url);
 			//return false;
 
 			//this.setState({ redirectto: url });
 			//if (this.refStoreActions?.current !== null) this.refStoreActions.current.loadPage(url);
 
-			if (this.refRouter?.current !== null) this.refRouter.current.historyPush(url);
+			if (this.refRouter?.current !== null) {
+				this.refRouter.current.historyPush(url);
+				event.preventDefault();
+				event.stopPropagation();
+				return false;
+			} else {
+				// маловероятно, но хз
+				Console.error('refRouter is null');
+            }
 			//Console.log('this.refRouter=', this.refRouter);
-
-			return false;/**/
+			/**/
 		} else {
 			// отправка поста
 			//Console.log('redirect to:', url, this.refStoreActions?.current);
@@ -112,7 +103,8 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		return url;*/
 
 		// см коментарий в Utils.makeFilterUrl (всегда указываем '0' страницу при применении фильтров. даже если фильтр сброшен!)
-		const [not_used_host, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.path, '0', filterAndSort);
+		const page = this.props.pageWraper?.item as iPage;
+		const [not_used_host, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '0', filterAndSort);
 		return url;
 	}
 

@@ -18,10 +18,11 @@ export interface iListState {
 export class List extends React.Component<iContentProps, iListState> {
 	path: string;
 	site: iSite;
-	page: iPage;
+	// не будем странциу засовывать в свойства компонента, страница меняется в течении жизни компонента
+	//page: iPage;
 	// не будем использовать! так как настройки (в частности пагинатора) будут меняться
 	//settings: Hash<string>; // NB!!! использваоть тока для фиксированных свойств, например "path"! 
-	refStoreActions: React.RefObject<StoreActions>;
+	//refStoreActions: React.RefObject<StoreActions>;
 
 	constructor(props: iContentProps) {
 		super(props);
@@ -31,7 +32,7 @@ export class List extends React.Component<iContentProps, iListState> {
 		// вызов формы без этих параметров ошибка конфигурации
 		//this.settings = props.settings || {};
 		this.site = props.session?.site as iSite;
-		this.page = props.pageWraper?.item as iPage;
+		//this.page = props.pageWraper?.item as iPage;
 
 		// так как фильтр нам нужен и в списке! то юзаем вместе имени формы path
 		this.path = this.props.settings?.path || 'unknown'; // path у списка не меняется
@@ -42,7 +43,7 @@ export class List extends React.Component<iContentProps, iListState> {
 
 		//Console.log('.....', props.settings);
 
-		this.refStoreActions = React.createRef<StoreActions>();
+		//this.refStoreActions = React.createRef<StoreActions>();
 
 	}/* */
 
@@ -90,7 +91,9 @@ export class List extends React.Component<iContentProps, iListState> {
 		let settings: Hash<string> = Utils.clone(this.props.settings || {}); // NB!!! здесь именно this.props.settings так как настрйоки пагинатора будут менятся в завимсимости от фильтра и текущей страницы
 
 		// в урл надо добавить параметры фильтра и сортировку списка
-		const [not_used_host0, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.path, '{{PAGE}}', this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
+		//const [not_used_host0, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.path, '{{PAGE}}', this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
+		const page = this.props.pageWraper?.item as iPage;
+		const [not_used_host0, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '{{PAGE}}', Utils.getFilterContentArgs(this.path, page.forms || {}) || '');
 		let filter = '';
 
 		//const [not_used_host, url] = Utils.makeUrl(this.page, this.page, this.site, this.path + '/{{PAGE}}');
@@ -117,9 +120,10 @@ export class List extends React.Component<iContentProps, iListState> {
 	}
 
 	renderWraps() {
-		return <>
+		return [];
+		/*return <>
 			<StoreActionsWrapped ref={this.refStoreActions} />
-		</>;
+		</>;/**/
 	}
 
 	render() {

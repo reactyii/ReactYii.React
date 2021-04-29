@@ -221,6 +221,12 @@ export class Utils {
         }
         return l;
     }
+
+    static getFilterContentArgs(formkey: string, forms: Hash<Hash<string | string[]>>): string {
+        if (typeof forms[formkey] === 'undefined') return '';
+        return this.joinUrlParams(forms[formkey], true, this.encodePercentsSymbol);//.replace('&', encodeURIComponent('&'));
+    }
+
     /**
      * Подготовка аргументов фильтра списка для вставки в path (contentArgs на бэкенде)
      * очень большая проблема передать одиночный символ '%' в пути (в get проблем нет, также нет проблем и в %20 и кодировке русских букв в коды)
