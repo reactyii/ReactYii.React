@@ -7,22 +7,22 @@ import { iContentProps } from '../../models/contentModels';
 
 export class Paginator extends React.Component<iContentProps, {}> {
 
-	render_first_link(url: string) {
+	renderFirstLink(url: string) {
 		return <Link key="first" to={ url }>First</Link>;
 	}
-	render_last_link(url: string, ind: number) {
+	renderLastLink(url: string, ind: number) {
 		return <Link key="last" to={url}>Last</Link>;
 	}
-	render_prev_link(url: string, ind: number) {
+	renderPrevLink(url: string, ind: number) {
 		return <Link key="prev" to={url}>Prev</Link>;
 	}
-	render_page(url: string, ind: number) {
+	renderPage(url: string, ind: number) {
 		return <Link key={ind} to={url}>{ind}</Link>;
 	}
-	render_current(ind: number) {
+	renderCurrent(ind: number) {
 		return <span key="current">{ ind }</span>;
 	}
-	render_next_link(url: string, ind: number) {
+	renderNextLink(url: string, ind: number) {
 		return <Link key="next" to={url}>Next</Link>;
 	}
 
@@ -35,13 +35,13 @@ export class Paginator extends React.Component<iContentProps, {}> {
 		return settings['base_url'].replace('{{PAGE}}', '' + page);
 	}
 
-	render_pages(pages: Hash<React.ReactNode>): React.ReactNode {
+	renderPages(pages: Hash<React.ReactNode>): React.ReactNode {
 
 		// для тестового примера мы просто рендерим всем линки как есть, но в переопределенных вариантах может понадодобится что-то вставить между ними
-		return Object.values(pages);
+		return <div>{Object.values(pages)}</div>;
 	}
 
-	prepare_pages(): Hash<React.ReactNode> {
+	preparePages(): Hash<React.ReactNode> {
 		//Console.log('pages settings:', this.props.settings);
 		if (typeof this.props.settings === 'undefined') return {};
 		const s = this.props.settings;
@@ -65,33 +65,33 @@ export class Paginator extends React.Component<iContentProps, {}> {
 
 		//const base_url = s['base_url'];  // The page we are linking to
 
-		let res: Hash<React.ReactNode> = { 'first': this.render_first_link(this.url(s, 0)) };
+		let res: Hash<React.ReactNode> = { 'first': this.renderFirstLink(this.url(s, 0)) };
 
 		//Console.log('hhhhhhhhhhhh1', cur_page, num_links);
 		if (cur_page != 0) {
-			res['prev'] = this.render_prev_link(this.url(s, cur_page - 1), cur_page);
+			res['prev'] = this.renderPrevLink(this.url(s, cur_page - 1), cur_page);
 		}
 
 		let pages = [];
 		for (let loop = start; loop < end; loop++) {
 			if (cur_page == loop) {
-				pages.push(this.render_current(loop + 1));
+				pages.push(this.renderCurrent(loop + 1));
 			} else {
-				pages.push(this.render_page(this.url(s, loop), loop + 1));
+				pages.push(this.renderPage(this.url(s, loop), loop + 1));
 			}
 		}
 		res['pages'] = pages;
 
 		if (cur_page < num_pages - 1) {
-			res['next'] = this.render_next_link(this.url(s, cur_page + 1), cur_page + 2);
+			res['next'] = this.renderNextLink(this.url(s, cur_page + 1), cur_page + 2);
 		}
 
-		res['last'] = this.render_last_link(this.url(s, num_pages - 1), num_pages);
+		res['last'] = this.renderLastLink(this.url(s, num_pages - 1), num_pages);
 		
 		return res;
 	}
 
 	render() {
-		return this.render_pages(this.prepare_pages());
+		return this.renderPages(this.preparePages());
 	}
 }
