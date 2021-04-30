@@ -82,7 +82,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 			} else {
 				// маловероятно, но хз
 				Console.error('refRouter is null');
-            }
+			}
 			//Console.log('this.refRouter=', this.refRouter);
 			/**/
 		} else {
@@ -120,7 +120,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 			<RouterWrapped ref={this.refRouter} />
 		</>;
 	}
-	renderForm(action: string, method: string, content: React.ReactNode): React.ReactNode{
+	renderForm(action: string, method: string, content: React.ReactNode): React.ReactNode {
 		return <form action={action} method={method} onSubmit={this.handleSubmit}>
 			{this.renderWraps()}
 			{content}

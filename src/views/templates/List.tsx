@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { Templates } from '.';
 import { StoreActions } from '../../features/page/StoreActions';
 import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 import { Utils } from '../../helpers/Utils';
-import { Console, Hash, iSite } from '../../models/commonModels';
+import { Console, ContentType, Hash, iSite } from '../../models/commonModels';
 //import { Console, ContentType } from '../../models/commonModels';
 import { iContent, iContentProps } from '../../models/contentModels';
 import { iPage } from '../../models/pageModels';
@@ -76,6 +77,38 @@ export class List extends React.Component<iContentProps, iListState> {
 	renderAfter(): React.ReactNode {
 		return this.renderContent('AFTER');
 	}
+	/**
+	 * Делаем копию единицы контента ссылки на добавление так как нам нужно сформировать корректный урл (бэкенд не сильно разбирается как формировать урлы)
+	 * просто заменить settings.url не получится так как идет передача по "ссылке" и нельзя изменить объект в сторе редукса (если короче, то content is readonly)
+	 * 
+	 * @param content
+	 */
+	private _cloneAddLink(content: iContent): iContent {
+		if (content.type !== ContentType.Link) return content;
+
+		const url = '#!';
+		const _content = Utils.clone(content);
+		if (typeof _content.settings === 'undefined') {
+			_content.settings = { url };
+		} else {
+			_content.settings.url = url;
+		}
+		return _content;
+	}
+	renderLinkAdd(): React.ReactNode {
+		// надо сформирвоать url
+		const content = this.props.content.filter(item => item.content_keys?.indexOf('LINKADD') >= 0);
+		if (content.length === 0) return null;
+
+		const newContent: iContent[] = [];
+		for (let i = 0, l = content.length; i < l; i++) {
+			newContent.push(this._cloneAddLink(content[i]));
+			//Console.log('>>>', newContent[i].settings);
+		}
+
+		return <Content content={newContent} pageWraper={this.props.pageWraper} session={this.props.session} />;
+		//return this.renderContent('LINKADD');
+	}
 
 	renderRow(content: iContent): React.ReactNode{
 		return <Content key={content.id} content={[content]} pageWraper={this.props.pageWraper} session={this.props.session} />;
@@ -92,9 +125,8 @@ export class List extends React.Component<iContentProps, iListState> {
 		return <Content content={Utils.genErrorContent(message)} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
 
-	renderPages(): React.ReactNode {
-
-		let settings: Hash<string> = Utils.clone(this.props.settings || {}); // NB!!! здесь именно this.props.settings так как настрйоки пагинатора будут менятся в завимсимости от фильтра и текущей страницы
+	getSettingsForPages() {
+		const settings: Hash<string> = Utils.clone(this.props.settings || {}); // NB!!! здесь именно this.props.settings так как настрйоки пагинатора будут менятся в завимсимости от фильтра и текущей страницы
 
 		// в урл надо добавить параметры фильтра и сортировку списка
 		//const [not_used_host0, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.path, '{{PAGE}}', this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
@@ -108,7 +140,19 @@ export class List extends React.Component<iContentProps, iListState> {
 		const url1 = url.replace('{{PAGE}}', '0');
 		settings.first_url = url1;
 
-		return <Paginator content={[]} pageWraper={this.props.pageWraper} session={this.props.session} settings={settings} />;
+		return settings;
+
+	}
+	renderPages(): React.ReactNode {
+
+		const settings = this.getSettingsForPages();
+
+		// НЕ ДЕЛАТЬ ТАК! так как таким макаром мы не сможем поменять отрисовку пагинатора у потомка
+		//return <Paginator content={[]} pageWraper={this.props.pageWraper} session={this.props.session} settings={settings} />;
+		// вот так  мы и встаивм Paginator именно из шаблона
+		const pc = Utils.genContent('-111', '', 'Paginator');
+		pc.settings = settings;
+		return <Content content={[pc]} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
 
 	getChilds(): iContent[] {
@@ -147,6 +191,7 @@ export class List extends React.Component<iContentProps, iListState> {
 			{this.renderSort()}
 			{this.renderList()}
 			{this.renderPages()}
+			{this.renderLinkAdd()}
 			{this.renderAfter()}
 		</>;
 	}

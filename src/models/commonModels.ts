@@ -2,6 +2,7 @@ export interface Hash<T> { [s: string]: T; }
 export enum ContentType {
     // это не используем так как это по умолчанию и в котенте (шаблоне) стоит null
     //Text = "TEXT",
+    Link = "link",
     String = "string",
     Number = "number",
     List = "list",

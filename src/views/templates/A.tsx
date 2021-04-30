@@ -4,7 +4,7 @@ import { iContentProps } from '../../models/contentModels';
 import { Content } from '../Content';
 import { Utils } from '../../helpers/Utils';
 //import { FormStorage } from '../../helpers/FormStorage';
-import { Hash, iSite } from '../../models/commonModels';
+import { Console, Hash, iSite } from '../../models/commonModels';
 import { iPage } from '../../models/pageModels';
 //import { Html } from '../Html';
 
@@ -22,13 +22,14 @@ export class A extends React.Component<iContentProps, {}> {
 	}
 
 	getUrl(settings: Hash<string>): string {
-		return this.props.settings?.content ? this.props.settings?.content : ''; // к сожалению урл сюда можно передать тока так, то есть построение урла снаружи
+		return settings.url ? settings.url : ''; // к сожалению урл сюда можно передать тока так, то есть построение урла снаружи
 	}
 
 	renderContent(settings: Hash<string>): React.ReactNode {
 		const childsContent = this.props.content.filter(item => {
 			return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
 		});
+		Console.log('}}}}}}}}}', settings, childsContent);
 		return childsContent.length > 0
 			? <Content content={childsContent} pageWraper={this.props.pageWraper} session={this.props.session} />
 			: (settings.content ? settings.content : '');
@@ -36,7 +37,6 @@ export class A extends React.Component<iContentProps, {}> {
 
 	render() {
 		const settings = this.props.settings || {};
-		
 
 		return this.renderA(this.getUrl(settings), this.renderContent(settings), this.getAttrs(settings));
 	}

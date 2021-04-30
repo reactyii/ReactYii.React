@@ -22,6 +22,7 @@ export { Error };
 
 export const Templates: Hash<any> = {
     H1: H1,
+    A:A,
     List: List,
     ListContent: ListContent,
     Form: Form,

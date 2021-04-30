@@ -48,7 +48,7 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 		Console.log('field change!', this.formpath, this.fieldname, event.target.value);
 		//this.setState({ value: event.target.value });
 		//FormStorage.setValue(this.formpath, this.fieldname, event.target.value as string | string[]);
-		this.refStoreActions.current?.setFieldValue(this.formpath, this.fieldname, event.target.value as string | string[]);
+		this.refStoreActions.current?.setFieldValue(this.formpath, this.fieldname, event.target.value); // | string[]
 	}
 	renderField(): React.ReactNode {
 		//if (typeof this.props.settings === 'undefined') return;
