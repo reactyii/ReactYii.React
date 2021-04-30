@@ -42,13 +42,13 @@ export class FormReset extends React.Component<iContentProps, {}> {
 		//FormStorage.clearForm(this.formpath);
 	}*/
 
-	renderButton() {
+	renderButton(): React.ReactNode {
 		//return <button type="submit" onClick={this.handleClick}>reset</button>;
 		// todo! добавить сортировку в filterAndSort аргумент
 		const [not_used_host0, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.formpath, '0', '');
 		return <Link to={url}>{this.props.settings?.value || 'Reset'}</Link>;
 	}
-	renderWraps() {
+	renderWraps(): React.ReactNode {
 		return [];
 		/*return <>
 			<StoreActionsWrapped ref={this.refStoreActions} />

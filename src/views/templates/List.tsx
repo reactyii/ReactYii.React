@@ -53,40 +53,46 @@ export class List extends React.Component<iContentProps, iListState> {
 	}/**/
 
 
-	drawContent(key: string) {
+	renderContent(key: string): React.ReactNode {
 		const content = this.props.content.filter(item => item.content_keys?.indexOf(key) >= 0);
 		if (content.length === 0) return null;
 		return <Content content={content} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
-	renderHeader() {
-		return this.drawContent('HEADER');
+	renderHeader(): React.ReactNode {
+		return this.renderContent('HEADER');
 	}
 
-	renderFilter() {
+	renderFilter(): React.ReactNode {
 		//Console.log(':::', this.props.content.filter(item => item.content_keys?.indexOf('FILTER') >= 0));
-		return this.drawContent('FILTER');
+		return this.renderContent('FILTER');
 	}
 
-	renderSort() {
-		return this.drawContent('SORT');
+	renderSort(): React.ReactNode {
+		return this.renderContent('SORT');
+	}
+	renderBefore(): React.ReactNode {
+		return this.renderContent('BEFORE');
+	}
+	renderAfter(): React.ReactNode {
+		return this.renderContent('AFTER');
 	}
 
-	renderRow(content: iContent) {
+	renderRow(content: iContent): React.ReactNode{
 		return <Content key={content.id} content={[content]} pageWraper={this.props.pageWraper} session={this.props.session} />;
 		//return '???';
 	}
 
-	renderList() {
+	renderList(): React.ReactNode {
 		return this.getChilds().map(item => this.renderRow(item));
 	}
 
-	renderError(message: string[]) {
+	renderError(message: string[]): React.ReactNode {
 		Console.log('form error!');
 		//return <Error content={[Utils.genContent('1', message)]} />;
 		return <Content content={Utils.genErrorContent(message)} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
 
-	renderPages() {
+	renderPages(): React.ReactNode {
 
 		let settings: Hash<string> = Utils.clone(this.props.settings || {}); // NB!!! здесь именно this.props.settings так как настрйоки пагинатора будут менятся в завимсимости от фильтра и текущей страницы
 
@@ -94,7 +100,7 @@ export class List extends React.Component<iContentProps, iListState> {
 		//const [not_used_host0, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.path, '{{PAGE}}', this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
 		const page = this.props.pageWraper?.item as iPage;
 		const [not_used_host0, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '{{PAGE}}', Utils.getFilterContentArgs(this.path, page.forms || {}) || '');
-		let filter = '';
+		//let filter = '';
 
 		//const [not_used_host, url] = Utils.makeUrl(this.page, this.page, this.site, this.path + '/{{PAGE}}');
 		settings.base_url = url;
@@ -105,11 +111,11 @@ export class List extends React.Component<iContentProps, iListState> {
 		return <Paginator content={[]} pageWraper={this.props.pageWraper} session={this.props.session} settings={settings} />;
 	}
 
-	getChilds() {
+	getChilds(): iContent[] {
 		return this.props.content.filter(item => item.content_keys?.indexOf('CONTENT') >= 0);
 	}
 
-	renderFounded() {
+	renderFounded(): React.ReactNode {
 		const countAll = this.props.settings?.total_rows || '0';
 		const max_on_page = this.props.settings?.per_page || '0';
 		const offset = this.props.settings?.cur_page || '0';
@@ -119,7 +125,7 @@ export class List extends React.Component<iContentProps, iListState> {
 		return 'Найдено ' + countAll + '.' + (+count > 0 ? ' Показано ' + (+offset * +max_on_page) + ' - ' + (+offset * +max_on_page + +count) : '');
 	}
 
-	renderWraps() {
+	renderWraps(): React.ReactNode {
 		return [];
 		/*return <>
 			<StoreActionsWrapped ref={this.refStoreActions} />
@@ -135,11 +141,13 @@ export class List extends React.Component<iContentProps, iListState> {
 		return <>
 			{this.renderWraps()}
 			{this.renderHeader()}
+			{this.renderBefore()}
 			{this.renderFilter()}
 			{this.renderFounded()}
 			{this.renderSort()}
 			{this.renderList()}
 			{this.renderPages()}
+			{this.renderAfter()}
 		</>;
 	}
 }

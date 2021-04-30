@@ -7,7 +7,7 @@ import { Field } from './Field';
 
 export class FieldSelect extends Field {
 
-	render_options(options: iContent[], prefix = "") {
+	render_options(options: iContent[], prefix = ""): React.ReactNode {
 		//const singlePrefix = 
 		return options.map(item => {
 			// так как у нас может быть html в частности в префиксе &raquo;
@@ -15,7 +15,7 @@ export class FieldSelect extends Field {
 		});
 	}
 
-	renderField() {
+	renderField(): React.ReactNode {
 		//if (typeof this.props.settings === 'undefined') return;
 		return <select onChange={this.handleChange}>{
 			this.render_options(this.props.content.filter(item => {

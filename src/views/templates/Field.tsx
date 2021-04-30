@@ -56,7 +56,7 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 		const val = Utils.getFieldValue(this.props.pageWraper?.item?.forms || {}, this.formpath, this.fieldname)
 		return <input type={this.settings['type'] as string} value={val} onChange={this.handleChange} />;
 	}
-	renderWraps() {
+	renderWraps(): React.ReactNode {
 		return <>
 			<StoreActionsWrapped ref={this.refStoreActions} />
 		</>;

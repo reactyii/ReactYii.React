@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Hash } from '../../models/commonModels';
 import { H1 } from './H1';
+import { A } from './A';
 import { List } from './List';
 import { ListContent } from './ListContent';
 import { Paginator } from './Paginator';
@@ -15,7 +16,7 @@ import { FieldSelect } from './FieldSelect';
 import { FieldHidden } from './FieldHidden';
 import { Error } from './Error';
 
-export { H1, List, ListContent, Paginator, Form, FormFilter, Field, FieldSelect, FieldHidden, FormSubmit, };
+export { H1, List, ListContent, Paginator, Form, FormFilter, Field, FieldSelect, FieldHidden, FormSubmit, FormReset, A};
 export { Layout/*, WideLayout*/ };
 export { Error };
 

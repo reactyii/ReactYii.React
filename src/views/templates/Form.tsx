@@ -108,19 +108,19 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		return url;
 	}
 
-	renderError(message: string[]) {
+	renderError(message: string[]): React.ReactNode {
 		Console.log('form error!');
 		//return <Error content={[Utils.genContent('1', message)]} />;
 		return <Content content={Utils.genErrorContent(message)} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
 
-	renderWraps() {
+	renderWraps(): React.ReactNode {
 		return <>
 			<StoreActionsWrapped ref={this.refStoreActions} />
 			<RouterWrapped ref={this.refRouter} />
 		</>;
 	}
-	renderForm(action: string, method: string, content: React.ReactNode) {
+	renderForm(action: string, method: string, content: React.ReactNode): React.ReactNode{
 		return <form action={action} method={method} onSubmit={this.handleSubmit}>
 			{this.renderWraps()}
 			{content}
