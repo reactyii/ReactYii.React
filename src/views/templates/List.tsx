@@ -83,10 +83,11 @@ export class List extends React.Component<iContentProps, iListState> {
 	 * 
 	 * @param content
 	 */
-	private _cloneAddLink(content: iContent): iContent {
+	protected _cloneAddEditLink(content: iContent, id: string = '0'): iContent {
 		if (content.type !== ContentType.Link) return content;
 
-		const url = '#!';
+		const page = this.props.pageWraper?.item as iPage;
+		const [not_used_host0, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '', '__edit/' + id);
 		const _content = Utils.clone(content);
 		if (typeof _content.settings === 'undefined') {
 			_content.settings = { url };
@@ -95,14 +96,14 @@ export class List extends React.Component<iContentProps, iListState> {
 		}
 		return _content;
 	}
-	renderLinkAdd(): React.ReactNode {
+	renderLinkAddEdit(action: string = 'ADD', id: string = '0'): React.ReactNode {
 		// надо сформирвоать url
-		const content = this.props.content.filter(item => item.content_keys?.indexOf('LINKADD') >= 0);
+		const content = this.props.content.filter(item => item.content_keys?.indexOf('LINK' + action) >= 0);
 		if (content.length === 0) return null;
 
 		const newContent: iContent[] = [];
 		for (let i = 0, l = content.length; i < l; i++) {
-			newContent.push(this._cloneAddLink(content[i]));
+			newContent.push(this._cloneAddEditLink(content[i], id));
 			//Console.log('>>>', newContent[i].settings);
 		}
 
@@ -111,7 +112,10 @@ export class List extends React.Component<iContentProps, iListState> {
 	}
 
 	renderRow(content: iContent): React.ReactNode{
-		return <Content key={content.id} content={[content]} pageWraper={this.props.pageWraper} session={this.props.session} />;
+		const linkEdit = this.renderLinkAddEdit('EDIT', content.id);
+		const c = <Content key={content.id} content={[content]} pageWraper={this.props.pageWraper} session={this.props.session} />;
+		// по умолчанию если есть линк на редактирование, то сунем его вправо и обернем все div-ами. в реальных преопределениях все равно переопределим эту функцию
+		return linkEdit !== null ? <div><div style={{ float: 'right' }}>{linkEdit}</div>{c}</div> : c;
 		//return '???';
 	}
 
@@ -149,7 +153,7 @@ export class List extends React.Component<iContentProps, iListState> {
 
 		// НЕ ДЕЛАТЬ ТАК! так как таким макаром мы не сможем поменять отрисовку пагинатора у потомка
 		//return <Paginator content={[]} pageWraper={this.props.pageWraper} session={this.props.session} settings={settings} />;
-		// вот так  мы и встаивм Paginator именно из шаблона
+		// вот так  мы и вставим Paginator именно из шаблона
 		const pc = Utils.genContent('-111', '', 'Paginator');
 		pc.settings = settings;
 		return <Content content={[pc]} pageWraper={this.props.pageWraper} session={this.props.session} />;
@@ -191,7 +195,7 @@ export class List extends React.Component<iContentProps, iListState> {
 			{this.renderSort()}
 			{this.renderList()}
 			{this.renderPages()}
-			{this.renderLinkAdd()}
+			{this.renderLinkAddEdit()}
 			{this.renderAfter()}
 		</>;
 	}

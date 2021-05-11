@@ -58,7 +58,7 @@ export class Utils {
         // и в любом случае если у нас задана страница то мы указываем каноникал на /admin/contents.html
         //if ((page === '0' || page === '') && !filterAndSort) return this.makeUrl(currentPage, newPage, site);
 
-        return this.makeUrl(currentPage, newPage, site, path + '/' + page + (filterAndSort ? '/' + filterAndSort : ''));
+        return this.makeUrl(currentPage, newPage, site, path + (page ? '/' + page : '') + (filterAndSort ? '/' + filterAndSort : ''));
     }
     
     static makeUrl(currentPage: iPage, newPage: iPage | iMenu, site: iSite, contentArgs: string = '', gets: Hash<string | string[]> = {}): [string, string] {

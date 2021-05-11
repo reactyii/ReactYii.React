@@ -13,7 +13,7 @@ export class FieldSelect extends Field {
 	handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
 		//if (typeof this.props.settings === 'undefined') return;
 
-		Console.log('select change!', this.formpath, this.fieldname, event.target.selectedOptions);
+		//Console.log('select change!', this.formpath, this.fieldname, event.target.selectedOptions);
 		const vals = Array.from(event.target.selectedOptions, (item: HTMLOptionElement) => item.value);
 		//this.setState({ value: event.target.value });
 		//FormStorage.setValue(this.formpath, this.fieldname, event.target.value as string | string[]);
