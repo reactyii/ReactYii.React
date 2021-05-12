@@ -88,7 +88,19 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		} else {
 			// отправка поста
 			//Console.log('redirect to:', url, this.refStoreActions?.current);
-			if (this.refStoreActions?.current !== null) this.refStoreActions?.current.submitForm('!!!!!!!!!!');
+
+			const page = this.props.pageWraper?.item as iPage;
+			const data: Hash<string> = this.props.pageWraper?.item?.forms[this.path] as Hash<string> || {};
+			const id = typeof data.id !== 'undefined' ? data.id : '?';
+			const [not_used_host, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '', '__edit/' + id);
+			//const url = this.getActionUrl('__edit/0');
+			Console.log('submit form', url, data);
+
+			if (this.refStoreActions?.current !== null) this.refStoreActions?.current.submitForm(url, data);
+
+			event.preventDefault();
+			event.stopPropagation();
+			return false;
 		}
 	}
 
@@ -128,7 +140,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 	}
 
 	render() {
-		//Console.log('hhhhhhhhhhhh1', this.state.redirectto);
+		//Console.log('hhhhhhhhhhhh1');
 
 		// ошибки компонента! ошибки самой формы покажутся в форме как обычные единицы контента
 		if (this.state.error.length > 0) return this.renderError(this.state.error);
@@ -141,10 +153,11 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		//if (typeof this.props.session?.site === 'undefined') return 'Error';
 
 		//const settings: Hash<string> = this.props.settings;
-
-		const content = <Content key="formcontent" content={this.props.content.filter(item => {
+		const _content = this.props.content.filter(item => {
 			return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
-		})} pageWraper={this.props.pageWraper} session={this.props.session} />
+		});
+		//Console.log('fields:', _content);
+		const content = <Content key="formcontent" content={_content} pageWraper={this.props.pageWraper} session={this.props.session} />
 
 		return this.renderForm(this.getActionUrl(''), this.method, content);
 	}

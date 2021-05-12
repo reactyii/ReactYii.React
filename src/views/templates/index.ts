@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Hash } from '../../models/commonModels';
 import { H1 } from './H1';
 import { A } from './A';

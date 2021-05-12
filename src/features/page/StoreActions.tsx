@@ -61,8 +61,8 @@ export class StoreActions extends React.Component<Props, State> {
 		return Utils.joinUrlParams(this.props.pageWraper?.item?.forms[formkey], true, Utils.encodePercentsSymbol);//.replace('&', encodeURIComponent('&'));
 	}/**/
 
-	public submitForm(path: string) {
-		this.props.startFormSubmit(path);
+	public submitForm(url: string, data: Hash<string>) {
+		this.props.startFormSubmit(url);
 	}
 
 	public loadPage(path: string) {
