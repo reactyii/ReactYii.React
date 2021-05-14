@@ -15,7 +15,7 @@ class PageRepository extends BaseRepository<iPage>{
 		let path = this.host + key;
 		let p = Utils.joinUrlParams(params);
 
-		if (p!=='') {
+		if (p !== '') {
 			path += (path.indexOf('?') >= 0 ? '&' : '?') + p;//'__siteLM=' + this.props.session.site.lastModified;
 		}
 		return path;

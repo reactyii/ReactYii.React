@@ -132,12 +132,20 @@ export const pageSlice = createSlice({
 		},
 
 		startFormSubmit: (state, action: PayloadAction<string>) => {
-			//state.loadingPath = action.payload; // устанавливаем признак загрузки
+			state.loadingPath = action.payload; // устанавливаем признак загрузки
+
+			// todo сделать признак того что форма сабмитится. херить данные всех форм идея так себе, но и возможность юзеру менять данные при сабмите тоже не айс
+			// в теории мы так можем скрыть форму
+			/*if (state.pageWraper?.item) {
+				state.pageWraper.item.forms = {};
+				Console.log('clear forms');
+			}/**/
+
 			Console.log('startFormSubmit', action.payload);
 		},
-		endFormSubmit: (state, action: PayloadAction<iWrapLoadableItem<iPage>>) => {
+		/*endFormSubmit: (state, action: PayloadAction<iWrapLoadableItem<iPage>>) => {
 			Console.log('endFormSubmit');
-		},
+		},*/
 		// ------------------------------ / forms
 
 
@@ -157,7 +165,7 @@ export const pageSlice = createSlice({
 			state.pageWraper = action.payload;
 			if (state.pageWraper.item) {
 				state.pageWraper.item.forms = findForms(state.pageWraper.item.content || []);
-				Console.log('forms=', state.pageWraper.item.forms);
+				//Console.log('forms=', state.pageWraper.item.forms);
 			}
 			if (typeof state.session === 'undefined') state.session = {};
 			if (typeof action.payload.item?.session?.site !== 'undefined') {
@@ -179,20 +187,38 @@ export const pageSlice = createSlice({
 	},
 });
 
-export const { testPage, startLoadPage, endLoadPage, clearForm, setFieldValue, startFormSubmit, endFormSubmit } = pageSlice.actions;
+export const { testPage, startLoadPage, endLoadPage, clearForm, setFieldValue, startFormSubmit/*, endFormSubmit*/ } = pageSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched
-export const loadPageAsync = (path: string, params: Hash<string>): AppThunk => dispatch => {
+export const loadPageAsync = (path: string, get: Hash<string>): AppThunk => dispatch => {
 	Console.log('start loading:', path);
 	dispatch(startLoadPage(path));
 
-	pageRepository.get(path, params, item => {
+	pageRepository.get(path, get, item => {
 		//Console.log('loaded:', item);
 		//setTimeout(() => {
 			dispatch(endLoadPage(item));
+		//}, 1000);/* */
+	});
+
+	/*setTimeout(() => {
+		Console.log('loaded:', path);
+		let page: iPage = {key: path, template: '', layout: '', contents: []};
+		dispatch(endLoadPage(page));
+	}, 1000);/* */
+};
+
+export const postFormAsync = (path: string, get: Hash<string>, post: Hash<string | string[]>): AppThunk => dispatch => {
+	Console.log('start post:', path);
+	dispatch(startFormSubmit(path));
+
+	pageRepository.post(path, get, post, item => {
+		//Console.log('loaded:', item);
+		//setTimeout(() => {
+		dispatch(endLoadPage(item));
 		//}, 1000);/* */
 	});
 

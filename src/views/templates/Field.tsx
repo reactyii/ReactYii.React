@@ -50,16 +50,23 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 		//FormStorage.setValue(this.formpath, this.fieldname, event.target.value as string | string[]);
 		this.refStoreActions.current?.setFieldValue(this.formpath, this.fieldname, event.target.value); // | string[]
 	}
+	getValue() {
+		return Utils.getFieldValue(this.props.pageWraper?.item?.forms || {}, this.formpath, this.fieldname);
+	}
+	renderError(): React.ReactNode {
+		const settings = this.props.settings || {}; // здесь нельзя использовать this.settings так как он не меняется после создания компонента
+		return typeof settings.error === 'undefined' || !settings.error ? null : <Content content={Utils.genErrorContent([settings.error])} pageWraper={this.props.pageWraper} session={this.props.session} />;
+	}
 	renderField(): React.ReactNode {
 		//if (typeof this.props.settings === 'undefined') return;
-		
-		const val = Utils.getFieldValue(this.props.pageWraper?.item?.forms || {}, this.formpath, this.fieldname)
-		return <input type={this.settings['type'] as string} value={val} onChange={this.handleChange} />;
+
+		const inp = <input type={this.settings['type'] as string} value={this.getValue()} onChange={this.handleChange} />;
+		const err = this.renderError();
+		//Console.log('field error', this.formpath, this.fieldname, err);
+		return err === null ? inp : <div>{inp}{err}</div>;
 	}
 	renderWraps(): React.ReactNode {
-		return <>
-			<StoreActionsWrapped ref={this.refStoreActions} />
-		</>;
+		return <StoreActionsWrapped ref={this.refStoreActions} />;
 	}
 
 	render() {

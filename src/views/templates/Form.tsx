@@ -94,9 +94,10 @@ export class Form extends React.Component<iContentProps, iFormState> {
 			const id = typeof data.id !== 'undefined' ? data.id : '?';
 			const [not_used_host, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '', '__edit/' + id);
 			//const url = this.getActionUrl('__edit/0');
+
 			Console.log('submit form', url, data);
 
-			if (this.refStoreActions?.current !== null) this.refStoreActions?.current.submitForm(url, data);
+			if (this.refStoreActions?.current !== null) this.refStoreActions?.current.submitForm(url, {}, data);
 
 			event.preventDefault();
 			event.stopPropagation();
@@ -132,9 +133,25 @@ export class Form extends React.Component<iContentProps, iFormState> {
 			<RouterWrapped ref={this.refRouter} />
 		</>;
 	}
-	renderForm(action: string, method: string, content: React.ReactNode): React.ReactNode {
-		return <form action={action} method={method} onSubmit={this.handleSubmit}>
+	renderForm(): React.ReactNode {
+		const _error = this.props.content.filter(item => {
+			return typeof item.content_keys !== 'undefined' && item.content_keys.indexOf('ERROR') >= 0;
+		});
+		//Console.log('errors:', _error);
+
+		const error = _error.length > 0 ? <Content key="formerror" content={_error} pageWraper={this.props.pageWraper} session={this.props.session} /> : null;
+
+		const _content = this.props.content.filter(item => {
+			return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
+		});
+		//Console.log('fields:', _content);
+		const content = <Content key="formcontent" content={_content} pageWraper={this.props.pageWraper} session={this.props.session} />
+
+		const action = this.getActionUrl('');
+
+		return <form action={action} method={this.method} onSubmit={this.handleSubmit}>
 			{this.renderWraps()}
+			{error}
 			{content}
 		</form>;
 	}
@@ -152,14 +169,7 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		//if (typeof this.props.pageWraper?.item === 'undefined' || this.props.pageWraper?.item === null) return 'Error';
 		//if (typeof this.props.session?.site === 'undefined') return 'Error';
 
-		//const settings: Hash<string> = this.props.settings;
-		const _content = this.props.content.filter(item => {
-			return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
-		});
-		//Console.log('fields:', _content);
-		const content = <Content key="formcontent" content={_content} pageWraper={this.props.pageWraper} session={this.props.session} />
-
-		return this.renderForm(this.getActionUrl(''), this.method, content);
+		return this.renderForm();
 	}
 }
 

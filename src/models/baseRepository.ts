@@ -1,5 +1,6 @@
 //import * as request from 'superagent'; // годные доки https://visionmedia.github.io/superagent/
 import 'isomorphic-fetch'; // https://www.digitalocean.com/community/tutorials/js-fetch-api
+import { Utils } from '../helpers/Utils';
 import {
     Console,
 	Hash, 
@@ -38,7 +39,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 	protected readonly data: Hash<iWrapLoadableItem<T>> = {};
 	private abortController: AbortController | null = null;
 
-	public get(key: string, params: Hash<string>, end: (item: iWrapLoadableItem<T>) => void) {
+	public get(key: string, get: Hash<string>, end: (item: iWrapLoadableItem<T>) => void) {
 		//Console.log('this.enableCache=', this.enableCache);
 		if (this.enableCache && typeof this.data[key] !== 'undefined' && this.data[key].item !== null) 
 		{
@@ -48,10 +49,15 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 			return end(this.prepareItemForStore(key, this.data[key]));
 		}
 
-		this.load(key, params, end);
+		this.load(key, get, end);
 	}
 
-	public load(key: string, params: Hash<string>, end: (item: iWrapLoadableItem<T>) => void) {
+	public post(key: string, get: Hash<string>, post: Hash<string|string[]>, end: (item: iWrapLoadableItem<T>) => void) {
+
+		this.load(key, get, end, 'POST', post);
+	}
+
+	public load(key: string, get: Hash<string>, end: (item: iWrapLoadableItem<T>) => void, method = 'GET', post: Hash<string | string[]> = {}) {
 		if (typeof this.data[key] === 'undefined') {
 			this.data[key] = { key: key, item: null, err: null, abortController: null/*, request: null*/ };
 		}
@@ -60,25 +66,32 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 
 		this.data[key].err = null; // скинем ошибку если была
 
-		try { // тупо давим все ошибки если не вышло отменить и пес с ним
-			Console.log('try cancel ', key);
-			this.abortController?.abort();
-			this.data[key].abortController?.abort();
-		} catch (error) {
-			Console.error('Ошибка при отмене запроса:', error);
+		if (method === 'GET') { // глушим только гет запросы!
+			try { // тупо давим все ошибки если не вышло отменить и пес с ним
+				Console.log('try cancel ', key);
+				this.abortController?.abort();
+				this.data[key].abortController?.abort();
+			} catch (error) {
+				Console.error('Ошибка при отмене запроса:', error);
+			}
 		}
 
 		// https://learn.javascript.ru/fetch-abort
-		const options = {
-			method: 'GET',
+		const options: RequestInit = {
+			method: method,
 			signal: this.abortAll ? (this.abortController = new AbortController()).signal : (this.data[key].abortController = new AbortController()).signal,
-			//body: JSON.stringify(myPost),
+			//body: post ? Utils.joinUrlParams(post) : undefined,//JSON.stringify(myPost),
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', //'application/json',
 				'X-Requested-With': 'XMLHttpRequest'
 			}
 		};
-		fetch(this.getUrl(key, params), options).then(res => {
+
+		if (Object.keys(post).length > 0) {
+			options['body'] = Utils.joinUrlParams(post);
+		}
+		
+		fetch(this.getUrl(key, get), options).then(res => {
 			//Console.log('data loaded1', res);
 			if (res.ok) {
 				return res.json();
@@ -132,7 +145,7 @@ export abstract class BaseRepository<T extends iLoadableItem> {
 	}
 
 	abstract getTestItem(key: string): T;
-	abstract getUrl(key: string, params: Hash<string>): string;
+	abstract getUrl(key: string, get: Hash<string>): string;
 	abstract prepareItemForStore(key: string, item: iWrapLoadableItem<T>): iWrapLoadableItem<T>;
 
 }

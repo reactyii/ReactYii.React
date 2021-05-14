@@ -29,7 +29,7 @@ export class A extends React.Component<iContentProps, {}> {
 		const childsContent = this.props.content.filter(item => {
 			return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
 		});
-		Console.log('}}}}}}}}}', settings, childsContent);
+		//Console.log('}}}}}}}}}', settings, childsContent);
 		return childsContent.length > 0
 			? <Content content={childsContent} pageWraper={this.props.pageWraper} session={this.props.session} />
 			: (settings.content ? settings.content : '');

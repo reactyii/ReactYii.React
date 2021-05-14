@@ -3,7 +3,7 @@ import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { Console, Hash } from '../../models/commonModels';
 import { RootState, AppDispatch } from '../../app/store';
-import { startLoadPage, loadPageAsync, testPage, startFormSubmit, clearForm, setFieldValue } from '../../features/page/pageSlice';
+import { startLoadPage, loadPageAsync, testPage, clearForm, setFieldValue, postFormAsync } from '../../features/page/pageSlice';
 import { RouteComponentProps } from 'react-router-dom';
 import { Utils } from '../../helpers/Utils';
 
@@ -21,8 +21,9 @@ export const mapDispatchToProps = (dispatch: AppDispatch) => bindActionCreators(
 		clearForm: clearForm,
 		setFieldValue: setFieldValue,
 		load: loadPageAsync,
+		post: postFormAsync,
 		startLoadPage: startLoadPage,
-		startFormSubmit: startFormSubmit,
+		//startFormSubmit: startFormSubmit,
 		test: testPage
 	},
 	dispatch
@@ -61,8 +62,9 @@ export class StoreActions extends React.Component<Props, State> {
 		return Utils.joinUrlParams(this.props.pageWraper?.item?.forms[formkey], true, Utils.encodePercentsSymbol);//.replace('&', encodeURIComponent('&'));
 	}/**/
 
-	public submitForm(url: string, data: Hash<string>) {
-		this.props.startFormSubmit(url);
+	public submitForm(url: string, get: Hash<string>, post: Hash<string | string[]>) {
+		//this.props.startFormSubmit(url);
+		this.props.post(url, get, post);
 	}
 
 	public loadPage(path: string) {
