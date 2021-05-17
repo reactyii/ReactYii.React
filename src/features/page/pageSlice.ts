@@ -71,14 +71,14 @@ function findForms(content: iContent[]): Hash<Hash<string | string[]>> {
 	const forms: Hash<Hash<string | string[]>> = {};
 	for (let i = 0, l = content.length; i < l; i++) {
 		const c: iContent = content[i];
-		if (!c) {
+		/*if (!c) {
 			Console.error('content[' + i + '] is WTF:', content);
 			continue;
 		}
 		if (typeof c.type === 'undefined') {
 			Console.error('c.type is undefined:', c);
 			continue;
-		}
+		}/**/
 		if (c.type !== ContentType.Form) {
 			const _form = findForms(c.childs || []);
 			for (let k in _form) {
