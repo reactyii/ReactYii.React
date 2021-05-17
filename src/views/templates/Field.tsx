@@ -6,8 +6,9 @@ import { Console, Hash, iFieldState, iSite } from '../../models/commonModels';
 import { iPage } from '../../models/pageModels';
 import { StoreActions } from '../../features/page/StoreActions';
 import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
+import { BaseComponent } from './BaseComponent';
 
-export class Field extends React.Component<iContentProps, iFieldState> {
+export class Field extends BaseComponent<iContentProps, iFieldState> {
 	site: iSite;
 	// не будем странциу засовывать в свойства компонента, страница меняется в течении жизни компонента
 	//page: iPage;
@@ -53,7 +54,7 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 	getValue() {
 		return Utils.getFieldValue(this.props.pageWraper?.item?.forms || {}, this.formpath, this.fieldname);
 	}
-	renderError(): React.ReactNode {
+	renderErrorMessage(): React.ReactNode {
 		const settings = this.props.settings || {}; // здесь нельзя использовать this.settings так как он не меняется после создания компонента
 		return typeof settings.error === 'undefined' || !settings.error ? null : <Content content={Utils.genErrorContent([settings.error])} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
@@ -61,7 +62,7 @@ export class Field extends React.Component<iContentProps, iFieldState> {
 		//if (typeof this.props.settings === 'undefined') return;
 
 		const inp = <input type={this.settings['type'] as string} value={this.getValue()} onChange={this.handleChange} />;
-		const err = this.renderError();
+		const err = this.renderErrorMessage();
 		//Console.log('field error', this.formpath, this.fieldname, err);
 		return err === null ? inp : <div>{inp}{err}</div>;
 	}

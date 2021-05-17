@@ -9,14 +9,14 @@ import { iContent, iContentProps } from '../../models/contentModels';
 import { iPage } from '../../models/pageModels';
 import { Content } from '../Content';
 import { Paginator } from './Paginator';
+import { BaseComponent } from './BaseComponent';
 
 export interface iListState {
 
 	error: string[];
 }
 
-
-export class List extends React.Component<iContentProps, iListState> {
+export class List extends BaseComponent<iContentProps, iListState> {
 	path: string;
 	site: iSite;
 	// не будем странциу засовывать в свойства компонента, страница меняется в течении жизни компонента
@@ -53,29 +53,23 @@ export class List extends React.Component<iContentProps, iListState> {
 		this.refStoreActions.current?.initForm(this.path);
 	}/**/
 
-
-	renderContent(key: string): React.ReactNode {
-		const content = this.props.content.filter(item => item.content_keys?.indexOf(key) >= 0);
-		if (content.length === 0) return null;
-		return <Content content={content} pageWraper={this.props.pageWraper} session={this.props.session} />;
-	}
 	renderHeader(): React.ReactNode {
-		return this.renderContent('HEADER');
+		return this.renderContentByKey('HEADER');
 	}
 
 	renderFilter(): React.ReactNode {
 		//Console.log(':::', this.props.content.filter(item => item.content_keys?.indexOf('FILTER') >= 0));
-		return this.renderContent('FILTER');
+		return this.renderContentByKey('FILTER');
 	}
 
 	renderSort(): React.ReactNode {
-		return this.renderContent('SORT');
+		return this.renderContentByKey('SORT');
 	}
 	renderBefore(): React.ReactNode {
-		return this.renderContent('BEFORE');
+		return this.renderContentByKey('BEFORE');
 	}
 	renderAfter(): React.ReactNode {
-		return this.renderContent('AFTER');
+		return this.renderContentByKey('AFTER');
 	}
 	/**
 	 * Делаем копию единицы контента ссылки на добавление так как нам нужно сформировать корректный урл (бэкенд не сильно разбирается как формировать урлы)
@@ -120,13 +114,7 @@ export class List extends React.Component<iContentProps, iListState> {
 	}
 
 	renderList(): React.ReactNode {
-		return this.getChilds().map(item => this.renderRow(item));
-	}
-
-	renderError(message: string[]): React.ReactNode {
-		Console.log('form error!');
-		//return <Error content={[Utils.genContent('1', message)]} />;
-		return <Content content={Utils.genErrorContent(message)} pageWraper={this.props.pageWraper} session={this.props.session} />;
+		return this.getContentByKey().map(item => this.renderRow(item));
 	}
 
 	getSettingsForPages() {
@@ -159,16 +147,13 @@ export class List extends React.Component<iContentProps, iListState> {
 		return <Content content={[pc]} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
 
-	getChilds(): iContent[] {
-		return this.props.content.filter(item => item.content_keys?.indexOf('CONTENT') >= 0);
-	}
 
 	renderFounded(): React.ReactNode {
 		const countAll = this.props.settings?.total_rows || '0';
 		const max_on_page = this.props.settings?.per_page || '0';
 		const offset = this.props.settings?.cur_page || '0';
 		
-		const count = this.getChilds().length;
+		const count = this.getContentByKey().length;
 
 		return 'Найдено ' + countAll + '.' + (+count > 0 ? ' Показано ' + (+offset * +max_on_page) + ' - ' + (+offset * +max_on_page + +count) : '');
 	}

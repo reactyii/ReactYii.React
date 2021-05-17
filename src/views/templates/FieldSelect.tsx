@@ -14,7 +14,7 @@ export class FieldSelect extends Field {
 		//if (typeof this.props.settings === 'undefined') return;
 
 		Console.log('select change!', this.formpath, this.fieldname, event.target.selectedOptions);
-		Console.log('multiple=', this.props.settings?.multiple);
+		//Console.log('multiple=', this.props.settings?.multiple);
 		
 		const vals = Array.from(event.target.selectedOptions, (item: HTMLOptionElement) => item.value);
 		const multiple = !!this.props.settings?.multiple;
@@ -39,9 +39,7 @@ export class FieldSelect extends Field {
 		
 		//const _val = multiple &&
 		return <select value={selected} multiple={multiple} onChange={this.handleChange}>{
-			this.renderOptions(this.props.content.filter(item => {
-				return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
-			})) // 
+			this.renderOptions(this.getContentByKey()) // 
 		}</select>;
 	}
 }

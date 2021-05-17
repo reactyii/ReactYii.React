@@ -12,6 +12,8 @@ import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 import { StoreActions } from '../../features/page/StoreActions';
 import RouterWrapped from '../../features/page/RouterWrapped';
 import { Router } from '../../features/page/Router';
+import { BaseComponent } from './BaseComponent';
+
 //import { Html } from '../Html';
 interface iFormState {
 
@@ -23,7 +25,7 @@ interface iFormState {
 	error: string[];
 }
 
-export class Form extends React.Component<iContentProps, iFormState> {
+export class Form extends BaseComponent<iContentProps, iFormState> {
 	path: string;
 	method: string;
 	site: iSite;
@@ -121,29 +123,20 @@ export class Form extends React.Component<iContentProps, iFormState> {
 		return url;
 	}
 
-	renderError(message: string[]): React.ReactNode {
-		Console.log('form error!');
-		//return <Error content={[Utils.genContent('1', message)]} />;
-		return <Content content={Utils.genErrorContent(message)} pageWraper={this.props.pageWraper} session={this.props.session} />;
-	}
-
 	renderWraps(): React.ReactNode {
 		return <>
 			<StoreActionsWrapped ref={this.refStoreActions} />
 			<RouterWrapped ref={this.refRouter} />
 		</>;
 	}
+
 	renderForm(): React.ReactNode {
-		const _error = this.props.content.filter(item => {
-			return typeof item.content_keys !== 'undefined' && item.content_keys.indexOf('ERROR') >= 0;
-		});
+		const _error = this.getContentByKey('ERROR');
 		//Console.log('errors:', _error);
 
 		const error = _error.length > 0 ? <Content key="formerror" content={_error} pageWraper={this.props.pageWraper} session={this.props.session} /> : null;
 
-		const _content = this.props.content.filter(item => {
-			return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
-		});
+		const _content = this.getContentByKey();
 		//Console.log('fields:', _content);
 		const content = <Content key="formcontent" content={_content} pageWraper={this.props.pageWraper} session={this.props.session} />
 
