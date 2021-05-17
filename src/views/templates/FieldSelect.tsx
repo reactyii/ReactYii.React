@@ -13,11 +13,15 @@ export class FieldSelect extends Field {
 	handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
 		//if (typeof this.props.settings === 'undefined') return;
 
-		//Console.log('select change!', this.formpath, this.fieldname, event.target.selectedOptions);
+		Console.log('select change!', this.formpath, this.fieldname, event.target.selectedOptions);
+		Console.log('multiple=', this.props.settings?.multiple);
+		
 		const vals = Array.from(event.target.selectedOptions, (item: HTMLOptionElement) => item.value);
+		const multiple = !!this.props.settings?.multiple;
+
 		//this.setState({ value: event.target.value });
 		//FormStorage.setValue(this.formpath, this.fieldname, event.target.value as string | string[]);
-		this.refStoreActions.current?.setFieldValue(this.formpath, this.fieldname, vals);
+		this.refStoreActions.current?.setFieldValue(this.formpath, this.fieldname, multiple ? vals : (vals.length > 0 ? vals[0] : ''));
 	}
 	renderOptions(options: iContent[], selected: string[] = [], prefix = ""): React.ReactNode {
 		//const singlePrefix = 

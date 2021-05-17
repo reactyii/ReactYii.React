@@ -14,10 +14,11 @@ import { Field } from './Field';
 import { FieldSelect } from './FieldSelect';
 import { FieldHidden } from './FieldHidden';
 import { Error } from './Error';
+import { Message } from './Message';
 
 export { H1, List, ListContent, Paginator, Form, FormFilter, Field, FieldSelect, FieldHidden, FormSubmit, FormReset, A};
 export { Layout/*, WideLayout*/ };
-export { Error };
+export { Error, Message };
 
 export const Templates: Hash<any> = {
     H1: H1,
@@ -35,5 +36,6 @@ export const Templates: Hash<any> = {
     Paginator: Paginator,
     Layout: Layout,
     Error: Error,
+    Message: Message,
     //WideLayout: WideLayout
 };
