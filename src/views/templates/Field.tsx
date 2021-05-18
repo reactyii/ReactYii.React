@@ -61,7 +61,7 @@ export class Field extends BaseComponent<iContentProps, iFieldState> {
 	renderField(): React.ReactNode {
 		//if (typeof this.props.settings === 'undefined') return;
 
-		const inp = <input type={this.settings['type'] as string} value={this.getValue()} onChange={this.handleChange} />;
+		const inp = <input type={this.settings['fieldtype'] as string} value={this.getValue()} onChange={this.handleChange} />;
 		const err = this.renderErrorMessage();
 		//Console.log('field error', this.formpath, this.fieldname, err);
 		return err === null ? inp : <div>{inp}{err}</div>;

@@ -23,12 +23,17 @@ export class FieldSelect extends Field {
 		//FormStorage.setValue(this.formpath, this.fieldname, event.target.value as string | string[]);
 		this.refStoreActions.current?.setFieldValue(this.formpath, this.fieldname, multiple ? vals : (vals.length > 0 ? vals[0] : ''));
 	}
-	renderOptions(options: iContent[], selected: string[] = [], prefix = ""): React.ReactNode {
+	renderOptions(options: iContent[], selected: string[] = [], singlePrefix = '&raquo;', prefix = ""): React.ReactNode[] {
 		//const singlePrefix = 
 		return options.map(item => {
 			// так как у нас может быть html в частности в префиксе &raquo;
-			return <option key={item.id} value={item.path} dangerouslySetInnerHTML={{ __html: item.content }}></option>; // selected={selected.indexOf(item.path) >= 0}
+			const opt: React.ReactNode[] = [<option key={item.id} value={item.path} dangerouslySetInnerHTML={{ __html: prefix + item.content }}></option>]; // selected={selected.indexOf(item.path) >= 0}
+
+			const opts: React.ReactNode[] = typeof item.childs !== 'undefined' && item.childs.length > 0 ? this.renderOptions(item.childs, selected, singlePrefix, prefix + singlePrefix) : [];
+
+			return opt.concat(opts);
 		});
+
 	}
 
 	renderField(): React.ReactNode {
