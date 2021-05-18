@@ -41,10 +41,14 @@ export class FieldSelect extends Field {
 		const value = Utils.getFieldValue(this.props.pageWraper?.item?.forms || {}, this.formpath, this.fieldname);
 		const multiple = !!this.props.settings?.multiple;
 		const selected = multiple && !Array.isArray(value) ? [value] : value;
+
+		const err = this.renderErrorMessage();
 		
 		//const _val = multiple &&
-		return <select value={selected} multiple={multiple} onChange={this.handleChange}>{
+		const select =<select value={selected} multiple={multiple} onChange={this.handleChange}>{
 			this.renderOptions(this.getContentByKey()) // 
 		}</select>;
+
+		return err === null ? select : <div>{select}{err}</div>;
 	}
 }
