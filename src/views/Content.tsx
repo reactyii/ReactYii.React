@@ -10,21 +10,24 @@ export class Content extends React.Component<iContentProps, {}> {
 	// если у ноды есть childs то возвращаем их, если нет, то создаем ноду из item.content
 	// короче childs переопределяет item.content
 	protected _prepareChilds(item: iContent): iContent[] {
+		//const _content = typeof item.childs !== 'undefined' && item.childs.length > 0 ? item.childs?.filter(item => typeof item.content_keys === 'undefined' || item.content_keys?.indexOf('CONTENT') >= 0) : [];
+
+		// здесь передаем всех child! на надо выбирать только 'CONTENT'
 		return typeof item.childs !== 'undefined' && item.childs.length > 0
-			? item.childs :
-			[{ id: item.id, name: '', content: item.content, priority: 100, content_keys: ['CONTENT'], parent_id: null, path: '', type: null, template: null, template_key: null }];
+			? item.childs
+			: [{ id: item.id, name: '', content: item.content, priority: 100, content_keys: ['CONTENT'], parent_id: null, path: '', type: null, template: null, template_key: null }];
 	}
 
 	render() {
 
 		return this.props.content.map(item => {
-			//Console.log('-->', item.type, item.template, item);
+			//Console.log('-->', item.type, item.template_key, item.template, item);
 
 			// контент с шаблоном из БД
 			if (item.template) {
 				//Console.log('==>', item);
 
-				// для простоты (чтобы не делать еще оин уровень в дереве) если у ноды нет потомков и есть и шаблон и контент то контент перенесем в потомки
+				// для простоты (чтобы не делать еще один уровень в дереве) если у ноды нет потомков и есть и шаблон и контент то контент перенесем в потомки
 				return <Html key={item.id} html={item.template} data={this._prepareChilds(item)} pageWraper={this.props.pageWraper} session={this.props.session}/>;
 			}
 
@@ -57,10 +60,14 @@ export class Content extends React.Component<iContentProps, {}> {
 			}
 
 			// контент потомки
-			if (typeof item.childs !== 'undefined' && item.childs.length > 0) {
-				// вот думаю если есть item.content, то надо его передать или нет?
-				// НЕ НАДО! так как у нас идет преопределение, например, языка или инфы для раздела
-				return <Content key={item.id} content={item.childs} pageWraper={this.props.pageWraper} session={this.props.session} />;
+			if (typeof item.childs !== 'undefined') {
+				// есть внутренние узлы, НО шаблона нет! значит показываем строго 'CONTENT' узлы
+				const _childs = item.childs.filter(item => typeof item.content_keys === 'undefined' || item.content_keys?.indexOf('CONTENT') >= 0);
+				if (_childs.length > 0) {
+					// вот думаю если есть item.content, то надо его передать или нет?
+					// НЕ НАДО! так как у нас идет преопределение, например, языка или инфы для раздела
+					return <Content key={item.id} content={_childs} pageWraper={this.props.pageWraper} session={this.props.session} />;
+				}
 			}
 
 			// примитивы 
@@ -76,6 +83,11 @@ export class Content extends React.Component<iContentProps, {}> {
 
 			// допилить другие примитивы ...
 			// ...
+
+			if (item.type === ContentType.Html) {
+				// вот не знаю. пока data передам пустое, но думаю что можно и this._prepareChilds(item)
+				return <Html key={item.id} html={item.content} data={[]} pageWraper={this.props.pageWraper} session={this.props.session} />;
+			}
 
 			return item.content; //if (item.type === ContentType.String)
 		});

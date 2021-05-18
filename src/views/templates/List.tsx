@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Templates } from '.';
-import { StoreActions } from '../../features/page/StoreActions';
-import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
+//import { Templates } from '.';
+//import { StoreActions } from '../../features/page/StoreActions';
+//import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 import { Utils } from '../../helpers/Utils';
 import { Console, ContentType, Hash, iSite } from '../../models/commonModels';
 //import { Console, ContentType } from '../../models/commonModels';
 import { iContent, iContentProps } from '../../models/contentModels';
 import { iPage } from '../../models/pageModels';
 import { Content } from '../Content';
-import { Paginator } from './Paginator';
+//import { Paginator } from './Paginator';
 import { BaseComponent } from './BaseComponent';
 
 export interface iListState {
@@ -48,11 +48,6 @@ export class List extends BaseComponent<iContentProps, iListState> {
 
 	}/* */
 
-	/*componentDidMount() {
-		// форму инициализирует и список! так как сортировка будет храниться тоже в форме, а фильтра может не быть!
-		this.refStoreActions.current?.initForm(this.path);
-	}/**/
-
 	renderHeader(): React.ReactNode {
 		return this.renderContentByKey('HEADER');
 	}
@@ -78,7 +73,7 @@ export class List extends BaseComponent<iContentProps, iListState> {
 	 * @param content
 	 */
 	protected _cloneAddEditLink(content: iContent, id: string = '0'): iContent {
-		if (content.type !== ContentType.Link) return content;
+		if (content.type !== ContentType.LinkAdd && content.type !== ContentType.LinkEdit) return content;
 
 		const page = this.props.pageWraper?.item as iPage;
 		const [not_used_host0, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '', '__edit/' + id);
@@ -90,9 +85,12 @@ export class List extends BaseComponent<iContentProps, iListState> {
 		}
 		return _content;
 	}
-	renderLinkAddEdit(action: string = 'ADD', id: string = '0'): React.ReactNode {
+	renderLinkAddEdit(childs:iContent[], action: string = 'ADD', id: string = '0'): React.ReactNode {
 		// надо сформирвоать url
-		const content = this.props.content.filter(item => item.content_keys?.indexOf('LINK' + action) >= 0);
+		const content = childs.filter(item => item.content_keys?.indexOf('LINK' + action) >= 0);
+		//Console.log('renderLinkAddEdit() content=', content, action);
+		//Console.log('renderLinkAddEdit() childs=', this.props.content, action);
+		
 		if (content.length === 0) return null;
 
 		const newContent: iContent[] = [];
@@ -106,14 +104,24 @@ export class List extends BaseComponent<iContentProps, iListState> {
 	}
 
 	renderRow(content: iContent): React.ReactNode{
-		const linkEdit = this.renderLinkAddEdit('EDIT', content.id);
+		const linkEdit = this.renderLinkAddEdit(content?.childs || [], 'EDIT', content.id);
+
+		/*const _content = typeof content.childs !== 'undefined' && content.childs.length > 0
+			? content.childs?.filter(item => typeof item.content_keys === 'undefined' || item.content_keys?.indexOf('CONTENT') >= 0)
+			: [{ id: content.id, name: '', content: content.content, priority: 100, content_keys: ['CONTENT'], parent_id: null, path: '', type: null, template: null, template_key: null }];
+		/**/
+
+		//Console.log('renderRow content=', content);
 		const c = <Content key={content.id} content={[content]} pageWraper={this.props.pageWraper} session={this.props.session} />;
 		// по умолчанию если есть линк на редактирование, то сунем его вправо и обернем все div-ами. в реальных преопределениях все равно переопределим эту функцию
-		return linkEdit !== null ? <div><div style={{ float: 'right' }}>{linkEdit}</div>{c}</div> : c;
+		//Console.log('linkEdit=', linkEdit);
+		
+		return linkEdit !== null ? <div key={content.id}><div style={{ float: 'right' }}>{linkEdit}</div>{c}</div> : c;
 		//return '???';
 	}
 
 	renderList(): React.ReactNode {
+		//Console.log('-=-=-=-=  renderList()');
 		return this.getContentByKey().map(item => this.renderRow(item));
 	}
 
@@ -142,7 +150,7 @@ export class List extends BaseComponent<iContentProps, iListState> {
 		// НЕ ДЕЛАТЬ ТАК! так как таким макаром мы не сможем поменять отрисовку пагинатора у потомка
 		//return <Paginator content={[]} pageWraper={this.props.pageWraper} session={this.props.session} settings={settings} />;
 		// вот так  мы и вставим Paginator именно из шаблона
-		const pc = Utils.genContent('-111', '', 'Paginator');
+		const pc = Utils.genContent('Paginator', '', 'Paginator');
 		pc.settings = settings;
 		return <Content content={[pc]} pageWraper={this.props.pageWraper} session={this.props.session} />;
 	}
@@ -180,7 +188,7 @@ export class List extends BaseComponent<iContentProps, iListState> {
 			{this.renderSort()}
 			{this.renderList()}
 			{this.renderPages()}
-			{this.renderLinkAddEdit()}
+			{this.renderLinkAddEdit(this.props.content)}
 			{this.renderAfter()}
 		</>;
 	}

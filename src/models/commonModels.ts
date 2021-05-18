@@ -3,7 +3,10 @@ export enum ContentType {
     // это не используем так как это по умолчанию и в котенте (шаблоне) стоит null
     //Text = "TEXT",
     Link = "link",
+    LinkAdd = "linkadd",
+    LinkEdit = "linkedit",
     String = "string",
+    Html = "html",
     Number = "number",
     List = "list",
     Tree = "tree",

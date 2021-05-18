@@ -6,11 +6,13 @@ import { List } from './List';
 export class ListContent extends List {
 
 	renderRow(content: iContent) {
+		const linkEdit = this.renderLinkAddEdit(content?.childs || [], 'EDIT', content.id);
 
 		return <div key={content.id}>
+			<div style={{ float: 'right' }}>{linkEdit}</div>
 			<b>{content.id}</b> {content.name}
 		</div>;
-	}
+	}/**/
 
 /*	renderHeader(content: iContent[]) {
 

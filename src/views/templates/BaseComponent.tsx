@@ -8,7 +8,7 @@ export class BaseComponent<Prop extends iContentProps, State> extends React.Comp
 
 	getContentByKey(key: string = 'CONTENT'): iContent[] {
 		return key === 'CONTENT'
-			? this.props.content.filter(item => typeof item.content_keys === 'undefined' || item.content_keys?.indexOf(key) >= 0)
+			? this.props.content.filter(item => typeof item.content_keys === 'undefined' || item.content_keys.length === 0 || item.content_keys?.indexOf(key) >= 0)
 			: this.props.content.filter(item => item.content_keys?.indexOf(key) >= 0);
 	}
 
