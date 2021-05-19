@@ -7,12 +7,12 @@ import { Field } from './Field';
 
 export class FieldHidden extends Field {
 
-	// для оптимизации чтоб невызывался пререндер
+	// РґР»СЏ РѕРїС‚РёРјРёР·Р°С†РёРё С‡С‚РѕР± РЅРµРІС‹Р·С‹РІР°Р»СЃСЏ РїСЂРµСЂРµРЅРґРµСЂ
 	shouldComponentUpdate(props:iContentProps, state: iFieldState) {
 		return false;
 	}
 
-	// тут ничего рендерить не надо
+	// С‚СѓС‚ РЅРёС‡РµРіРѕ СЂРµРЅРґРµСЂРёС‚СЊ РЅРµ РЅР°РґРѕ
 	renderField() {
 		return [];
 	}

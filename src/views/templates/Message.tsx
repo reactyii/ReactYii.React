@@ -12,7 +12,7 @@ export class Message extends React.Component<iContentProps, {}> {
 		const style = { color: '#00e100' };
 
 		return this.props.content.map(item => {
-			return <div key={item.id} style={style} dangerouslySetInnerHTML={{ __html: item.content }}></div>; // могут быть сущности типа &quot;
+			return <div key={item.id} style={style} dangerouslySetInnerHTML={{ __html: item.content }}></div>; // РјРѕРіСѓС‚ Р±С‹С‚СЊ СЃСѓС‰РЅРѕСЃС‚Рё С‚РёРїР° &quot;
 		});
 	}
 }

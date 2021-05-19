@@ -37,7 +37,7 @@ export class ListContent extends List {
 	render() {
 		//Console.log('hhhhhhhhhhhh1', this.props.content);
 
-		// протестируем передачу настроек в компоненты
+		// РїСЂРѕС‚РµСЃС‚РёСЂСѓРµРј РїРµСЂРµРґР°С‡Сѓ РЅР°СЃС‚СЂРѕРµРє РІ РєРѕРјРїРѕРЅРµРЅС‚С‹
 		if (typeof this.props.settings !== 'undefined' && typeof this.props.settings['align'] !== 'undefined') {
 
 		}

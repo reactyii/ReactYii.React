@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 export class FormReset extends React.Component<iContentProps, {}> {
 	site: iSite;
 	page: iPage;
-	settings: Hash<string>; // пока предполагаем что настройки формы не изменятся во время жизни на странице
+	settings: Hash<string>; // РїРѕРєР° РїСЂРµРґРїРѕР»Р°РіР°РµРј С‡С‚Рѕ РЅР°СЃС‚СЂРѕР№РєРё С„РѕСЂРјС‹ РЅРµ РёР·РјРµРЅСЏС‚СЃСЏ РІРѕ РІСЂРµРјСЏ Р¶РёР·РЅРё РЅР° СЃС‚СЂР°РЅРёС†Рµ
 	formpath: string;
 	//fieldname: string;
 	//refStoreActions: React.RefObject<StoreActions>;
@@ -24,11 +24,11 @@ export class FormReset extends React.Component<iContentProps, {}> {
 
 		//let error: string[] = Utils.checkContentProps(props, ['formpath']);
 
-		// вызов формы без этих параметров ошибка конфигурации
+		// РІС‹Р·РѕРІ С„РѕСЂРјС‹ Р±РµР· СЌС‚РёС… РїР°СЂР°РјРµС‚СЂРѕРІ РѕС€РёР±РєР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 		this.settings = props.settings || {};
 		this.site = props.session?.site as iSite;
 		this.page = props.pageWraper?.item as iPage;
-		this.formpath = this.settings.formpath || 'unknown'; // наличие этих настроек проверяется выше (см установку значения let error = ...)
+		this.formpath = this.settings.formpath || 'unknown'; // РЅР°Р»РёС‡РёРµ СЌС‚РёС… РЅР°СЃС‚СЂРѕРµРє РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ РІС‹С€Рµ (СЃРј СѓСЃС‚Р°РЅРѕРІРєСѓ Р·РЅР°С‡РµРЅРёСЏ let error = ...)
 
 		//this.handleClick = this.handleClick.bind(this);
 
@@ -44,7 +44,7 @@ export class FormReset extends React.Component<iContentProps, {}> {
 
 	renderButton(): React.ReactNode {
 		//return <button type="submit" onClick={this.handleClick}>reset</button>;
-		// todo! добавить сортировку в filterAndSort аргумент
+		// todo! РґРѕР±Р°РІРёС‚СЊ СЃРѕСЂС‚РёСЂРѕРІРєСѓ РІ filterAndSort Р°СЂРіСѓРјРµРЅС‚
 		const [, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.formpath, '0', '');
 		return <Link to={url}>{this.props.settings?.value || 'Reset'}</Link>;
 	}
