@@ -11,12 +11,14 @@ import { FormFilter } from './FormFilter';
 import { FormSubmit } from './FormSubmit';
 import { FormReset } from './FormReset';
 import { Field } from './Field';
+import { FieldFilter } from './FieldFilter';
+import { FieldFilterSelect } from './FieldFilterSelect';
 import { FieldSelect } from './FieldSelect';
 import { FieldHidden } from './FieldHidden';
 import { Error } from './Error';
 import { Message } from './Message';
 
-export { H1, List, ListContent, Paginator, Form, FormFilter, Field, FieldSelect, FieldHidden, FormSubmit, FormReset, A};
+export { H1, List, ListContent, Paginator, Form, FormFilter, Field, FieldFilter, FieldFilterSelect, FieldSelect, FieldHidden, FormSubmit, FormReset, A};
 export { Layout/*, WideLayout*/ };
 export { Error, Message };
 
@@ -29,6 +31,8 @@ export const Templates: Hash<any> = {
     FormFilter: FormFilter,
     //FormFilterContent: FormFilterContent,
     Field: Field,
+    FieldFilter: FieldFilter,
+    FieldFilterSelect: FieldFilterSelect,
     FieldSelect: FieldSelect,
     FieldHidden: FieldHidden,
     FormSubmit: FormSubmit,

@@ -2,12 +2,10 @@ import * as React from 'react';
 //import { Console, ContentType } from '../../models/commonModels';
 import { iContentProps } from '../../models/contentModels';
 import { Content } from '../Content';
-import { Error } from './Error';
 import { Utils } from '../../helpers/Utils';
 //import { FormStorage } from '../../helpers/FormStorage';
 import { Console, Hash, iSite } from '../../models/commonModels';
 import { iPage } from '../../models/pageModels';
-import { Redirect, withRouter } from 'react-router-dom';
 import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 import { StoreActions } from '../../features/page/StoreActions';
 import RouterWrapped from '../../features/page/RouterWrapped';
@@ -94,7 +92,7 @@ export class Form extends BaseComponent<iContentProps, iFormState> {
 			const page = this.props.pageWraper?.item as iPage;
 			const data: Hash<string> = this.props.pageWraper?.item?.forms[this.path] as Hash<string> || {};
 			const id = typeof data.id !== 'undefined' ? data.id : '?';
-			const [not_used_host, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '', '__edit/' + id);
+			const [, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '', '__edit/' + id);
 			//const url = this.getActionUrl('__edit/0');
 
 			Console.log('submit form', url, data);
@@ -119,7 +117,7 @@ export class Form extends BaseComponent<iContentProps, iFormState> {
 
 		// см коментарий в Utils.makeFilterUrl (всегда указываем '0' страницу при применении фильтров. даже если фильтр сброшен!)
 		const page = this.props.pageWraper?.item as iPage;
-		const [not_used_host, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '0', filterAndSort);
+		const [, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '0', filterAndSort);
 		return url;
 	}
 

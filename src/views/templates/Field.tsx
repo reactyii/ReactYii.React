@@ -3,7 +3,7 @@ import { iContentProps } from '../../models/contentModels';
 import { Content } from '../Content';
 import { Utils } from '../../helpers/Utils';
 import { Console, Hash, iFieldState, iSite } from '../../models/commonModels';
-import { iPage } from '../../models/pageModels';
+//import { iPage } from '../../models/pageModels';
 import { StoreActions } from '../../features/page/StoreActions';
 import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 import { BaseComponent } from './BaseComponent';
@@ -61,10 +61,12 @@ export class Field extends BaseComponent<iContentProps, iFieldState> {
 	renderField(): React.ReactNode {
 		//if (typeof this.props.settings === 'undefined') return;
 
-		const inp = <input type={this.settings['fieldtype'] as string} value={this.getValue()} onChange={this.handleChange} />;
+		const inp = <input type={this.getSetting('fieldtype')} placeholder={this.getSetting('label', '')} value={this.getValue()} onChange={this.handleChange} />;
 		const err = this.renderErrorMessage();
+		const label = <span>{this.getSetting('label')}</span>;
 		//Console.log('field error', this.formpath, this.fieldname, err);
-		return err === null ? inp : <div>{inp}{err}</div>;
+		//return err === null ? inp : <div>{inp}{err}</div>;
+		return <div>{label}{inp}{err}</div>;
 	}
 	renderWraps(): React.ReactNode {
 		return <StoreActionsWrapped ref={this.refStoreActions} />;

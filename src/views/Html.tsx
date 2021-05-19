@@ -4,9 +4,9 @@
 // https://www.npmjs.com/package/html-react-parser
 import Parser from 'html-react-parser';
 
-import { Console, Hash, iSession } from '../models/commonModels';
+import { Hash, iSession } from '../models/commonModels';
 import { Content } from './Content';
-import { iContent, iContentProps } from '../models/contentModels';
+import { iContent } from '../models/contentModels';
 import { iWrapLoadableItem } from '../models/baseRepository';
 import { iPage } from '../models/pageModels';
 
@@ -19,7 +19,7 @@ import { iPage } from '../models/pageModels';
     //attrs?: Hash<React.ReactText>;
     //cb?: tWidgetCallBack;
 }*/
-interface iState { }
+//interface iState { }
 interface iProps {
     html: string;
     //data?: Hash<iContent>;
@@ -66,7 +66,7 @@ export class Html extends React.Component<iProps, {}>{//React.Component<iProps, 
                     if (typeof this.props.data === 'undefined') return;
                     //Console.log('...', domNode.name);
 
-                    if (domNode.name == 'custom') { // протестировано. domNode.name всегда в нижнем регистре
+                    if (domNode.name === 'custom') { // протестировано. domNode.name всегда в нижнем регистре
                         const content = htmls[domNode.attribs.name]; // всегда должно существовать! см выше мы делаем замены
                         //Console.log('...', domNode.name, domNode.attribs.name);
                         return <Content content={content} pageWraper={this.props.pageWraper} session={this.props.session} />;

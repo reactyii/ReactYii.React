@@ -1,6 +1,6 @@
 import * as React from 'react';
 //import { Console, ContentType } from '../../models/commonModels';
-import { iContent, iContentProps } from '../../models/contentModels';
+import { iContent } from '../../models/contentModels';
 import { List } from './List';
 
 export class ListContent extends List {

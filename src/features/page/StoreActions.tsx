@@ -1,11 +1,11 @@
 import * as React from 'react';
 //import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Console, Hash } from '../../models/commonModels';
+import { Hash } from '../../models/commonModels';
 import { RootState, AppDispatch } from '../../app/store';
 import { startLoadPage, loadPageAsync, testPage, clearForm, setFieldValue, postFormAsync } from '../../features/page/pageSlice';
-import { RouteComponentProps } from 'react-router-dom';
-import { Utils } from '../../helpers/Utils';
+//import { RouteComponentProps } from 'react-router-dom';
+//import { Utils } from '../../helpers/Utils';
 
 export const mapStateToProps = (state: RootState) => (state.page);
 /*const mapDispatchToProps = {

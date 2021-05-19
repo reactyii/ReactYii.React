@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Console, Hash } from '../../models/commonModels';
+import { Hash } from '../../models/commonModels';
 //import { Console, ContentType } from '../../models/commonModels';
 import { iContentProps } from '../../models/contentModels';
 
@@ -28,7 +28,7 @@ export class Paginator extends React.Component<iContentProps, {}> {
 
 	url(settings: Hash<string>, page: number): string {
 		
-		if (page == 0) {
+		if (page === 0) {
 			return typeof settings['first_url'] !== 'undefined' ? settings['first_url'] : settings['base_url'].replace('{{PAGE}}', '0')
 		}
 
@@ -68,13 +68,13 @@ export class Paginator extends React.Component<iContentProps, {}> {
 		let res: Hash<React.ReactNode> = { 'first': this.renderFirstLink(this.url(s, 0)) };
 
 		//Console.log('hhhhhhhhhhhh1', cur_page, num_links);
-		if (cur_page != 0) {
+		if (cur_page !== 0) {
 			res['prev'] = this.renderPrevLink(this.url(s, cur_page - 1), cur_page);
 		}
 
 		let pages = [];
 		for (let loop = start; loop < end; loop++) {
-			if (cur_page == loop) {
+			if (cur_page === loop) {
 				pages.push(this.renderCurrent(loop + 1));
 			} else {
 				pages.push(this.renderPage(this.url(s, loop), loop + 1));

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { iContent, iContentProps } from '../../models/contentModels';
-import { Content } from '../Content';
+//import { Content } from '../Content';
 import { Utils } from '../../helpers/Utils';
-import { Console, Hash } from '../../models/commonModels';
+import { Console } from '../../models/commonModels';
 import { Field } from './Field';
 
 export class FieldSelect extends Field {
@@ -43,12 +43,15 @@ export class FieldSelect extends Field {
 		const selected = multiple && !Array.isArray(value) ? [value] : value;
 
 		const err = this.renderErrorMessage();
-		
+
+		const label = <span>{this.getSetting('label')}</span>;
+
 		//const _val = multiple &&
 		const select =<select value={selected} multiple={multiple} onChange={this.handleChange}>{
 			this.renderOptions(this.getContentByKey()) // 
 		}</select>;
 
-		return err === null ? select : <div>{select}{err}</div>;
+		//return err === null ? select : <div>{select}{err}</div>;
+		return <div>{label}{select}{err}</div>;
 	}
 }

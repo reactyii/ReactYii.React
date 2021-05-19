@@ -3,7 +3,7 @@ import * as React from 'react';
 //import { StoreActions } from '../../features/page/StoreActions';
 //import StoreActionsWrapped from '../../features/page/StoreActionsWrapped';
 import { Utils } from '../../helpers/Utils';
-import { Console, ContentType, Hash, iSite } from '../../models/commonModels';
+import { ContentType, Hash, iSite } from '../../models/commonModels';
 //import { Console, ContentType } from '../../models/commonModels';
 import { iContent, iContentProps } from '../../models/contentModels';
 import { iPage } from '../../models/pageModels';
@@ -76,7 +76,7 @@ export class List extends BaseComponent<iContentProps, iListState> {
 		if (content.type !== ContentType.LinkAdd && content.type !== ContentType.LinkEdit) return content;
 
 		const page = this.props.pageWraper?.item as iPage;
-		const [not_used_host0, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '', '__edit/' + id);
+		const [, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '', '__edit/' + id);
 		const _content = Utils.clone(content);
 		if (typeof _content.settings === 'undefined') {
 			_content.settings = { url };
@@ -129,14 +129,10 @@ export class List extends BaseComponent<iContentProps, iListState> {
 		const settings: Hash<string> = Utils.clone(this.props.settings || {}); // NB!!! здесь именно this.props.settings так как настрйоки пагинатора будут менятся в завимсимости от фильтра и текущей страницы
 
 		// в урл надо добавить параметры фильтра и сортировку списка
-		//const [not_used_host0, url] = Utils.makeFilterUrl(this.page, this.page, this.site, this.path, '{{PAGE}}', this.refStoreActions.current?.getFilterContentArgs(this.path) || '');
 		const page = this.props.pageWraper?.item as iPage;
-		const [not_used_host0, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '{{PAGE}}', Utils.getFilterContentArgs(this.path, page.forms || {}) || '');
-		//let filter = '';
-
-		//const [not_used_host, url] = Utils.makeUrl(this.page, this.page, this.site, this.path + '/{{PAGE}}');
+		const [, url] = Utils.makeFilterUrl(page, page, this.site, this.path, '{{PAGE}}', Utils.getFilterContentArgs(this.path, page.forms || {}) || '');
+		
 		settings.base_url = url;
-		//const [not_used_host1, url1] = Utils.makeUrl(this.page, this.page, this.site, '');
 		const url1 = url.replace('{{PAGE}}', '0');
 		settings.first_url = url1;
 

@@ -3,13 +3,11 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 //import { Layouts } from './layouts';
 import { Templates } from './templates';
 
-import {
-	Link,
-  } from "react-router-dom";
-import { Console } from '../models/commonModels';
+//import { Link, } from "react-router-dom";
+//import { Console } from '../models/commonModels';
 import { iPageProps } from '../models/pageModels';
-import { Content } from './Content';
-import { iContent } from '../models/contentModels';
+//import { Content } from './Content';
+//import { iContent } from '../models/contentModels';
 
 export class Page extends React.Component<iPageProps, {}> {
 		

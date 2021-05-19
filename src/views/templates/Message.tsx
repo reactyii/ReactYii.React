@@ -2,7 +2,7 @@ import * as React from 'react';
 //import { Console } from '../../models/commonModels';
 //import { Console, ContentType } from '../../models/commonModels';
 import { iContentProps } from '../../models/contentModels';
-import { Content } from '../Content';
+//import { Content } from '../Content';
 //import { Html } from '../Html';
 
 export class Message extends React.Component<iContentProps, {}> {

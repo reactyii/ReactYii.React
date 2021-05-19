@@ -6,6 +6,10 @@ import { Content } from '../Content';
 
 export class BaseComponent<Prop extends iContentProps, State> extends React.Component<Prop, State> {
 
+	getSetting(name: string, defValue: string | undefined = undefined): string | undefined {
+		if (typeof this.props.settings === 'undefined' || typeof this.props.settings[name] === 'undefined') return defValue;
+		return this.props.settings[name];
+	}
 	getContentByKey(key: string = 'CONTENT'): iContent[] {
 		return key === 'CONTENT'
 			? this.props.content.filter(item => typeof item.content_keys === 'undefined' || item.content_keys.length === 0 || item.content_keys?.indexOf(key) >= 0)
