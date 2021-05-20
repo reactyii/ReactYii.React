@@ -2,25 +2,51 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
-define(["require", "exports", "react", "../../helpers/Utils", "../../models/commonModels", "../Content", "./BaseComponent"], function (require, exports, React, Utils_1, commonModels_1, Content_1, BaseComponent_1) {
+define(["require", "exports", "react/jsx-runtime", "react", "../../helpers/Utils", "../../models/commonModels", "../Content", "./BaseComponent"], function (require, exports, jsx_runtime_1, React, Utils_1, commonModels_1, Content_1, BaseComponent_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.List = void 0;
     React = __importStar(React);
     var List = /** @class */ (function (_super) {
         __extends(List, _super);
@@ -68,8 +94,8 @@ define(["require", "exports", "react", "../../helpers/Utils", "../../models/comm
          * @param content
          */
         List.prototype._cloneAddEditLink = function (content, id) {
-            if (id === void 0) { id = '0'; }
             var _a;
+            if (id === void 0) { id = '0'; }
             if (content.type !== commonModels_1.ContentType.LinkAdd && content.type !== commonModels_1.ContentType.LinkEdit)
                 return content;
             var page = (_a = this.props.pageWraper) === null || _a === void 0 ? void 0 : _a.item;
@@ -97,7 +123,7 @@ define(["require", "exports", "react", "../../helpers/Utils", "../../models/comm
                 newContent.push(this._cloneAddEditLink(content[i], id));
                 //Console.log('>>>', newContent[i].settings);
             }
-            return React.createElement(Content_1.Content, { content: newContent, pageWraper: this.props.pageWraper, session: this.props.session });
+            return jsx_runtime_1.jsx(Content_1.Content, { content: newContent, pageWraper: this.props.pageWraper, session: this.props.session }, void 0);
             //return this.renderContent('LINKADD');
         };
         List.prototype.renderRow = function (content) {
@@ -107,12 +133,10 @@ define(["require", "exports", "react", "../../helpers/Utils", "../../models/comm
                 : [{ id: content.id, name: '', content: content.content, priority: 100, content_keys: ['CONTENT'], parent_id: null, path: '', type: null, template: null, template_key: null }];
             /**/
             //Console.log('renderRow content=', content);
-            var c = React.createElement(Content_1.Content, { key: content.id, content: [content], pageWraper: this.props.pageWraper, session: this.props.session });
+            var c = jsx_runtime_1.jsx(Content_1.Content, { content: [content], pageWraper: this.props.pageWraper, session: this.props.session }, content.id);
             // по умолчанию если есть линк на редактирование, то сунем его вправо и обернем все div-ами. в реальных преопределениях все равно переопределим эту функцию
             //Console.log('linkEdit=', linkEdit);
-            return linkEdit !== null ? React.createElement("div", { key: content.id },
-                React.createElement("div", { style: { float: 'right' } }, linkEdit),
-                c) : c;
+            return linkEdit !== null ? jsx_runtime_1.jsxs("div", { children: [jsx_runtime_1.jsx("div", __assign({ style: { float: 'right' } }, { children: linkEdit }), void 0), c] }, content.id) : c;
             //return '???';
         };
         List.prototype.renderList = function () {
@@ -138,7 +162,7 @@ define(["require", "exports", "react", "../../helpers/Utils", "../../models/comm
             // вот так  мы и вставим Paginator именно из шаблона
             var pc = Utils_1.Utils.genContent('Paginator', '', 'Paginator');
             pc.settings = settings;
-            return React.createElement(Content_1.Content, { content: [pc], pageWraper: this.props.pageWraper, session: this.props.session });
+            return jsx_runtime_1.jsx(Content_1.Content, { content: [pc], pageWraper: this.props.pageWraper, session: this.props.session }, void 0);
         };
         List.prototype.renderFounded = function () {
             var _a, _b, _c;
@@ -159,17 +183,7 @@ define(["require", "exports", "react", "../../helpers/Utils", "../../models/comm
             // ошибки компонента! ошибки самой формы покажутся в форме как обычные единицы контента
             if (this.state.error.length > 0)
                 return this.renderError(this.state.error);
-            return React.createElement(React.Fragment, null,
-                this.renderWraps(),
-                this.renderHeader(),
-                this.renderBefore(),
-                this.renderFilter(),
-                this.renderFounded(),
-                this.renderSort(),
-                this.renderList(),
-                this.renderPages(),
-                this.renderLinkAddEdit(this.props.content),
-                this.renderAfter());
+            return jsx_runtime_1.jsxs(jsx_runtime_1.Fragment, { children: [this.renderWraps(), this.renderHeader(), this.renderBefore(), this.renderFilter(), this.renderFounded(), this.renderSort(), this.renderList(), this.renderPages(), this.renderLinkAddEdit(this.props.content), this.renderAfter()] }, void 0);
         };
         return List;
     }(BaseComponent_1.BaseComponent));

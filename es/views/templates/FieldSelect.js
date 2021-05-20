@@ -2,15 +2,29 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
 //import { Content } from '../Content';
 import { Utils } from '../../helpers/Utils';
@@ -42,7 +56,7 @@ var FieldSelect = /** @class */ (function (_super) {
         //const singlePrefix = 
         return options.map(function (item) {
             // так как у нас может быть html в частности в префиксе &raquo;
-            var opt = [React.createElement("option", { key: item.id, value: item.path, dangerouslySetInnerHTML: { __html: prefix + item.content } })]; // selected={selected.indexOf(item.path) >= 0}
+            var opt = [_jsx("option", { value: item.path, dangerouslySetInnerHTML: { __html: prefix + item.content } }, item.id)]; // selected={selected.indexOf(item.path) >= 0}
             var opts = typeof item.childs !== 'undefined' && item.childs.length > 0 ? _this.renderOptions(item.childs, selected, singlePrefix, prefix + singlePrefix) : [];
             return opt.concat(opts);
         });
@@ -54,15 +68,12 @@ var FieldSelect = /** @class */ (function (_super) {
         var multiple = !!((_c = this.props.settings) === null || _c === void 0 ? void 0 : _c.multiple);
         var selected = multiple && !Array.isArray(value) ? [value] : value;
         var err = this.renderErrorMessage();
-        var label = React.createElement("span", null, this.getSetting('label'));
+        var label = _jsx("span", { children: this.getSetting('label') }, void 0);
         //const _val = multiple &&
-        var select = React.createElement("select", { value: selected, multiple: multiple, onChange: this.handleChange }, this.renderOptions(this.getContentByKey()) // 
-        );
+        var select = _jsx("select", __assign({ value: selected, multiple: multiple, onChange: this.handleChange }, { children: this.renderOptions(this.getContentByKey()) // 
+         }), void 0);
         //return err === null ? select : <div>{select}{err}</div>;
-        return React.createElement("div", null,
-            label,
-            select,
-            err);
+        return _jsxs("div", { children: [label, select, err] }, void 0);
     };
     return FieldSelect;
 }(Field));

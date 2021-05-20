@@ -3,6 +3,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.unregister = exports.register = void 0;
     // This lets the app load faster on subsequent visits in production, and gives
     // it offline capabilities. However, it also means that developers (and users)
     // will only see deployed updates on subsequent visits to a page, after all the

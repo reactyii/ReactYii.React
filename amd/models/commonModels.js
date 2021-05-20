@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Console = exports.ContentType = void 0;
     var ContentType;
     (function (ContentType) {
         // это не используем так как это по умолчанию и в котенте (шаблоне) стоит null

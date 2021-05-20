@@ -1,6 +1,7 @@
 define(["require", "exports", "../helpers/Utils", "./commonModels", "isomorphic-fetch"], function (require, exports, Utils_1, commonModels_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.BaseRepository = void 0;
     var prepareHost = function (host) {
         if (typeof host === 'undefined') {
             commonModels_1.Console.error('".env" file required. please, rename ".env.inc" to ".env" and set vars.');
@@ -34,9 +35,9 @@ define(["require", "exports", "../helpers/Utils", "./commonModels", "isomorphic-
         };
         BaseRepository.prototype.load = function (key, get, end, method, post) {
             var _this = this;
+            var _a, _b;
             if (method === void 0) { method = 'GET'; }
             if (post === void 0) { post = {}; }
-            var _a, _b;
             if (typeof this.data[key] === 'undefined') {
                 this.data[key] = { key: key, item: null, err: null, abortController: null /*, request: null*/ };
             }

@@ -2,15 +2,29 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from 'react';
 //import { Templates } from '.';
 //import { StoreActions } from '../../features/page/StoreActions';
@@ -66,8 +80,8 @@ var List = /** @class */ (function (_super) {
      * @param content
      */
     List.prototype._cloneAddEditLink = function (content, id) {
-        if (id === void 0) { id = '0'; }
         var _a;
+        if (id === void 0) { id = '0'; }
         if (content.type !== ContentType.LinkAdd && content.type !== ContentType.LinkEdit)
             return content;
         var page = (_a = this.props.pageWraper) === null || _a === void 0 ? void 0 : _a.item;
@@ -95,7 +109,7 @@ var List = /** @class */ (function (_super) {
             newContent.push(this._cloneAddEditLink(content[i], id));
             //Console.log('>>>', newContent[i].settings);
         }
-        return React.createElement(Content, { content: newContent, pageWraper: this.props.pageWraper, session: this.props.session });
+        return _jsx(Content, { content: newContent, pageWraper: this.props.pageWraper, session: this.props.session }, void 0);
         //return this.renderContent('LINKADD');
     };
     List.prototype.renderRow = function (content) {
@@ -105,12 +119,10 @@ var List = /** @class */ (function (_super) {
             : [{ id: content.id, name: '', content: content.content, priority: 100, content_keys: ['CONTENT'], parent_id: null, path: '', type: null, template: null, template_key: null }];
         /**/
         //Console.log('renderRow content=', content);
-        var c = React.createElement(Content, { key: content.id, content: [content], pageWraper: this.props.pageWraper, session: this.props.session });
+        var c = _jsx(Content, { content: [content], pageWraper: this.props.pageWraper, session: this.props.session }, content.id);
         // по умолчанию если есть линк на редактирование, то сунем его вправо и обернем все div-ами. в реальных преопределениях все равно переопределим эту функцию
         //Console.log('linkEdit=', linkEdit);
-        return linkEdit !== null ? React.createElement("div", { key: content.id },
-            React.createElement("div", { style: { float: 'right' } }, linkEdit),
-            c) : c;
+        return linkEdit !== null ? _jsxs("div", { children: [_jsx("div", __assign({ style: { float: 'right' } }, { children: linkEdit }), void 0), c] }, content.id) : c;
         //return '???';
     };
     List.prototype.renderList = function () {
@@ -136,7 +148,7 @@ var List = /** @class */ (function (_super) {
         // вот так  мы и вставим Paginator именно из шаблона
         var pc = Utils.genContent('Paginator', '', 'Paginator');
         pc.settings = settings;
-        return React.createElement(Content, { content: [pc], pageWraper: this.props.pageWraper, session: this.props.session });
+        return _jsx(Content, { content: [pc], pageWraper: this.props.pageWraper, session: this.props.session }, void 0);
     };
     List.prototype.renderFounded = function () {
         var _a, _b, _c;
@@ -157,17 +169,7 @@ var List = /** @class */ (function (_super) {
         // ошибки компонента! ошибки самой формы покажутся в форме как обычные единицы контента
         if (this.state.error.length > 0)
             return this.renderError(this.state.error);
-        return React.createElement(React.Fragment, null,
-            this.renderWraps(),
-            this.renderHeader(),
-            this.renderBefore(),
-            this.renderFilter(),
-            this.renderFounded(),
-            this.renderSort(),
-            this.renderList(),
-            this.renderPages(),
-            this.renderLinkAddEdit(this.props.content),
-            this.renderAfter());
+        return _jsxs(_Fragment, { children: [this.renderWraps(), this.renderHeader(), this.renderBefore(), this.renderFilter(), this.renderFounded(), this.renderSort(), this.renderList(), this.renderPages(), this.renderLinkAddEdit(this.props.content), this.renderAfter()] }, void 0);
     };
     return List;
 }(BaseComponent));

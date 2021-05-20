@@ -2,6 +2,7 @@ define(["require", "exports", "@reduxjs/toolkit", "../../models/pageRepository",
     "use strict";
     var _a;
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.selectPage = exports.postFormAsync = exports.loadPageAsync = exports.startFormSubmit = exports.setFieldValue = exports.clearForm = exports.endLoadPage = exports.startLoadPage = exports.testPage = exports.pageSlice = void 0;
     //import { Content } from '../../views/Content';
     // https://github.com/stereobooster/react-snap
     // Grab the state from a global variable injected into the server-generated HTML
@@ -15,6 +16,9 @@ define(["require", "exports", "@reduxjs/toolkit", "../../models/pageRepository",
     var initialState = {
         //currentPath: '',
         loadingPath: '',
+        //forms: {},
+        //page: null,
+        //value: {},
     };
     var fieldtypes = ['field'];
     function fillForm(content) {
@@ -162,7 +166,7 @@ define(["require", "exports", "@reduxjs/toolkit", "../../models/pageRepository",
     // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
     // will call the thunk with the `dispatch` function as the first argument. Async
     // code can then be executed and other actions can be dispatched
-    exports.loadPageAsync = function (path, get) { return function (dispatch) {
+    var loadPageAsync = function (path, get) { return function (dispatch) {
         commonModels_1.Console.log('start loading:', path);
         dispatch(exports.startLoadPage(path));
         pageRepository_1.pageRepository.get(path, get, function (item) {
@@ -177,7 +181,8 @@ define(["require", "exports", "@reduxjs/toolkit", "../../models/pageRepository",
             dispatch(endLoadPage(page));
         }, 1000);/* */
     }; };
-    exports.postFormAsync = function (path, get, post) { return function (dispatch) {
+    exports.loadPageAsync = loadPageAsync;
+    var postFormAsync = function (path, get, post) { return function (dispatch) {
         commonModels_1.Console.log('start post:', path);
         dispatch(exports.startFormSubmit(path));
         pageRepository_1.pageRepository.post(path, get, post, function (item) {
@@ -192,9 +197,11 @@ define(["require", "exports", "@reduxjs/toolkit", "../../models/pageRepository",
             dispatch(endLoadPage(page));
         }, 1000);/* */
     }; };
+    exports.postFormAsync = postFormAsync;
     // The function below is called a selector and allows us to select a value from
     // the state. Selectors can also be defined inline where they're used instead of
     // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-    exports.selectPage = function (state) { return state.page.pageWraper; };
+    var selectPage = function (state) { return state.page.pageWraper; };
+    exports.selectPage = selectPage;
     exports.default = exports.pageSlice.reducer;
 });

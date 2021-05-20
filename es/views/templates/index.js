@@ -38,4 +38,5 @@ export var Templates = {
     Layout: Layout,
     Error: Error,
     Message: Message,
+    //WideLayout: WideLayout
 };

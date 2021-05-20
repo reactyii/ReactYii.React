@@ -2,10 +2,12 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -22,6 +24,7 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from 'react';
 import { Content } from '../Content';
 //import { iPage } from '../../models/pageModels';
@@ -33,7 +36,7 @@ var A = /** @class */ (function (_super) {
     }
     A.prototype.renderA = function (url, content, attrs) {
         if (attrs === void 0) { attrs = {}; }
-        return React.createElement("a", __assign({ href: url }, attrs), content);
+        return _jsx("a", __assign({ href: url }, attrs, { children: content }), void 0);
     };
     A.prototype.getAttrs = function (settings) {
         var attrs = {};
@@ -52,7 +55,7 @@ var A = /** @class */ (function (_super) {
         });
         //Console.log('}}}}}}}}}', settings, childsContent);
         return childsContent.length > 0
-            ? React.createElement(Content, { content: childsContent, pageWraper: this.props.pageWraper, session: this.props.session })
+            ? _jsx(Content, { content: childsContent, pageWraper: this.props.pageWraper, session: this.props.session }, void 0)
             : (settings.content ? settings.content : '');
     };
     A.prototype.render = function () {

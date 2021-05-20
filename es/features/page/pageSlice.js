@@ -15,6 +15,9 @@ if (typeof window !== 'undefined') {
 var initialState = {
     //currentPath: '',
     loadingPath: '',
+    //forms: {},
+    //page: null,
+    //value: {},
 };
 var fieldtypes = ['field'];
 function fillForm(content) {

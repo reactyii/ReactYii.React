@@ -1,7 +1,9 @@
 //import * as request from 'superagent'; // годные доки https://visionmedia.github.io/superagent/
 import 'isomorphic-fetch'; // https://www.digitalocean.com/community/tutorials/js-fetch-api
 import { Utils } from '../helpers/Utils';
-import { Console, } from './commonModels';
+import { Console,
+//ContentType,
+ } from './commonModels';
 var prepareHost = function (host) {
     if (typeof host === 'undefined') {
         Console.error('".env" file required. please, rename ".env.inc" to ".env" and set vars.');
@@ -35,9 +37,9 @@ var BaseRepository = /** @class */ (function () {
     };
     BaseRepository.prototype.load = function (key, get, end, method, post) {
         var _this = this;
+        var _a, _b;
         if (method === void 0) { method = 'GET'; }
         if (post === void 0) { post = {}; }
-        var _a, _b;
         if (typeof this.data[key] === 'undefined') {
             this.data[key] = { key: key, item: null, err: null, abortController: null /*, request: null*/ };
         }

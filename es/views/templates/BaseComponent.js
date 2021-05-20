@@ -2,15 +2,18 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from 'react';
 import { Utils } from '../../helpers/Utils';
 import { Console } from '../../models/commonModels';
@@ -36,12 +39,12 @@ var BaseComponent = /** @class */ (function (_super) {
         var content = this.getContentByKey(key); //this.props.content.filter(item => item.content_keys?.indexOf(key) >= 0);
         if (content.length === 0)
             return null;
-        return React.createElement(Content, { content: content, pageWraper: this.props.pageWraper, session: this.props.session });
+        return _jsx(Content, { content: content, pageWraper: this.props.pageWraper, session: this.props.session }, void 0);
     };
     BaseComponent.prototype.renderError = function (message) {
         Console.log('form error!');
         //return <Error content={[Utils.genContent('1', message)]} />;
-        return React.createElement(Content, { content: Utils.genErrorContent(message), pageWraper: this.props.pageWraper, session: this.props.session });
+        return _jsx(Content, { content: Utils.genErrorContent(message), pageWraper: this.props.pageWraper, session: this.props.session }, void 0);
     };
     return BaseComponent;
 }(React.Component));

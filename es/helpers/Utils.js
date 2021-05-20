@@ -67,8 +67,8 @@ var Utils = /** @class */ (function () {
         });
     };
     Utils.checkContentProps = function (props, requiredSettings) {
-        if (requiredSettings === void 0) { requiredSettings = []; }
         var _a, _b, _c;
+        if (requiredSettings === void 0) { requiredSettings = []; }
         var res = [];
         //let error: string | undefined = undefined;
         if (typeof props.settings === 'undefined')

@@ -2,15 +2,29 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
 import { Content } from '../Content';
 import { Utils } from '../../helpers/Utils';
@@ -96,22 +110,18 @@ var Form = /** @class */ (function (_super) {
         return url;
     };
     Form.prototype.renderWraps = function () {
-        return React.createElement(React.Fragment, null,
-            React.createElement(StoreActionsWrapped, { ref: this.refStoreActions }),
-            React.createElement(RouterWrapped, { ref: this.refRouter }));
+        return _jsxs(_Fragment, { children: [_jsx(StoreActionsWrapped, { ref: this.refStoreActions }, void 0),
+                _jsx(RouterWrapped, { ref: this.refRouter }, void 0)] }, void 0);
     };
     Form.prototype.renderForm = function () {
         var _error = this.getContentByKey('ERROR');
         //Console.log('errors:', _error);
-        var error = _error.length > 0 ? React.createElement(Content, { key: "formerror", content: _error, pageWraper: this.props.pageWraper, session: this.props.session }) : null;
+        var error = _error.length > 0 ? _jsx(Content, { content: _error, pageWraper: this.props.pageWraper, session: this.props.session }, "formerror") : null;
         var _content = this.getContentByKey();
         //Console.log('fields:', _content);
-        var content = React.createElement(Content, { key: "formcontent", content: _content, pageWraper: this.props.pageWraper, session: this.props.session });
+        var content = _jsx(Content, { content: _content, pageWraper: this.props.pageWraper, session: this.props.session }, "formcontent");
         var action = this.getActionUrl('');
-        return React.createElement("form", { action: action, method: this.method, onSubmit: this.handleSubmit },
-            this.renderWraps(),
-            error,
-            content);
+        return _jsxs("form", __assign({ action: action, method: this.method, onSubmit: this.handleSubmit }, { children: [this.renderWraps(), error, content] }), void 0);
     };
     Form.prototype.render = function () {
         //Console.log('hhhhhhhhhhhh1');
@@ -128,4 +138,3 @@ var Form = /** @class */ (function (_super) {
     return Form;
 }(BaseComponent));
 export { Form };
-//export default withRouter(Form);

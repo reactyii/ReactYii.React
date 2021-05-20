@@ -2,15 +2,18 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 //import { Layouts } from './layouts';
@@ -29,8 +32,7 @@ var Page = /** @class */ (function (_super) {
     // дадим возможность переопределить в шаблонах
     Page.prototype.renderSEO = function () {
         var _a, _b;
-        return React.createElement(HelmetProvider, { key: "seo" },
-            React.createElement(Helmet, { title: (_b = (_a = this.props.pageWraper) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.seo.title }));
+        return _jsx(HelmetProvider, { children: _jsx(Helmet, { title: (_b = (_a = this.props.pageWraper) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.seo.title }, void 0) }, "seo");
     };
     Page.prototype.renderLayout = function (layout) {
         var _a, _b, _c, _d, _e, _f;

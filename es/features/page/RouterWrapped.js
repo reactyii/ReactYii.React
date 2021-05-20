@@ -20,15 +20,16 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from 'react';
 import { Router } from './Router';
 import { withRouter } from "react-router-dom";
 var withRouterAndRef = function (Wrapped) {
     var WithRouter = withRouter(function (_a) {
         var forwardRef = _a.forwardRef, otherProps = __rest(_a, ["forwardRef"]);
-        return React.createElement(Wrapped, __assign({ ref: forwardRef }, otherProps));
+        return _jsx(Wrapped, __assign({ ref: forwardRef }, otherProps), void 0);
     });
-    var WithRouterAndRef = React.forwardRef(function (props, ref) { return (React.createElement(WithRouter, __assign({}, props, { forwardRef: ref }))); });
+    var WithRouterAndRef = React.forwardRef(function (props, ref) { return (_jsx(WithRouter, __assign({}, props, { forwardRef: ref }), void 0)); });
     var name = Wrapped.displayName || Wrapped.name;
     WithRouterAndRef.displayName = "withRouterAndRef(" + name + ")";
     return WithRouterAndRef;

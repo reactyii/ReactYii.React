@@ -2,15 +2,18 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from 'react';
 import { Utils } from '../helpers/Utils';
 import { Console, ContentType } from '../models/commonModels';
@@ -38,7 +41,7 @@ var Content = /** @class */ (function (_super) {
             if (item.template) {
                 //Console.log('==>', item);
                 // для простоты (чтобы не делать еще один уровень в дереве) если у ноды нет потомков и есть и шаблон и контент то контент перенесем в потомки
-                return React.createElement(Html, { key: item.id, html: item.template, data: _this._prepareChilds(item), pageWraper: _this.props.pageWraper, session: _this.props.session });
+                return _jsx(Html, { html: item.template, data: _this._prepareChilds(item), pageWraper: _this.props.pageWraper, session: _this.props.session }, item.id);
             }
             // контент с шаблоном - компонентом реакта
             if (item.template_key) {
@@ -70,23 +73,24 @@ var Content = /** @class */ (function (_super) {
                 if (_childs.length > 0) {
                     // вот думаю если есть item.content, то надо его передать или нет?
                     // НЕ НАДО! так как у нас идет преопределение, например, языка или инфы для раздела
-                    return React.createElement(Content, { key: item.id, content: _childs, pageWraper: _this.props.pageWraper, session: _this.props.session });
+                    return _jsx(Content, { content: _childs, pageWraper: _this.props.pageWraper, session: _this.props.session }, item.id);
                 }
             }
             // примитивы 
             // здесь контент как html
             // но https://reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml мы тут заюзать не сможем, так как вот так не прокатывает < dangerouslySetInnerHTML={{ __html: item.content}}></>
-            if (item.type === null)
-                return React.createElement(Html, { key: item.id, html: item.content }); // <span key={item.id} dangerouslySetInnerHTML={{ __html: item.content}}></span>;
+            //if (item.type === null) return <Html key={item.id} html={item.content} />;// <span key={item.id} dangerouslySetInnerHTML={{ __html: item.content}}></span>;
+            if (item.type === null || item.type === ContentType.Html) {
+                // вот не знаю. пока data передам пустое, но думаю что можно и this._prepareChilds(item)
+                if (item.content === null)
+                    return null;
+                return _jsx(Html, { html: item.content, data: [], pageWraper: _this.props.pageWraper, session: _this.props.session }, item.id);
+            }
             // хм а вот такого наверное не будет так как list у нас всегда с шаблоном (причем сложным) идет (фильтры, пагинатор, сами элементы списка)
             if (item.type === ContentType.List) {
             }
             // допилить другие примитивы ...
             // ...
-            if (item.type === ContentType.Html) {
-                // вот не знаю. пока data передам пустое, но думаю что можно и this._prepareChilds(item)
-                return React.createElement(Html, { key: item.id, html: item.content, data: [], pageWraper: _this.props.pageWraper, session: _this.props.session });
-            }
             return item.content; //if (item.type === ContentType.String)
         });
     };

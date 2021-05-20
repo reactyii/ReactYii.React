@@ -2,15 +2,18 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from 'react';
 import { Content } from '../Content';
 import { Utils } from '../../helpers/Utils';
@@ -52,28 +55,23 @@ var Field = /** @class */ (function (_super) {
     };
     Field.prototype.renderErrorMessage = function () {
         var settings = this.props.settings || {}; // здесь нельзя использовать this.settings так как он не меняется после создания компонента
-        return typeof settings.error === 'undefined' || !settings.error ? null : React.createElement(Content, { content: Utils.genErrorContent([settings.error]), pageWraper: this.props.pageWraper, session: this.props.session });
+        return typeof settings.error === 'undefined' || !settings.error ? null : _jsx(Content, { content: Utils.genErrorContent([settings.error]), pageWraper: this.props.pageWraper, session: this.props.session }, void 0);
     };
     Field.prototype.renderField = function () {
         //if (typeof this.props.settings === 'undefined') return;
-        var inp = React.createElement("input", { type: this.getSetting('fieldtype'), placeholder: this.getSetting('label', ''), value: this.getValue(), onChange: this.handleChange });
+        var inp = _jsx("input", { type: this.getSetting('fieldtype'), placeholder: this.getSetting('label', ''), value: this.getValue(), onChange: this.handleChange }, void 0);
         var err = this.renderErrorMessage();
-        var label = React.createElement("span", null, this.getSetting('label'));
+        var label = _jsx("span", { children: this.getSetting('label') }, void 0);
         //Console.log('field error', this.formpath, this.fieldname, err);
         //return err === null ? inp : <div>{inp}{err}</div>;
-        return React.createElement("div", null,
-            label,
-            inp,
-            err);
+        return _jsxs("div", { children: [label, inp, err] }, void 0);
     };
     Field.prototype.renderWraps = function () {
-        return React.createElement(StoreActionsWrapped, { ref: this.refStoreActions });
+        return _jsx(StoreActionsWrapped, { ref: this.refStoreActions }, void 0);
     };
     Field.prototype.render = function () {
         //Console.log('hhhhhhhhhhhh1', this.props.content);
-        return React.createElement(React.Fragment, null,
-            this.renderWraps(),
-            this.renderField());
+        return _jsxs(_Fragment, { children: [this.renderWraps(), this.renderField()] }, void 0);
     };
     return Field;
 }(BaseComponent));

@@ -2,10 +2,12 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -47,6 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -116,7 +119,7 @@ var PageLoader = /** @class */ (function (_super) {
         //let { path } = useParams();
         //let path = '';
         //let location = useLocation();
-        return React.createElement(Page, { pageWraper: this.props.pageWraper, loadingPath: this.props.loadingPath, session: this.props.session });
+        return _jsx(Page, { pageWraper: this.props.pageWraper, loadingPath: this.props.loadingPath, session: this.props.session }, void 0);
     };
     return PageLoader;
 }(React.Component));
