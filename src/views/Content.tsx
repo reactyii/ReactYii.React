@@ -74,7 +74,12 @@ export class Content extends React.Component<iContentProps, {}> {
 
 			// здесь контент как html
 			// но https://reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml мы тут заюзать не сможем, так как вот так не прокатывает < dangerouslySetInnerHTML={{ __html: item.content}}></>
-			if (item.type === null) return <Html key={item.id} html={item.content} />;// <span key={item.id} dangerouslySetInnerHTML={{ __html: item.content}}></span>;
+			//if (item.type === null) return <Html key={item.id} html={item.content} />;// <span key={item.id} dangerouslySetInnerHTML={{ __html: item.content}}></span>;
+			if (item.type === null || item.type === ContentType.Html) {
+				// вот не знаю. пока data передам пустое, но думаю что можно и this._prepareChilds(item)
+				if (item.content === null) return null;
+				return <Html key={item.id} html={item.content} data={[]} pageWraper={this.props.pageWraper} session={this.props.session} />;
+			}
 
 			// хм а вот такого наверное не будет так как list у нас всегда с шаблоном (причем сложным) идет (фильтры, пагинатор, сами элементы списка)
 			if (item.type === ContentType.List) {
@@ -83,11 +88,6 @@ export class Content extends React.Component<iContentProps, {}> {
 
 			// допилить другие примитивы ...
 			// ...
-
-			if (item.type === ContentType.Html) {
-				// вот не знаю. пока data передам пустое, но думаю что можно и this._prepareChilds(item)
-				return <Html key={item.id} html={item.content} data={[]} pageWraper={this.props.pageWraper} session={this.props.session} />;
-			}
 
 			return item.content; //if (item.type === ContentType.String)
 		});

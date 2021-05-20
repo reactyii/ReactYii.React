@@ -30,8 +30,9 @@ interface iProps {
 
 export class Html extends React.Component<iProps, {}>{//React.Component<iProps, {}> {
     public render() {
-        
+
         let html = this.props.html;
+        //Console.log('Html render', html);
         //let html = this.props.content.widget.template as string; // на null проверено снаружи
         //if (html.indexOf('<custom ') >= 0) throw new Error(Lang.get('CustomTemplateError') as string);
 
