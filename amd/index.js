@@ -20,7 +20,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 define(["require", "exports", "react-dom", "./serviceWorker", "./models/commonModels", "./helpers/Utils", "./views/templates", "./App", "./index.css"], function (require, exports, react_dom_1, serviceWorker, commonModels_1, Utils_1, templates_1, App_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.App = void 0;
     serviceWorker = __importStar(serviceWorker);
+    Object.defineProperty(exports, "App", { enumerable: true, get: function () { return App_1.App; } });
     commonModels_1.Console.log('-->', process.env.NODE_ENV);
     //Console.log('-->', process.env.REACT_APP_HOST);
     // пока решим проблему вот так топорно.

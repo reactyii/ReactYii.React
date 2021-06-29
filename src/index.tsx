@@ -10,6 +10,8 @@ import { Utils } from './helpers/Utils';
 import { Templates } from './views/templates';
 import { App } from './App';
 
+export { App, Utils, Console };
+
 Console.log('-->', process.env.NODE_ENV);
 //Console.log('-->', process.env.REACT_APP_HOST);
 

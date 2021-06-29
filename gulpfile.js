@@ -103,11 +103,23 @@ gulp.task("build-es", function() {
     .js.pipe(gulp.dest("es/"));
 });
 
-var tsDtsProject = tsc.createProject("tsconfig.json", {
+var tsDtsProject = tsc.createProject("tsconfig.json", { declaration: true, noResolve: false, typescript: require("typescript") });
+//var tsDtsProject = tsc.createProject("tsconfig.json", {
+/*var tsDtsProject = tsc.createProject({
     declaration: true,
-    noResolve: false,
+//    noResolve: false,
+
+//    target: "es5",
+//    allowJs: true,
+    skipLibCheck: true,
+    esModuleInterop: true,
+    jsx: "react-jsx",
+    "isolatedModules": true,
+//    "module": "commonjs",
+    "emitDeclarationOnly": true,
+
     typescript: require("typescript") 
-});
+});*/
 
 gulp.task("build-dts", function() {
     return gulp.src([
@@ -118,7 +130,7 @@ gulp.task("build-dts", function() {
     .on("error", function (err) {
         process.exit(1);
     })
-    .dts.pipe(gulp.dest("dts"));
+    .dts.pipe(gulp.dest("dts/"));
 
 });
 
