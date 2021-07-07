@@ -1,9 +1,12 @@
 {
   "name": "reactyii.react",
-  "version": "1.24.3",
+  "version": "1.24.4",
   "main-deleted": "lib/index.js",
   "typings-deleted": "./dts/index.d.ts",
   "jsnext:main-deleted": "es/index.js",
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/reactyii/ReactYii.React"
@@ -15,7 +18,7 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/isomorphic-fetch": "^0.0.35",
     "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
+    "@types/node": "^16.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-helmet": "^6.1.0",
@@ -33,9 +36,12 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "superagent": "^5.2.2",
-    "typescript": "^4.1.2"
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.5"
   },
   "scripts": {
+    "buildlib": "yarn buildlib:esm",
+    "buildlib:esm": "tsc --build tsconfig.d.ts.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "serve": "serve -c ../serve.json build",
@@ -73,7 +79,6 @@
     "run-sequence": "^2.2.1",
     "serve": "^11.3.2",
     "tslint": "5.9.1",
-
     "performance-now": "2.1.0",
     "publish-please": "2.3.1",
     "reflect-metadata": "0.1.12",
