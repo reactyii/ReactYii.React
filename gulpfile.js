@@ -17,7 +17,7 @@ var gulp        = require("gulp"),
 //    sourcemaps  = require("gulp-sourcemaps"),
     uglify      = require("gulp-uglify"),
 //    rename      = require("gulp-rename"),
-    runSequence = require("run-sequence"),
+//    runSequence = require("run-sequence"),
 //    mocha       = require("gulp-mocha"),
 //    istanbul    = require("gulp-istanbul"),
 //    karma       = require("karma"),
@@ -103,7 +103,7 @@ gulp.task("build-es", function() {
     .js.pipe(gulp.dest("es/"));
 });
 
-var tsDtsProject = tsc.createProject("tsconfig.json", { declaration: true, noResolve: false, typescript: require("typescript") });
+var tsDtsProject = tsc.createProject("tsconfig.json", { declaration: true, target: "es5", module: "commonjs", typescript: require("typescript")});
 //var tsDtsProject = tsc.createProject("tsconfig.json", {
 /*var tsDtsProject = tsc.createProject({
     declaration: true,
@@ -122,7 +122,7 @@ var tsDtsProject = tsc.createProject("tsconfig.json", { declaration: true, noRes
 });*/
 
 gulp.task("build-dts", function() {
-    return gulp.src([
+    var tsResult = gulp.src([
         "src/**/*.ts",
         "src/**/*.tsx"
     ])
@@ -130,7 +130,11 @@ gulp.task("build-dts", function() {
     .on("error", function (err) {
         process.exit(1);
     })
-    .dts.pipe(gulp.dest("dts/"));
+    .dts.pipe(gulp.dest("dts/"))
+    ;
+
+    //console.log(tsResult);
+    return tsResult;
 
 });
 
@@ -246,7 +250,7 @@ gulp.task("build-dts", function() {
 //******************************************************************************
 //* DEFAULT
 //******************************************************************************
-gulp.task("build", function(cb) {
+/*gulp.task("build", function(cb) {
     runSequence(
         "lint", 
         [
@@ -266,4 +270,12 @@ gulp.task("default", function (cb) {
     "build",
     //"test",
     cb);
-});
+});*/
+
+gulp.task("build", ["lint",
+            "build-es",
+            "build-lib",
+            "build-amd",
+            "build-dts"]);
+
+gulp.task('default', [/*'clean',*/ 'build']);

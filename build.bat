@@ -1,1 +1,1 @@
-@gulp
+@gulp clean | gulp
