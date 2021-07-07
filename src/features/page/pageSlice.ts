@@ -35,11 +35,11 @@ interface iEndLoadPageParams {
 	error?: string;
 }/* */
 
-interface iFormClearPayload {
+export interface iFormClearPayload {
 	formkey: string;
 	fullClear?: boolean;
 }
-interface iSetValuePayload {
+export interface iSetValuePayload {
 	formkey: string;
 	fieldName: string;
 	value: string | string[];
