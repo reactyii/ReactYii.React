@@ -7,7 +7,7 @@ import { Console } from './models/commonModels';
 import { Utils } from './helpers/Utils';
 import { Templates } from './views/templates';
 import { App } from './App';
-export { App };
+export { App, Utils, Console };
 Console.log('-->', process.env.NODE_ENV);
 //Console.log('-->', process.env.REACT_APP_HOST);
 // пока решим проблему вот так топорно.
