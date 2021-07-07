@@ -1,9 +1,9 @@
 {
   "name": "reactyii.react",
   "version": "1.24.2",
-  "main": "lib/index.js",
-  "typings": "./dts/index.d.ts",
-  "jsnext:main": "es/index.js",
+  "main-deleted": "lib/index.js",
+  "typings-deleted": "./dts/index.d.ts",
+  "jsnext:main-deleted": "es/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/reactyii/ReactYii.React"
