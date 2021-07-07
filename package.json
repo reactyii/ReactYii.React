@@ -59,6 +59,9 @@
     ]
   },
   "devDependencies": {
+    "react-snap": "^1.23.0"
+  },
+  "deletedDevDependencies": {
     "del": "3.0.0",
     "es6-symbol": "3.1.1",
     "gulp": "3.9.1",
@@ -67,12 +70,10 @@
     "gulp-uglify": "3.0.0",
     "harmonize": "^2.0.0",
     "harmony-proxy": "^1.0.1",
-    "react-snap": "^1.23.0",
     "run-sequence": "^2.2.1",
     "serve": "^11.3.2",
-    "tslint": "5.9.1"
-  },
-  "deletedDevDependencies": {
+    "tslint": "5.9.1",
+
     "performance-now": "2.1.0",
     "publish-please": "2.3.1",
     "reflect-metadata": "0.1.12",
