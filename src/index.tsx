@@ -1,5 +1,7 @@
 import { hydrate, render } from "react-dom";
-import './index.css';
+
+// никаких стилей в либе быть не должно, так как это импортируется и в index.d.ts файле
+//import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 

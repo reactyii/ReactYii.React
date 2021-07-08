@@ -1,4 +1,3 @@
-import './index.css';
 import { Console } from './models/commonModels';
 import { Utils } from './helpers/Utils';
 import { Templates } from './views/templates';
