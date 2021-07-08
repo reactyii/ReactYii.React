@@ -1,6 +1,6 @@
 {
   "name": "reactyii.react",
-  "version": "1.25.2",
+  "version": "1.25.3",
   "main-deleted": "lib/index.js",
   "typings-deleted": "./dts/index.d.ts",
   "jsnext:main-deleted": "es/index.js",
