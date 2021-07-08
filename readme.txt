@@ -6,3 +6,17 @@
 	rename reactyii.tabler ReactYii.Tabler
 
 	yarn add @tabler/core
+
+	добавляем в
+	"dependencies":{
+		"reactyii.react": "git+https://github.com/reactyii/ReactYii.React",
+		"react-snap": "^1.23.0"
+	},
+	"scripts": {
+		"postbuild": "react-snap"
+	}
+	"reactSnap": {
+		"removeStyleTags": true,
+		"destination": "ssr"
+	}
+
