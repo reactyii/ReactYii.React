@@ -1,7 +1,8 @@
 import { hydrate, render } from "react-dom";
 
-// никаких стилей в либе быть не должно, так как это импортируется и в index.d.ts файле
-//import './index.css';
+// никаких стилей в либе быть не должно, так как это импортируется и в index.d.ts файл
+// для подключения как либы используем другой файл
+import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 
@@ -11,10 +12,6 @@ import { Console } from './models/commonModels';
 import { Utils } from './helpers/Utils';
 import { Templates } from './views/templates';
 import { App } from './App';
-import { Html } from './views/Html';
-import { Content } from './views/Content';
-
-export { App, Utils, Console, Templates, Html, Content };
 
 Console.log('-->', process.env.NODE_ENV);
 //Console.log('-->', process.env.REACT_APP_HOST);
@@ -25,8 +22,10 @@ Utils.Templates = Templates;
 const rootElement = document.getElementById("root");
 if (rootElement != null) {
 	if (rootElement.hasChildNodes()) {
+		//console.log('hydrate');
 		hydrate(App, rootElement);
 	} else {
+		//console.log('render');
 		render(App, rootElement);
 	}
 }

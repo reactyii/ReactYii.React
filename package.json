@@ -1,11 +1,8 @@
 {
   "name": "reactyii.react",
-  "version": "1.25.4",
-  "main-deleted": "lib/index.js",
-  "typings-deleted": "./dts/index.d.ts",
-  "jsnext:main-deleted": "es/index.js",
-  "module": "./lib/esm/index.js",
-  "types": "./lib/esm/index.d.ts",
+  "version": "1.25.5",
+  "module": "./lib/esm/lib.js",
+  "types": "./lib/esm/lib.d.ts",
   "files": [
     "lib"
   ],
