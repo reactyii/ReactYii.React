@@ -7,3 +7,4 @@ import { Content } from './views/Content';
 import { iContentProps } from './models/contentModels';
 
 export { App, Utils, Console, Templates, Html, Content, iContentProps };
+

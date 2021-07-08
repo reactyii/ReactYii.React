@@ -1,6 +1,6 @@
 {
   "name": "reactyii.react",
-  "version": "1.26.2",
+  "version": "1.26.3",
   "module": "./lib/esm/lib.js",
   "types": "./lib/esm/lib.d.ts",
   "files": [

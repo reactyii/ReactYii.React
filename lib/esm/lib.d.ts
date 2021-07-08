@@ -4,4 +4,5 @@ import { Templates } from './views/templates';
 import { App } from './App';
 import { Html } from './views/Html';
 import { Content } from './views/Content';
-export { App, Utils, Console, Templates, Html, Content };
+import { iContentProps } from './models/contentModels';
+export { App, Utils, Console, Templates, Html, Content, iContentProps };
