@@ -6,6 +6,7 @@ import { iContentProps } from '../../models/contentModels';
 //import { Header, Footer } from '@template/views';
 //import { iPageProps } from '../../models/pageModels';
 import { Content } from '../Content';
+import { DropdownTest } from '../DropdownTest';
 
 export class Layout extends React.Component<iContentProps, {}> {
 
@@ -18,7 +19,7 @@ export class Layout extends React.Component<iContentProps, {}> {
 
         return <div className="page"><b>Layout</b> <Link to="/admin/contents.html" >list</Link>
             <div className="page-main">
-                
+
 
                 <div className="my-3 my-md-5">
                     <div className="container">
@@ -26,8 +27,15 @@ export class Layout extends React.Component<iContentProps, {}> {
                     </div>
                 </div>
             </div>
-            
 
+            Test zone
+            <div>
+                <DropdownTest isopen={true} title="dropdown1" body={<div>тело дропдауна 1</div>}></DropdownTest>
+
+                <DropdownTest title="dropdown2" body={<div>тело дропдауна 2</div>}></DropdownTest>
+                <DropdownTest title="dropdown3" body={<div>тело дропдауна 3</div>}></DropdownTest>
+
+            </div>
         </div>;
     }
 }

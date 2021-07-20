@@ -14,7 +14,7 @@
 	},
 	"scripts": {
 		"postbuild": "react-snap"
-	}
+	},
 	"reactSnap": {
 		"removeStyleTags": true,
 		"destination": "ssr"

@@ -4878,6 +4878,14 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
+eexchange@^1.27.5:
+  version "1.27.5"
+  resolved "https://registry.yarnpkg.com/eexchange/-/eexchange-1.27.5.tgz#84e9f6f024b75847feb463d34b7ac78ea37d90a6"
+  integrity sha512-CkOIcVV3DNxWKAjpeCyiXIDR5K8mfQ3jl9GcoVzpDQGTwe0GDbtTC+b+yNDYSC1PFADxh2rQaGiBzqOfapCaZg==
+  dependencies:
+    "@types/node" "^16.0.0"
+    typescript "^4.3.5"
+
 ejs@^2.6.1:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.7.4.tgz#48661287573dcc53e366c7a1ae52c3a120eec9ba"
