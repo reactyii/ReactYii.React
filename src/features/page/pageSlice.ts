@@ -19,6 +19,8 @@ if (typeof (window as any) !== 'undefined') {
 	delete (window as any).__PRELOADED_STATE__;
 }/**/
 
+Console.log('preloadedState for path:', preloadedState?.pageWraper?.key);
+
 const initialState: iPageStoreState = {
 	//currentPath: '',
 	loadingPath: '',

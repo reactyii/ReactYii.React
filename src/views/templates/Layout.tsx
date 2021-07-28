@@ -17,7 +17,16 @@ export class Layout extends React.Component<iContentProps, {}> {
             return typeof item.content_keys === 'undefined' || item.content_keys.indexOf('CONTENT') >= 0;
         })} pageWraper={this.props.pageWraper} session={this.props.session} />
 
-        return <div className="page"><b>Layout</b> <Link to="/admin/contents.html" >list</Link>
+        const rurl = '/p' + Date.now() + '.html';
+        return <div className="page"><b>Layout</b> <Link to="/admin/contents.html" >list</Link> <Link to="/404.html" >404</Link>
+            {
+                navigator.userAgent !== "ReactSnap"
+                ? <Link to={rurl} >random 404</Link>
+                    : null
+                /* нельзя так делать!!! мы ж будем показывать, то что нагенерим для "ReactSnap" обычным юзерам
+                  <Link to="/500.html" >500</Link>
+                */
+            }
             <div className="page-main">
 
 
