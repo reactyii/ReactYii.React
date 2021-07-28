@@ -99,6 +99,7 @@
     "graceful-fs": "^4.2.4"
   },
   "reactSnap": {
+    "include": ["/500.html"],
     "removeStyleTags": true,
     "destination": "ssr"
   }
