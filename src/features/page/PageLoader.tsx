@@ -57,7 +57,7 @@ class PageLoader extends React.Component<Props, State> {
 			
 			params['__siteLM'] = '' + this.props.session.site.lastModified;
 		}
-		//Console.log('check for load page path=', path, 'key=', this.props.pageWraper?.key, 'loading=', this.props.loadingPath);
+		Console.log('check for load page path=', path, 'key=', this.props.pageWraper?.key, 'loading=', this.props.loadingPath);
 
 		// 1 отсекаем если мы уже грузим эту страницу
 		if (/*path === this.props.pageWraper?.key ||*/ path === this.props.loadingPath) return;
