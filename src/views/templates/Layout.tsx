@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { Console } from '../../models/commonModels';
 import { iContentProps } from '../../models/contentModels';
 
 //import { NavMenu } from '@template/views/NavMenu';
@@ -10,6 +11,16 @@ import { DropdownTest } from '../DropdownTest';
 
 export class Layout extends React.Component<iContentProps, {}> {
 
+    renderMenu(content_key: string) {
+        const content = this.props.content.filter(item => {
+            return /*typeof item.content_keys !== 'undefined' &&*/ item.content_keys?.indexOf(content_key) >= 0;
+        });
+
+        Console.log(content);
+
+        return <Content content={content} pageWraper={this.props.pageWraper} session={this.props.session} />
+    }
+
     public render() {
         //Console.log('...Layout::render()');
 
@@ -18,7 +29,9 @@ export class Layout extends React.Component<iContentProps, {}> {
         })} pageWraper={this.props.pageWraper} session={this.props.session} />
 
         const rurl = '/p' + Date.now() + '.html';
-        return <div className="page"><b>Layout</b> <Link to="/admin/contents.html" >list</Link> <Link to="/404.html" >404</Link>
+        return <div className="page">
+            <div>{this.renderMenu('TOP_MENU')}</div>
+            <b>Layout</b> <Link to="/admin/contents.html" >list</Link> <Link to="/404.html" >404</Link>
             {
                 navigator.userAgent !== "ReactSnap"
                 ? <Link to={rurl} >random 404</Link>
