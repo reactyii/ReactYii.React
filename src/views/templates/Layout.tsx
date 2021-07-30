@@ -30,7 +30,7 @@ export class Layout extends React.Component<iContentProps, {}> {
 
         const rurl = '/p' + Date.now() + '.html';
         return <div className="page">
-            <div>{this.renderMenu('TOP_MENU')}</div>
+            <div>{this.renderMenu('MENU_TOP')}</div>
             <b>Layout</b> <Link to="/admin/contents.html" >list</Link> <Link to="/404.html" >404</Link>
             {
                 navigator.userAgent !== "ReactSnap"
