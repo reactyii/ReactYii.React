@@ -169,7 +169,9 @@ export const pageSlice = createSlice({
 			// нужно проверить может быть юзер уже грузит другую страницу
 			if (state.loadingPath !== action.payload.key) return;
 
-			Console.log('setPage:', action.payload);
+			Console.log('setPage item:', action.payload.item);
+			//Console.log('setPage content:', action.payload.item?.content);
+			//Console.log('setPage:', action.payload);
 
 			state.pageWraper = action.payload;
 			if (state.pageWraper.item) {

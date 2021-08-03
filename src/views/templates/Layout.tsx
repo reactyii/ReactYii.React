@@ -16,7 +16,7 @@ export class Layout extends React.Component<iContentProps, {}> {
             return /*typeof item.content_keys !== 'undefined' &&*/ item.content_keys?.indexOf(content_key) >= 0;
         });
 
-        Console.log(content);
+        //Console.log('1', content);
 
         return <Content content={content} pageWraper={this.props.pageWraper} session={this.props.session} />
     }
