@@ -8,14 +8,16 @@ import { iContentProps } from '../../models/contentModels';
 //import { iPageProps } from '../../models/pageModels';
 import { Content } from '../Content';
 import { DropdownTest } from '../DropdownTest';
+import { BaseComponent } from './BaseComponent';
 
-export class Layout extends React.Component<iContentProps, {}> {
+export class Layout extends BaseComponent<iContentProps, {}> {
 
     renderMenu(content_key: string) {
-        const content = this.props.content.filter(item => {
-            return /*typeof item.content_keys !== 'undefined' &&*/ item.content_keys?.indexOf(content_key) >= 0;
-        });
+        //const content = this.props.content.filter(item => {
+        //    return /*typeof item.content_keys !== 'undefined' &&*/ item.content_keys?.indexOf(content_key) >= 0;
+        //});
 
+        const content = this.getContentByKey(content_key);
         //Console.log('1', content);
 
         return <Content content={content} pageWraper={this.props.pageWraper} session={this.props.session} />

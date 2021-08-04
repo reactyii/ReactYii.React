@@ -74,7 +74,7 @@ export interface iMenu {
     //icon: string | null;
     is_all_section: boolean;
     is_current_section: boolean;
-    section_id: number | null;
+    section_id: string | null;
     //is_default: boolean;
     childs: iMenu[];
     //parents: string[]; // чтобы тип не приводить

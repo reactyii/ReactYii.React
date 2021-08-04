@@ -4,7 +4,8 @@ import { iContentProps } from '../../models/contentModels';
 import { Content } from '../Content';
 //import { Utils } from '../../helpers/Utils';
 //import { FormStorage } from '../../helpers/FormStorage';
-import { Hash } from '../../models/commonModels';
+import { Console, Hash, iMenu } from '../../models/commonModels';
+import { Utils } from '../../helpers/Utils';
 //import { iPage } from '../../models/pageModels';
 //import { Html } from '../Html';
 
@@ -22,7 +23,32 @@ export class A extends React.Component<iContentProps, {}> {
 	}
 
 	getUrl(settings: Hash<string>): string {
-		return settings.url ? settings.url : ''; // к сожалению урл сюда можно передать тока так, то есть построение урла снаружи
+		if (settings.url) return settings.url;
+		//return settings.url ? settings.url : ''; // к сожалению урл сюда можно передать тока так, то есть построение урла снаружи
+		if (
+			typeof this.props.pageWraper?.item === 'undefined' || this.props.pageWraper?.item === null
+			|| typeof this.props.settings === 'undefined'
+			|| typeof this.props.session?.site === 'undefined'
+		) {
+			Console.error('error format url')
+			return '#unknown';
+		}
+
+		const new_page: iMenu = {
+			path: this.props.settings.path,
+			section_id: this.props.settings.section_id,
+			is_current_section: this.props.settings.is_current_section === '1',
+			is_all_section: this.props.settings.is_all_section === '1',
+
+			// not used in function Utils.makeUrl
+			id: '', name: '', menu_name: '', childs:[]
+		};
+		
+		const [host, url] = Utils.makeUrl(this.props.pageWraper.item, new_page, this.props.session.site);
+
+		Console.log('new_page=', this.props.settings, new_page, url);
+
+		return '//' + host + url;
 	}
 
 	renderContent(settings: Hash<string>): React.ReactNode {

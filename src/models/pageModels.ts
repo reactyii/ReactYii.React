@@ -36,7 +36,7 @@ export interface iPage extends iLoadableItem {
 	readonly path: string; // путь по которому загружена страница
 	lang: iLanguage | null;
 	section: iSection | null;
-	section_id: number | null;
+	section_id: string | null;
 	//template: string;
 	layout: string | null;
 	content: iContent[];
