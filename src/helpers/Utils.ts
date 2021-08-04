@@ -69,7 +69,7 @@ export class Utils {
         // раздел 
         const section = newPage.is_current_section && currentPage.section_id ?
             site.sections_hash['_' + currentPage.section_id] :
-            (newPage.section_id ? site.sections_hash[newPage.section_id] : undefined);
+            (newPage.section_id ? site.sections_hash['_' + newPage.section_id] : undefined);
 
         //Console.log('section:', newPage.section_id, section);
 
