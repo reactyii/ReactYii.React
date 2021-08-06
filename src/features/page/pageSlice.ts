@@ -186,6 +186,7 @@ export const pageSlice = createSlice({
 				if (typeof state.session.site !== 'undefined')
 					state.session.site.sections.forEach(s => { _hash['_' + s.id] = s; });
 				state.session.site.sections_hash = _hash;
+				//Console.log('state.session.site.sections_hash=', state.session.site.sections_hash);
 			}
 			if (typeof action.payload.item?.session?.user !== 'undefined') {
 				state.session.user = action.payload.item.session.user;

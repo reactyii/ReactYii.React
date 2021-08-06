@@ -60,7 +60,7 @@ export class Utils {
 
         return this.makeUrl(currentPage, newPage, site, path + (page ? '/' + page : '') + (filterAndSort ? '/' + filterAndSort : ''));
     }
-    
+
     static makeUrl(currentPage: iPage, newPage: iPage | iMenu, site: iSite, contentArgs: string = '', gets: Hash<string | string[]> = {}): [string, string] {
         // с курент страницы берем язык
         let host = site.main_host;

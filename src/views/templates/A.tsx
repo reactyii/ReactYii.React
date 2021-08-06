@@ -46,9 +46,11 @@ export class A extends React.Component<iContentProps, {}> {
 		
 		const [host, url] = Utils.makeUrl(this.props.pageWraper.item, new_page, this.props.session.site);
 
+		const [current_host,] = Utils.makeUrl(this.props.pageWraper.item, this.props.pageWraper.item, this.props.session.site);
+
 		Console.log('new_page=', this.props.settings, new_page, url);
 
-		return '//' + host + url;
+		return host !== current_host ? '//' + host + url : url;
 	}
 
 	renderContent(settings: Hash<string>): React.ReactNode {
